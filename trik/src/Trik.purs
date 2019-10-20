@@ -1,6 +1,3 @@
 module Trik where
 
-import Prelude
-
-f :: Int -> Int
-f n = n + 1
+foreign import readAccelerometer :: forall a. a -> Number

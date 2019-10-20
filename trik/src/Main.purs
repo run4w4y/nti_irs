@@ -2,9 +2,10 @@ module Main where
 
 import Prelude
 
-import Trik (f)
-import Effect (Effect)
+import Trik
 
-main = do
-    f 12
+solution :: forall a. a -> Number
+solution n = do
+    readAccelerometer 1 
 
+main = solution
