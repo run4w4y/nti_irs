@@ -1,5 +1,5 @@
 'use strict';
 
-exports.readAccelerometer = function() {
-    return brick.accelerometer().read();
+exports.readtrik = function(obj) {
+    return obj.read();
 }

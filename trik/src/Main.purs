@@ -6,6 +6,6 @@ import Trik
 
 solution :: forall a. a -> Number
 solution n = do
-    readAccelerometer 1 
+    read
 
 main = solution
