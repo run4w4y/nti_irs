@@ -22,7 +22,8 @@ data Brick = Brick {
     keys :: Keys,
     led :: LED,
     encoders :: Array Encoder,
-    motors :: Array Motor
+    motors :: Array Motor,
+    sensors :: Array Sensor
 }
 
 foreign import getBrickUncurried :: Fn3 (Array EncoderPort) (Array MotorPort) (Array SensorPort) Brick 
