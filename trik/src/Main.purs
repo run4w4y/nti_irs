@@ -2,10 +2,10 @@ module Main where
 
 import Prelude
 
-import Trik
+import Trik.Brick
 
-solution :: forall a. a -> Number
+solution :: forall a. a -> Int
 solution n = do
-    read
+    1
 
 main = solution

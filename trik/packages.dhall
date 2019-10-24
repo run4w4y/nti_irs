@@ -119,6 +119,12 @@ let overrides = {
       upstream.metadata // { version = "0.13.0" }
 }
 
-let additions = {=}
+let additions = 
+  { functions = 
+      mkPackage
+        ["prelude"]
+        "https://github.com/purescript/purescript-functions"
+        "v4.0.0"
+  }
 
 in  upstream // overrides // additions

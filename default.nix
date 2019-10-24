@@ -16,7 +16,7 @@ in
             psc-package-simple
             purp
             spago
-            pkgs.which
+            pkgs.git
         ];
 
         shellHook = ''
