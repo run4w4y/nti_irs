@@ -1,6 +1,10 @@
 module Trik.Ports where
 
-data Port
-    = MotorPort String
-    | SensorPort String
-    | EncoderPort String
+data MotorPort
+    = MotorPort Int
+
+data SensorPort
+    = SensorPort Int
+
+data EncoderPort
+    = EncoderPort Int

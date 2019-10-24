@@ -1,4 +1,6 @@
 module Trik.Sensor where
 
+import Trik.Ports
+
 data Sensor 
-    = Sensor { port :: String }
+    = Sensor { port :: SensorPort }

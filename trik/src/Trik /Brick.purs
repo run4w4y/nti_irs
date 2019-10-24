@@ -22,16 +22,19 @@ data Brick = Brick {
     keys :: Keys,
     led :: LED,
     encoders :: Array Encoder,
-    motors :: Array Motor,
-    ports :: Array Port
+    motors :: Array Motor
 }
 
--- foreign import playSoundUncurried :: Fn2 Brick String Number
+foreign import getBrickUncurried :: Fn3 (Array EncoderPort) (Array MotorPort) (Array SensorPort) Brick 
+getBrick :: Array EncoderPort -> Array MotorPort -> Array SensorPort -> Brick
+getBrick = runFn3 getBrickUncurried
 
--- playSound :: Brick -> String -> Number
--- playSound = runFn2 playSoundUncurried
+foreign import playSoundUncurried :: Fn2 Brick String Int
+playSound :: Brick -> String -> Int
+playSound = runFn2 playSoundUncurried
 
--- foreign import getMotor :: Port -> Motor
--- foreign import readAccelerometer :: Accelerometer -> AccelerometerValue
--- foreign import readSensor :: Sensor -> SensorValue
--- foreign import readEncoder :: Encoder -> EncoderValueв
+foreign import brickStop :: Brick -> Int
+
+foreign import brickSayUncurried :: Fn2 Brick String Int
+brickSay :: Brick -> String -> Int
+brickSay = runFn2 brickSayUncurried
