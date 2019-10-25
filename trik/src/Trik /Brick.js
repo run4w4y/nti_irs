@@ -22,6 +22,7 @@ exports.getBrickUncurried = function(encoder_ports, motor_ports, sensor_ports) {
         newbrick.sensors[i] = brick.sensor("S" + sensor_ports[i].port);
     }
     newbrick.orig = brick;
+    return newbrick;
 }
 
 exports.brickSayUncurried = function(defbrick, string) {
