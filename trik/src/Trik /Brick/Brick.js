@@ -15,7 +15,10 @@ exports.getBrickUncurried = function(encoder_ports, motor_ports, sensor_ports) {
     }
     newbrick.motors = [];
     for (var i = 0; i < motor_ports.length; ++i) {
-        newbrick.motors[i] = brick.motor("M" + motor_ports[i].value0);
+        if (motor_ports[i].constructor.name == "ServoMororPort")
+            newbrick.motors[i] = brick.motor("S" + motor_ports[i].value0);
+        else
+            newbrick.motors[i] = brick.motor("M" + motor_ports[i].value0);
     }
     newbrick.sensors = [];
     for (var i = 0; i < sensor_ports.length; ++i) {

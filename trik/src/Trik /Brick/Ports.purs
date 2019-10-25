@@ -1,7 +1,8 @@
 module Trik.Brick.Ports where
 
 data MotorPort
-    = MotorPort Int
+    = PowerMotorPort Int
+    | ServoMororPort Int
 
 data SensorPort
     = AnalogPort Int
