@@ -13,5 +13,5 @@ exports.motorPowerOff = function(motor) {
 }
 
 exports.setMotorPowerUncurried = function(motor, power) {
-    motor.setPower(power);
+    return function() {motor.setPower(power)};
 }

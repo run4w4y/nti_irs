@@ -1,5 +1,6 @@
 module Trik.Brick.Motor where
 
+import Effect
 import Data.Function.Uncurried
 import Data.Unit
 import Trik.Brick.Ports
@@ -15,6 +16,6 @@ foreign import getMotorPower :: Motor -> Int
 
 foreign import motorPowerOff :: Motor -> Unit
 
-foreign import setMotorPowerUncurried :: Fn2 Motor Int Unit
-setMotorPower :: Motor -> Int -> Unit
+foreign import setMotorPowerUncurried :: Fn2 Motor Int (Effect Unit)
+setMotorPower :: Motor -> Int -> Effect Unit
 setMotorPower = runFn2 setMotorPowerUncurried

@@ -124,7 +124,20 @@ let additions =
       mkPackage
         ["prelude"]
         "https://github.com/purescript/purescript-functions"
-        "v4.0.0"
+        "v4.0.0",
+    aff = 
+      mkPackage
+        [
+          "parallel",
+          "datetime",
+          "functions",
+          "transformers",
+          "unsafe-coerce",
+          "effect",
+          "exceptions"
+        ]
+        "https://github.com/purescript-contrib/purescript-aff"
+        "v5.1.2"
   }
 
 in  upstream // overrides // additions
