@@ -1,4 +1,4 @@
-module Trik.Keys where
+module Trik.Brick.Keys where
 
 data Keys
     = Keys

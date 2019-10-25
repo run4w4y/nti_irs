@@ -1,4 +1,4 @@
-module Trik.Battery where
+module Trik.Brick.Battery where
 
 type BatteryValue = Number
 data Battery 

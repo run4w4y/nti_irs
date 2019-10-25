@@ -1,4 +1,4 @@
-module Trik.Gyroscope where
+module Trik.Brick.Gyroscope where
 
 type GyroscopeValue = Array Number
 data Gyroscope 

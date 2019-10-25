@@ -1,4 +1,4 @@
-module Trik.Accelerometer where
+module Trik.Brick.Accelerometer where
 
 type AccelerometerValue = Array Number
 data Accelerometer 

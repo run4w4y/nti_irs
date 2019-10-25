@@ -1,10 +1,11 @@
-module Trik.Ports where
+module Trik.Brick.Ports where
 
 data MotorPort
     = MotorPort Int
 
 data SensorPort
-    = SensorPort Int
+    = AnalogPort Int
+    | DigitalPort Int
 
 data EncoderPort
     = EncoderPort Int

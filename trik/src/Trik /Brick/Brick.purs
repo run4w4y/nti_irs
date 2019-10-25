@@ -2,17 +2,17 @@ module Trik.Brick where
 
 import Data.Function.Uncurried
 import Data.Unit
-import Trik.Keys
-import Trik.Ports
-import Trik.Accelerometer
-import Trik.Battery
-import Trik.Camera
-import Trik.Gyroscope
-import Trik.Motor
-import Trik.Display
-import Trik.LED
-import Trik.Sensor
-import Trik.Encoder
+import Trik.Brick.Keys
+import Trik.Brick.Ports
+import Trik.Brick.Accelerometer
+import Trik.Brick.Battery
+import Trik.Brick.Camera
+import Trik.Brick.Gyroscope
+import Trik.Brick.Motor
+import Trik.Brick.Display
+import Trik.Brick.LED
+import Trik.Brick.Sensor
+import Trik.Brick.Encoder
 
 data Brick = Brick {
     accelerometer :: Accelerometer,

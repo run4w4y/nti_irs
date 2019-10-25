@@ -1,4 +1,4 @@
-module Trik.Camera where
+module Trik.Brick.Camera where
 
 type ColorSensorValue = Array Number
 data ColorSensor 
