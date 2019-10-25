@@ -14,7 +14,7 @@ import Trik.Brick.LED
 import Trik.Brick.Sensor
 import Trik.Brick.Encoder
 
-data Brick = Brick {
+type Brick = {
     accelerometer :: Accelerometer,
     battery :: Battery,
     colorSensor :: ColorSensor,
