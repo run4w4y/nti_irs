@@ -1,9 +1,9 @@
 module Main where
 
 import Prelude
-import Data.Function.Uncurried
-import Effect
-import Effect.Aff
+import Data.Array
+import Data.Maybe
+import Trik
 import Trik.Brick
 import Trik.Brick.Ports
 import Trik.Brick.Motor
@@ -14,8 +14,11 @@ brick = getBrick
             [PowerMotorPort 1, PowerMotorPort 2]
             []
 
-solution :: Effect Unit
-solution = do
-    foreachE brick.motors $ (flip setMotorPower) 90
+solution :: Array Unit
+solution = do [
+    (flip setMotorPower) 90 $ fromJust $ brick.motors !! 0,
+    (flip setMotorPower) 90 $ fromJust $ brick.motors !! 1,
+    unit
+]
 
 main = solution

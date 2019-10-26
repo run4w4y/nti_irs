@@ -12,13 +12,15 @@ exports.getBrickUncurried = function(encoder_ports, motor_ports, sensor_ports) {
     newbrick.encoders = [];
     for (var i = 0; i < encoder_ports.length; ++i) {
         newbrick.encoders[i] = brick.encoder("E" + encoder_ports[i].value0);
+        newbrick.encoders[i].value0 = encoder_ports[i];
     }
     newbrick.motors = [];
     for (var i = 0; i < motor_ports.length; ++i) {
-        if (motor_ports[i].constructor.name == "ServoMororPort")
+        if (motor_ports[i].constructor.name == "ServoMotorPort")
             newbrick.motors[i] = brick.motor("S" + motor_ports[i].value0);
         else
             newbrick.motors[i] = brick.motor("M" + motor_ports[i].value0);
+        newbrick.motors[i].value0 = motor_ports[i];
     }
     newbrick.sensors = [];
     for (var i = 0; i < sensor_ports.length; ++i) {
@@ -26,6 +28,7 @@ exports.getBrickUncurried = function(encoder_ports, motor_ports, sensor_ports) {
             newbrick.sensors[i] = brick.sensor("A" + sensor_ports[i].value0);
         else
             newbrick.sensors[i] = brick.sensor("D" + sensor_ports[i].value0);
+        newbrick.sensors[i].value0 = sensor_ports[i];
     }
     newbrick.orig = brick;
     return newbrick;
@@ -33,15 +36,12 @@ exports.getBrickUncurried = function(encoder_ports, motor_ports, sensor_ports) {
 
 exports.brickSayUncurried = function(defbrick, string) {
     defbrick.orig.say(string);
-    return 0;
 }
 
 exports.playSoundUncurried = function(defbrick, filename) {
     defbrick.orig.playSound(filename);
-    return 0;
 }
 
 exports.brickStop = function(defbrick) {
-    defbrick.orig.stop();
-    return 0;
+    redefbrick.orig.stop();
 }
