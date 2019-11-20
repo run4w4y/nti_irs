@@ -1,4 +1,4 @@
-package geometry;
+package trik.geometry;
 
 class Point {
     var x:Int;
