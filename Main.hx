@@ -7,6 +7,5 @@ class Main {
         var brick = new Brick();
         var pt:Point = new Point(1, 2);
         var sensor:Sensor = brick.sensor("A1");
-        trace(pt.toString());
     }
 }

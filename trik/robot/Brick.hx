@@ -22,7 +22,6 @@ class Brick {
     var led           :Led;
     var gyroscope     :Gyroscope;
     var lineSensor    :LineSensor;
-    var objectSensor  :ObjectSensor;
     
     public function encoder(port:String):Encoder {
         return untyped __js__("brick.encoder({0})", port);
@@ -52,6 +51,10 @@ class Brick {
         untyped __js__("brick.stop()");
     }
 
+    public function objectSensor(port:String):ObjectSensor {
+        return untyped __js__("brick.objectSensor({0})", port);
+    }
+
     // TODO: complete
     // public function getStillImage():
 
@@ -62,6 +65,5 @@ class Brick {
         this.keys = new KeysHigher(untyped __js__("brick.display()"));
         this.led = untyped __js__("brick.led()");
         this.gyroscope = untyped __js__("brick.gyroscope()");
-        this.objectSensor = untyped __js__("brick.objectSensor()");
     }
 }

@@ -118,7 +118,6 @@ var trik_robot_Brick = function() {
 	this.keys = new trik_robot_keys_KeysHigher(brick.display());
 	this.led = brick.led();
 	this.gyroscope = brick.gyroscope();
-	this.objectSensor = brick.objectSensor();
 };
 trik_robot_Brick.__name__ = true;
 trik_robot_Brick.prototype = {
@@ -142,6 +141,9 @@ trik_robot_Brick.prototype = {
 	}
 	,stop: function() {
 		brick.stop();
+	}
+	,objectSensor: function(port) {
+		return brick.objectSensor(port);
 	}
 };
 var trik_robot_keys_Key = { __ename__ : true, __constructs__ : ["Left","Up","Down","Enter","Right","Power","Esc"] };
