@@ -4,9 +4,16 @@ var Main = function() { };
 Main.__name__ = true;
 Main.main = function() {
 	var brick = new trik_robot_Brick();
+	var script = new trik_robot_Script();
 	var pt = new trik_geometry_Point(1,2);
-	var sensor = brick.sensor("A1");
-	console.log(pt.toString());
+	var motors = ["M3","M4"].map($bind(brick,brick.motor));
+	var _g = 0;
+	while(_g < motors.length) {
+		var motor = motors[_g];
+		++_g;
+		motor.setPower(100);
+	}
+	script.wait(1000);
 };
 Math.__name__ = true;
 var js_Boot = function() { };
@@ -146,6 +153,38 @@ trik_robot_Brick.prototype = {
 		return brick.objectSensor(port);
 	}
 };
+var trik_robot_Script = function() {
+};
+trik_robot_Script.__name__ = true;
+trik_robot_Script.prototype = {
+	quit: function() {
+		script.quit();
+	}
+	,random: function(from,to) {
+		return script.random(from, to);
+	}
+	,readAll: function(filename) {
+		return script.readAll(filename);
+	}
+	,removeFile: function(filename) {
+		script.removeFile(filename);
+	}
+	,run: function() {
+		script.run();
+	}
+	,system: function(command) {
+		script.system(command);
+	}
+	,time: function() {
+		return script.time();
+	}
+	,wait: function(duration) {
+		return script.wait(duration);
+	}
+	,writeToFile: function(filename,content) {
+		return script.writeToFile(filename, content);
+	}
+};
 var trik_robot_keys_Key = { __ename__ : true, __constructs__ : ["Left","Up","Down","Enter","Right","Power","Esc"] };
 trik_robot_keys_Key.Left = ["Left",0];
 trik_robot_keys_Key.Left.__enum__ = trik_robot_keys_Key;
@@ -200,6 +239,8 @@ trik_robot_keys_KeysHigher.prototype = {
 		return this.lowerKeys.wasPressed(this.keyToCode(key));
 	}
 };
+var $_, $fid = 0;
+function $bind(o,m) { if( m == null ) return null; if( m.__id__ == null ) m.__id__ = $fid++; var f; if( o.hx__closures__ == null ) o.hx__closures__ = {}; else f = o.hx__closures__[m.__id__]; if( f == null ) { f = function(){ return f.method.apply(f.scope, arguments); }; f.scope = o; f.method = m; o.hx__closures__[m.__id__] = f; } return f; }
 String.__name__ = true;
 Array.__name__ = true;
 Main.main();
