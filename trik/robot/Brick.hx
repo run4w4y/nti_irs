@@ -15,13 +15,13 @@ import trik.robot.sensor.Sensor;
 
 
 class Brick {
-    var accelerometer :Accelerometer;
-    var battery       :Battery;
-    var display       :Display;
-    var keys          :KeysHigher;
-    var led           :Led;
-    var gyroscope     :Gyroscope;
-    var lineSensor    :LineSensor;
+    public var accelerometer :Accelerometer;
+    public var battery       :Battery;
+    public var display       :Display;
+    public var keys          :KeysHigher;
+    public var led           :Led;
+    public var gyroscope     :Gyroscope;
+    public var lineSensor    :LineSensor;
     
     public function encoder(port:String):Encoder {
         return untyped __js__("brick.encoder({0})", port);
@@ -66,7 +66,7 @@ class Brick {
         this.accelerometer = untyped __js__("brick.accelerometer()");
         this.battery = untyped __js__("brick.battery()");
         this.display = untyped __js__("brick.display()");
-        this.keys = new KeysHigher(untyped __js__("brick.display()"));
+        this.keys = new KeysHigher();
         this.led = untyped __js__("brick.led()");
         this.gyroscope = untyped __js__("brick.gyroscope()");
     }

@@ -3,9 +3,7 @@ package trik.robot.keys;
 import trik.robot.keys.Keys;
 import trik.robot.keys.Key;
 
-class KeysHigher {
-    private var lowerKeys:Keys;
-
+abstract KeysHigher(Keys) {
     public function keyToCode (key:Key):Int {
         var res:Int = 0;
         switch (key) {
@@ -29,14 +27,14 @@ class KeysHigher {
     }
 
     public function isPressed (key:Key):Bool {
-        return lowerKeys.isPressed(keyToCode(key));
+        return this.isPressed(keyToCode(key));
     }
 
     public function wasPressed (key:Key):Bool {
-        return lowerKeys.wasPressed(keyToCode(key));
+        return this.wasPressed(keyToCode(key));
     }
 
-    public function new(lowerKeys:Keys):Void {
-        this.lowerKeys = lowerKeys;
+    public function new():Void {
+        this = untyped __js__("brick.keys()");
     }
 }

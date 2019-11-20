@@ -3,15 +3,8 @@
 var Main = function() { };
 Main.__name__ = true;
 Main.main = function() {
-	var motors = ["M3","M4"].map(($_=trik_Trik.brick,$bind($_,$_.motor)));
-	var _g = 0;
-	while(_g < motors.length) {
-		var motor = motors[_g];
-		++_g;
-		motor.setPower(100);
-	}
-	trik_Trik.script.wait(1000);
-	trik_Trik.print(10);
+	trik_Trik.script.wait(3000);
+	trik_Trik.print(trik_robot_keys__$KeysHigher_KeysHigher_$Impl_$.wasPressed(trik_Trik.brick.keys,trik_robot_keys_Key.Left));
 };
 Math.__name__ = true;
 var js_Boot = function() { };
@@ -104,7 +97,7 @@ var trik_robot_Brick = function() {
 	this.accelerometer = brick.accelerometer();
 	this.battery = brick.battery();
 	this.display = brick.display();
-	this.keys = new trik_robot_keys_KeysHigher(brick.display());
+	this.keys = trik_robot_keys__$KeysHigher_KeysHigher_$Impl_$._new();
 	this.led = brick.led();
 	this.gyroscope = brick.gyroscope();
 };
@@ -138,44 +131,44 @@ trik_robot_Brick.prototype = {
 		return getPhoto();
 	}
 };
-var trik_robot_keys_KeysHigher = function(lowerKeys) {
-	this.lowerKeys = lowerKeys;
+var trik_robot_keys__$KeysHigher_KeysHigher_$Impl_$ = {};
+trik_robot_keys__$KeysHigher_KeysHigher_$Impl_$.__name__ = true;
+trik_robot_keys__$KeysHigher_KeysHigher_$Impl_$.keyToCode = function(this1,key) {
+	var res = 0;
+	switch(key[1]) {
+	case 0:
+		res = 105;
+		break;
+	case 1:
+		res = 103;
+		break;
+	case 2:
+		res = 108;
+		break;
+	case 3:
+		res = 28;
+		break;
+	case 4:
+		res = 106;
+		break;
+	case 5:
+		res = 116;
+		break;
+	case 6:
+		res = 1;
+		break;
+	}
+	return res;
 };
-trik_robot_keys_KeysHigher.__name__ = true;
-trik_robot_keys_KeysHigher.prototype = {
-	keyToCode: function(key) {
-		var res = 0;
-		switch(key[1]) {
-		case 0:
-			res = 105;
-			break;
-		case 1:
-			res = 103;
-			break;
-		case 2:
-			res = 108;
-			break;
-		case 3:
-			res = 28;
-			break;
-		case 4:
-			res = 106;
-			break;
-		case 5:
-			res = 116;
-			break;
-		case 6:
-			res = 1;
-			break;
-		}
-		return res;
-	}
-	,isPressed: function(key) {
-		return this.lowerKeys.isPressed(this.keyToCode(key));
-	}
-	,wasPressed: function(key) {
-		return this.lowerKeys.wasPressed(this.keyToCode(key));
-	}
+trik_robot_keys__$KeysHigher_KeysHigher_$Impl_$.isPressed = function(this1,key) {
+	return this1.isPressed(trik_robot_keys__$KeysHigher_KeysHigher_$Impl_$.keyToCode(this1,key));
+};
+trik_robot_keys__$KeysHigher_KeysHigher_$Impl_$.wasPressed = function(this1,key) {
+	return this1.wasPressed(trik_robot_keys__$KeysHigher_KeysHigher_$Impl_$.keyToCode(this1,key));
+};
+trik_robot_keys__$KeysHigher_KeysHigher_$Impl_$._new = function() {
+	var this1 = brick.keys();
+	return this1;
 };
 var trik_robot_Mailbox = function() {
 };
@@ -243,6 +236,28 @@ trik_robot_Script.prototype = {
 		return script.writeToFile(filename, content);
 	}
 };
+var trik_robot_Concurrency = function() {
+};
+trik_robot_Concurrency.__name__ = true;
+trik_robot_Concurrency.prototype = {
+	joinThread: function(threadId) {
+		Threading.joinThread(threadId);
+	}
+	,killThread: function(threadId) {
+		Threading.killThread(threadId);
+	}
+	,receiveMessage: function(wait) {
+		return Threading.receiveMessage(wait);
+	}
+	,sendMessage: function(threadId,message) {
+		Threading.sendMessage(threadId, message);
+		return;
+	}
+	,startThread: function(threadId,functionName) {
+		Threading.startThread(threadId, functionName);
+		return;
+	}
+};
 var trik_Trik = function() { };
 trik_Trik.__name__ = true;
 trik_Trik.print = function(text) {
@@ -263,12 +278,11 @@ trik_robot_keys_Key.Power = ["Power",5];
 trik_robot_keys_Key.Power.__enum__ = trik_robot_keys_Key;
 trik_robot_keys_Key.Esc = ["Esc",6];
 trik_robot_keys_Key.Esc.__enum__ = trik_robot_keys_Key;
-var $_, $fid = 0;
-function $bind(o,m) { if( m == null ) return null; if( m.__id__ == null ) m.__id__ = $fid++; var f; if( o.hx__closures__ == null ) o.hx__closures__ = {}; else f = o.hx__closures__[m.__id__]; if( f == null ) { f = function(){ return f.method.apply(f.scope, arguments); }; f.scope = o; f.method = m; o.hx__closures__[m.__id__] = f; } return f; }
 String.__name__ = true;
 Array.__name__ = true;
 trik_Trik.brick = new trik_robot_Brick();
 trik_Trik.script = new trik_robot_Script();
 trik_Trik.mailbox = new trik_robot_Mailbox();
+trik_Trik.threading = new trik_robot_Concurrency();
 Main.main();
 })();
