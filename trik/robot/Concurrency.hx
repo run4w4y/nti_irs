@@ -20,4 +20,6 @@ class Concurrency {
     public function startThread(threadId:String, functionName:String):Void {
         return untyped __js__("Threading.startThread({0}, {1})", threadId, functionName);
     }
+
+    public function new() {}
 }
