@@ -55,6 +55,10 @@ class Brick {
         return untyped __js__("brick.objectSensor({0})", port);
     }
 
+    public function getPhoto():Array<Int> {
+        return untyped __js__("getPhoto()");
+    }
+
     // TODO: complete
     // public function getStillImage():
 
