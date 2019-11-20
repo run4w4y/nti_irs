@@ -6,31 +6,19 @@ import trik.robot.battery.Battery;
 import trik.robot.colorSensor.ColorSensor;
 import trik.robot.encoder.Encoder;
 import trik.robot.gyroscope.Gyroscope;
-import trik.robot.keys.Keys;
+import trik.robot.keys.KeysHigher;
 import trik.robot.led.Led;
 import trik.robot.lineSensor.LineSensor;
 import trik.robot.motor.Motor;
+import trik.robot.objectSensor.ObjectSensor;
+import trik.robot.sensor.Sensor;
 
-
-extern class ObjectSensor {
-    public function new():Void;
-    
-    @:selfCall
-    function call():Void;
-}
-
-extern class Sensor {
-    public function new():Void;
-    
-    @:selfCall
-    function call():Void;
-}
 
 class Brick {
     var accelerometer :Accelerometer;
     var battery       :Battery;
     var display       :Display;
-    var keys          :Keys;
+    var keys          :KeysHigher;
     var led           :Led;
     var gyroscope     :Gyroscope;
     var lineSensor    :LineSensor;
@@ -71,7 +59,7 @@ class Brick {
         this.accelerometer = untyped __js__("brick.accelerometer()");
         this.battery = untyped __js__("brick.battery()");
         this.display = untyped __js__("brick.display()");
-        this.keys = untyped __js__("brick.display()");
+        this.keys = new KeysHigher(untyped __js__("brick.display()"));
         this.led = untyped __js__("brick.led()");
         this.gyroscope = untyped __js__("brick.gyroscope()");
         this.objectSensor = untyped __js__("brick.objectSensor()");
