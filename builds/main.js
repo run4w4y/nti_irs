@@ -3,17 +3,15 @@
 var Main = function() { };
 Main.__name__ = true;
 Main.main = function() {
-	var brick = new trik_robot_Brick();
-	var script = new trik_robot_Script();
-	var pt = new trik_geometry_Point(1,2);
-	var motors = ["M3","M4"].map($bind(brick,brick.motor));
+	var motors = ["M3","M4"].map(($_=trik_Trik.brick,$bind($_,$_.motor)));
 	var _g = 0;
 	while(_g < motors.length) {
 		var motor = motors[_g];
 		++_g;
 		motor.setPower(100);
 	}
-	script.wait(1000);
+	trik_Trik.script.wait(1000);
+	trik_Trik.print(10);
 };
 Math.__name__ = true;
 var js_Boot = function() { };
@@ -102,22 +100,6 @@ js_Boot.__string_rec = function(o,s) {
 		return String(o);
 	}
 };
-var trik_geometry_Point = function(x,y) {
-	if(y == null) {
-		y = 0;
-	}
-	if(x == null) {
-		x = 0;
-	}
-	this.x = x;
-	this.y = y;
-};
-trik_geometry_Point.__name__ = true;
-trik_geometry_Point.prototype = {
-	toString: function() {
-		return "Point(" + this.x + "," + this.y + ")";
-	}
-};
 var trik_robot_Brick = function() {
 	this.accelerometer = brick.accelerometer();
 	this.battery = brick.battery();
@@ -152,54 +134,10 @@ trik_robot_Brick.prototype = {
 	,objectSensor: function(port) {
 		return brick.objectSensor(port);
 	}
-};
-var trik_robot_Script = function() {
-};
-trik_robot_Script.__name__ = true;
-trik_robot_Script.prototype = {
-	quit: function() {
-		script.quit();
-	}
-	,random: function(from,to) {
-		return script.random(from, to);
-	}
-	,readAll: function(filename) {
-		return script.readAll(filename);
-	}
-	,removeFile: function(filename) {
-		script.removeFile(filename);
-	}
-	,run: function() {
-		script.run();
-	}
-	,system: function(command) {
-		script.system(command);
-	}
-	,time: function() {
-		return script.time();
-	}
-	,wait: function(duration) {
-		return script.wait(duration);
-	}
-	,writeToFile: function(filename,content) {
-		return script.writeToFile(filename, content);
+	,getPhoto: function() {
+		return getPhoto();
 	}
 };
-var trik_robot_keys_Key = { __ename__ : true, __constructs__ : ["Left","Up","Down","Enter","Right","Power","Esc"] };
-trik_robot_keys_Key.Left = ["Left",0];
-trik_robot_keys_Key.Left.__enum__ = trik_robot_keys_Key;
-trik_robot_keys_Key.Up = ["Up",1];
-trik_robot_keys_Key.Up.__enum__ = trik_robot_keys_Key;
-trik_robot_keys_Key.Down = ["Down",2];
-trik_robot_keys_Key.Down.__enum__ = trik_robot_keys_Key;
-trik_robot_keys_Key.Enter = ["Enter",3];
-trik_robot_keys_Key.Enter.__enum__ = trik_robot_keys_Key;
-trik_robot_keys_Key.Right = ["Right",4];
-trik_robot_keys_Key.Right.__enum__ = trik_robot_keys_Key;
-trik_robot_keys_Key.Power = ["Power",5];
-trik_robot_keys_Key.Power.__enum__ = trik_robot_keys_Key;
-trik_robot_keys_Key.Esc = ["Esc",6];
-trik_robot_keys_Key.Esc.__enum__ = trik_robot_keys_Key;
 var trik_robot_keys_KeysHigher = function(lowerKeys) {
 	this.lowerKeys = lowerKeys;
 };
@@ -239,9 +177,98 @@ trik_robot_keys_KeysHigher.prototype = {
 		return this.lowerKeys.wasPressed(this.keyToCode(key));
 	}
 };
+var trik_robot_Mailbox = function() {
+};
+trik_robot_Mailbox.__name__ = true;
+trik_robot_Mailbox.prototype = {
+	connect: function(ip,port) {
+		if(port == null) {
+			port = -1;
+		}
+		if(port == -1) {
+			mailbox.connect(ip);
+		} else {
+			mailbox.connect(ip, port);
+		}
+	}
+	,hasMessages: function() {
+		return mailbox.hasMessages();
+	}
+	,myHullNumber: function() {
+		return mailbox.myHullNumber();
+	}
+	,receive: function() {
+		return mailbox.receive();
+	}
+	,send: function(message,robotNumber) {
+		if(robotNumber == null) {
+			robotNumber = -1;
+		}
+		if(robotNumber == -1) {
+			mailbox.send(message);
+		} else {
+			mailbox.send(robotNumber, message);
+		}
+	}
+};
+var trik_robot_Script = function() {
+};
+trik_robot_Script.__name__ = true;
+trik_robot_Script.prototype = {
+	quit: function() {
+		script.quit();
+	}
+	,random: function(from,to) {
+		return script.random(from, to);
+	}
+	,readAll: function(filename) {
+		return script.readAll(filename);
+	}
+	,removeFile: function(filename) {
+		script.removeFile(filename);
+	}
+	,run: function() {
+		script.run();
+	}
+	,system: function(command) {
+		script.system(command);
+	}
+	,time: function() {
+		return script.time();
+	}
+	,wait: function(duration) {
+		return script.wait(duration);
+	}
+	,writeToFile: function(filename,content) {
+		return script.writeToFile(filename, content);
+	}
+};
+var trik_Trik = function() { };
+trik_Trik.__name__ = true;
+trik_Trik.print = function(text) {
+	print(text);
+};
+var trik_robot_keys_Key = { __ename__ : true, __constructs__ : ["Left","Up","Down","Enter","Right","Power","Esc"] };
+trik_robot_keys_Key.Left = ["Left",0];
+trik_robot_keys_Key.Left.__enum__ = trik_robot_keys_Key;
+trik_robot_keys_Key.Up = ["Up",1];
+trik_robot_keys_Key.Up.__enum__ = trik_robot_keys_Key;
+trik_robot_keys_Key.Down = ["Down",2];
+trik_robot_keys_Key.Down.__enum__ = trik_robot_keys_Key;
+trik_robot_keys_Key.Enter = ["Enter",3];
+trik_robot_keys_Key.Enter.__enum__ = trik_robot_keys_Key;
+trik_robot_keys_Key.Right = ["Right",4];
+trik_robot_keys_Key.Right.__enum__ = trik_robot_keys_Key;
+trik_robot_keys_Key.Power = ["Power",5];
+trik_robot_keys_Key.Power.__enum__ = trik_robot_keys_Key;
+trik_robot_keys_Key.Esc = ["Esc",6];
+trik_robot_keys_Key.Esc.__enum__ = trik_robot_keys_Key;
 var $_, $fid = 0;
 function $bind(o,m) { if( m == null ) return null; if( m.__id__ == null ) m.__id__ = $fid++; var f; if( o.hx__closures__ == null ) o.hx__closures__ = {}; else f = o.hx__closures__[m.__id__]; if( f == null ) { f = function(){ return f.method.apply(f.scope, arguments); }; f.scope = o; f.method = m; o.hx__closures__[m.__id__] = f; } return f; }
 String.__name__ = true;
 Array.__name__ = true;
+trik_Trik.brick = new trik_robot_Brick();
+trik_Trik.script = new trik_robot_Script();
+trik_Trik.mailbox = new trik_robot_Mailbox();
 Main.main();
 })();
