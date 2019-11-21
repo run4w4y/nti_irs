@@ -1,6 +1,7 @@
 package trik.color;
 
 import trik.color.Color;
+import trik.geometry.Point3D;
 
 
 class ColorTools {
@@ -50,5 +51,20 @@ class ColorTools {
         if (!colorMatch.exists(color))
             throw "wrong color format was passed to the function";
         return colorMatch[color];
+    }
+
+    public static function colorToPoint3D(color):Point3D {
+        switch (color) {
+            case RGB(r, g, b):
+                return new Point3D(r, g, b);
+            case RGB24(_):
+                return colorToPoint3D(rgb24ToRgb(color));
+            case _:
+                return colorToPoint3D(colorToRgb(color));
+        }
+    }
+
+    public static function colorDist(color1:Color, color2:Color):Float {
+        return colorToPoint3D(color1).distTo(colorToPoint3D(color2));
     }
 }
