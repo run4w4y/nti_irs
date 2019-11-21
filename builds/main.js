@@ -297,7 +297,7 @@ js_Boot.__string_rec = function(o,s) {
 var trik_robot_Brick = function() {
 	this.accelerometer = brick.accelerometer();
 	this.battery = brick.battery();
-	this.display = brick.display();
+	this.display = trik_robot_display__$DisplayHigher_DisplayHigher_$Impl_$._new();
 	this.keys = trik_robot_keys__$KeysHigher_KeysHigher_$Impl_$._new();
 	this.led = brick.led();
 	this.gyroscope = brick.gyroscope();
@@ -331,6 +331,12 @@ trik_robot_Brick.prototype = {
 	,getPhoto: function() {
 		return getPhoto();
 	}
+};
+var trik_robot_display__$DisplayHigher_DisplayHigher_$Impl_$ = {};
+trik_robot_display__$DisplayHigher_DisplayHigher_$Impl_$.__name__ = true;
+trik_robot_display__$DisplayHigher_DisplayHigher_$Impl_$._new = function() {
+	var this1 = brick.display();
+	return this1;
 };
 var trik_robot_keys__$KeysHigher_KeysHigher_$Impl_$ = {};
 trik_robot_keys__$KeysHigher_KeysHigher_$Impl_$.__name__ = true;
@@ -537,6 +543,29 @@ trik_color_ColorTools.prototype = {
 		}
 	}
 	,colorToRgb: function(color) {
+		var _g = new haxe_ds_EnumValueMap();
+		_g.set(trik_color_Color.Red,trik_color_Color.RGB(255,0,0));
+		_g.set(trik_color_Color.DarkRed,trik_color_Color.RGB(127,0,0));
+		_g.set(trik_color_Color.Green,trik_color_Color.RGB(0,255,0));
+		_g.set(trik_color_Color.DarkGreen,trik_color_Color.RGB(0,127,0));
+		_g.set(trik_color_Color.Blue,trik_color_Color.RGB(0,0,255));
+		_g.set(trik_color_Color.DarkBlue,trik_color_Color.RGB(0,0,127));
+		_g.set(trik_color_Color.Cyan,trik_color_Color.RGB(0,255,255));
+		_g.set(trik_color_Color.DarkCyan,trik_color_Color.RGB(0,127,127));
+		_g.set(trik_color_Color.Magenta,trik_color_Color.RGB(255,0,255));
+		_g.set(trik_color_Color.DarkMagenta,trik_color_Color.RGB(127,0,127));
+		_g.set(trik_color_Color.Yellow,trik_color_Color.RGB(255,255,0));
+		_g.set(trik_color_Color.DarkYellow,trik_color_Color.RGB(127,127,0));
+		_g.set(trik_color_Color.Grey,trik_color_Color.RGB(127,127,127));
+		_g.set(trik_color_Color.DarkGrey,trik_color_Color.RGB(191,191,191));
+		_g.set(trik_color_Color.LightGrey,trik_color_Color.RGB(65,65,65));
+		_g.set(trik_color_Color.Black,trik_color_Color.RGB(0,0,0));
+		_g.set(trik_color_Color.White,trik_color_Color.RGB(255,255,255));
+		var colorMatch = _g;
+		if(!colorMatch.exists(color)) {
+			throw new js__$Boot_HaxeError("wrong color format was passed to the function");
+		}
+		return colorMatch.get(color);
 	}
 };
 var trik_robot_keys_Key = { __ename__ : true, __constructs__ : ["Left","Up","Down","Enter","Right","Power","Esc"] };

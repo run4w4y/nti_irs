@@ -1,6 +1,6 @@
 package trik.robot;
 
-import trik.robot.display.Display;
+import trik.robot.display.DisplayHigher;
 import trik.robot.accelerometer.Accelerometer;
 import trik.robot.battery.Battery;
 import trik.robot.colorSensor.ColorSensor;
@@ -17,7 +17,7 @@ import trik.robot.sensor.Sensor;
 class Brick {
     public var accelerometer :Accelerometer;
     public var battery       :Battery;
-    public var display       :Display;
+    public var display       :DisplayHigher;
     public var keys          :KeysHigher;
     public var led           :Led;
     public var gyroscope     :Gyroscope;
@@ -65,7 +65,7 @@ class Brick {
     public function new():Void {
         this.accelerometer = untyped __js__("brick.accelerometer()");
         this.battery = untyped __js__("brick.battery()");
-        this.display = untyped __js__("brick.display()");
+        this.display = new DisplayHigher();
         this.keys = new KeysHigher();
         this.led = untyped __js__("brick.led()");
         this.gyroscope = untyped __js__("brick.gyroscope()");

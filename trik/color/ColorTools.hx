@@ -4,7 +4,7 @@ import trik.color.Color;
 
 
 class ColorTools {
-    public function colorToNativeText(color:Color):String {
+    public static function colorToNativeText(color:Color):String {
         var colorMatch:Map<Color, String> = [
             Red     => "red",     DarkRed => "darkRed",
             Green   => "green",   DarkGreen => "darkGreen",
@@ -21,7 +21,7 @@ class ColorTools {
         return colorMatch[color];
     }
 
-    public function rgb24ToRgb(rgb24_value:Color):Color {
+    public static function rgb24ToRgb(rgb24_value:Color):Color {
         switch (rgb24_value) {
             case RGB24(val):
                 return return RGB(
@@ -34,7 +34,7 @@ class ColorTools {
         }
     }
 
-    public function colorToRgb(color:Color):Color {
+    public static function colorToRgb(color:Color):Color {
         var colorMatch:Map<Color, Color> = [
             Red     => RGB(255, 0, 0),     DarkRed     => RGB(127, 0, 0),
             Green   => RGB(0, 255, 0),     DarkGreen   => RGB(0, 127, 0),
