@@ -12,8 +12,6 @@ class Node {
 class Graph {
     var Connected:Array<Array<Bool>>;   
     var Dist:Map<Node,Map<Node,Int>>;
-    var N:Int;
-    var M:Int;
     var Nodes:List<Node>;
     var INF:Int = 1000000;
     public function new(?str:String){
