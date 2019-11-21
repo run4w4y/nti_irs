@@ -3,12 +3,22 @@
 nix-shell --pure
 ```
 
-### Building the code
+### Installing dependencies
 ```bash
-haxe -js builds/main.js -main Main
+haxelib install polygonal-ds 2.0.1
 ```
 
-### Run IDE server
+#### Make sure you have haxelib configured
+```bash
+haxelib setup ./lib
+```
+
+### Building the code
+```bash
+haxe build.hxml
+```
+
+### Run linting server
 ```bash
 haxe --wait 6000 &
 ```
