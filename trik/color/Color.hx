@@ -11,5 +11,7 @@ enum Color {
     Black;
     White;
     RGB(r:Int, g:Int, b:Int);
+    HSV(h:Float, s:Float, v:Float);
     RGB24(value:Int);
+    Mono(value:Int);
 }
