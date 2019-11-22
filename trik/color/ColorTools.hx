@@ -1,10 +1,24 @@
 package trik.color;
 
 import trik.color.Color;
+import trik.color.ColorType in CT;
 import trik.geometry.Point3D;
+import Math.*;
 
 
 class ColorTools {
+    static var literalRgbMatch:Map<Color, Color> = [
+        Red     => RGB(255, 0, 0),     DarkRed     => RGB(127, 0, 0),
+        Green   => RGB(0, 255, 0),     DarkGreen   => RGB(0, 127, 0),
+        Blue    => RGB(0, 0, 255),     DarkBlue    => RGB(0, 0, 127),
+        Cyan    => RGB(0, 255, 255),   DarkCyan    => RGB(0, 127, 127),
+        Magenta => RGB(255, 0, 255),   DarkMagenta => RGB(127, 0, 127),
+        Yellow  => RGB(255, 255, 0),   DarkYellow  => RGB(127, 127, 0),
+        Grey    => RGB(127, 127, 127), DarkGrey    => RGB(191, 191, 191), LightGrey => RGB(65, 65, 65),
+        Black   => RGB(0, 0, 0),
+        White   => RGB(255, 255, 255) 
+    ];
+
     public static function colorToNativeText(color:Color):String {
         var colorMatch:Map<Color, String> = [
             Red     => "red",     DarkRed => "darkRed",
@@ -22,37 +36,118 @@ class ColorTools {
         return colorMatch[color];
     }
 
-    public static function colorToRgb(color:Color):Color {
-        var colorMatch:Map<Color, Color> = [
-            Red     => RGB(255, 0, 0),     DarkRed     => RGB(127, 0, 0),
-            Green   => RGB(0, 255, 0),     DarkGreen   => RGB(0, 127, 0),
-            Blue    => RGB(0, 0, 255),     DarkBlue    => RGB(0, 0, 127),
-            Cyan    => RGB(0, 255, 255),   DarkCyan    => RGB(0, 127, 127),
-            Magenta => RGB(255, 0, 255),   DarkMagenta => RGB(127, 0, 127),
-            Yellow  => RGB(255, 255, 0),   DarkYellow  => RGB(127, 127, 0),
-            Grey    => RGB(127, 127, 127), DarkGrey    => RGB(191, 191, 191), LightGrey => RGB(65, 65, 65),
-            Black   => RGB(0, 0, 0),
-            White   => RGB(255, 255, 255) 
-        ];
-        
+    static function colorToRgb(color:Color):Color {
         switch (color) {
             case RGB(_, _, _):
                 return color;
             case RGB24(val):
-                return return RGB(
+                return RGB(
                     (val & 16711680) >> 16, 
                     (val & 65280) >> 8, 
                     val & 255
                 );
+            case Mono(val):
+                return RGB(val, val, val);
+            case HSV(h, s, v):
+                var fH = max(0, min(360, h))/60;
+                var fS = max(0, min(1, s));
+                var fV = max(0, min(1, s));
+
+                if (fS == 0)
+                    return RGB(
+                        round(v * 255),
+                        round(v * 255),
+                        round(v * 255)
+                    );
+                
+                var i = floor(h);
+                var f = h - i;
+                var p = v * (1 - s);
+                var q = v * (1 - s * f);
+                var t = v * (1 - s * (1 - f));
+                var res:Array<Float>;
+                
+                switch(i) {
+                    case 0:
+                        res = [v, t, p];
+                    case 1:
+                        res = [q, v, p];
+                    case 2:
+                        res = [p, v, t];
+                    case 3:
+                        res = [p, q, v];
+                    case 4:
+                        res = [t, p, v];
+                    case _:
+                        res = [v, p, q];
+                }
+                
+                return RGB(
+                    round(res[0] * 255), 
+                    round(res[1] * 255), 
+                    round(res[2] * 255)
+                );
             case _:
-                if (!colorMatch.exists(color))
+                if (!literalRgbMatch.exists(color))
                     throw "wrong color format was passed to the function";
                 else 
-                    return colorMatch[color];
-        }        
+                    return literalRgbMatch[color];
+        }
     }
 
-    public static function colorToPoint3D(color):Point3D {
+    static function rgbToHsv(color:Color):Color {
+        var fR:Float, fG:Float, fB:Float;
+
+        switch (color) {
+            case RGB(r, g, b):
+                fR = r/255;
+                fG = g/255;
+                fB = b/255;
+            case _:
+                throw "value is supposed to be of RGB constructor";
+        }
+
+        var minRGB = min(fR, min(fG, fB));
+        var maxRGB = max(fR, max(fG, fB));
+
+        if (minRGB == maxRGB)
+            return HSV(0, 0, minRGB);
+
+        var d = (fR == minRGB) ? fG - fB : ((fB == minRGB) ? fR - fG : fB - fR);
+        var h = (fR == minRGB) ? 3 : ((fB == minRGB) ? 1 : 5);
+
+        return HSV(
+            60*(h - d/(maxRGB - minRGB)),
+            (maxRGB - minRGB)/maxRGB,
+            maxRGB
+        );
+    }
+
+    static function rgbToMono(color:Color):Color {
+        switch (color) {
+            case RGB(r, g, b):
+                return Mono(floor((r + g + b) / 3));
+            case _:
+                throw "value is supposed to be of RGB constructor";
+        }
+    }
+
+    public static function convert(color:Color, targetColorType:ColorType):Color {
+        var colorRgb = colorToRgb(color);
+
+        switch (targetColorType) {
+            case CT.RGB:
+                return colorRgb;
+            case CT.HSV:
+                return rgbToHsv(colorRgb);
+            case CT.Mono:
+                return rgbToMono(colorRgb);
+            case _:
+                throw "cant convert color to this ColorType";
+        }
+    } 
+
+    public static function colorToPoint3D(color:Color):Point3D {
         switch (color) {
             case RGB(r, g, b):
                 return new Point3D(r, g, b);
