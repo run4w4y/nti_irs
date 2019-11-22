@@ -1,4 +1,4 @@
-package trik.color;
+package trik.tools;
 
 import trik.color.Color;
 import trik.color.ColorType in CT;
@@ -132,7 +132,7 @@ class ColorTools {
         }
     }
 
-    public static function convert(color:Color, targetColorType:ColorType):Color {
+    public static function convert(color:Color, targetColorType:CT):Color {
         var colorRgb = colorToRgb(color);
 
         switch (targetColorType) {
@@ -158,5 +158,26 @@ class ColorTools {
 
     public static function colorDist(color1:Color, color2:Color):Float {
         return colorToPoint3D(color1).distTo(colorToPoint3D(color2));
+    }
+
+    public static function getValue(color:Color):Int {
+        switch (color) {
+            case Mono(value):
+                return value;
+            case RGB24(value):
+                return value;
+            case _:
+                throw "cant extract value from color of constructors other than Mono and RGB24";
+        }
+    }
+
+    public static function getColorType(color:Color):CT {
+        switch (color) {
+            case Mono(_):      return CT.Mono;
+            case RGB24(_):     return CT.RGB24;
+            case RGB(_, _, _): return CT.RGB;
+            case HSV(_, _, _): return CT.HSV;
+            case _:            return CT.Literal;
+        }
     }
 }
