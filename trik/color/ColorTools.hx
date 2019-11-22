@@ -1,10 +1,11 @@
 package trik.color;
 
 import trik.color.Color;
+import trik.geometry.Point3D;
 
 
 class ColorTools {
-    public function colorToNativeText(color:Color):String {
+    public static function colorToNativeText(color:Color):String {
         var colorMatch:Map<Color, String> = [
             Red     => "red",     DarkRed => "darkRed",
             Green   => "green",   DarkGreen => "darkGreen",
@@ -21,20 +22,7 @@ class ColorTools {
         return colorMatch[color];
     }
 
-    public function rgb24ToRgb(rgb24_value:Color):Color {
-        switch (rgb24_value) {
-            case RGB24(val):
-                return return RGB(
-                    (val & 16711680) >> 16, 
-                    (val & 65280) >> 8, 
-                    val & 255
-                );
-            case _:
-                throw "wrong color format was passed, expected to get RGB24 value";
-        }
-    }
-
-    public function colorToRgb(color:Color):Color {
+    public static function colorToRgb(color:Color):Color {
         var colorMatch:Map<Color, Color> = [
             Red     => RGB(255, 0, 0),     DarkRed     => RGB(127, 0, 0),
             Green   => RGB(0, 255, 0),     DarkGreen   => RGB(0, 127, 0),
@@ -46,9 +34,34 @@ class ColorTools {
             Black   => RGB(0, 0, 0),
             White   => RGB(255, 255, 255) 
         ];
+        
+        switch (color) {
+            case RGB(_, _, _):
+                return color;
+            case RGB24(val):
+                return return RGB(
+                    (val & 16711680) >> 16, 
+                    (val & 65280) >> 8, 
+                    val & 255
+                );
+            case _:
+                if (!colorMatch.exists(color))
+                    throw "wrong color format was passed to the function";
+                else 
+                    return colorMatch[color];
+        }        
+    }
 
-        if (!colorMatch.exists(color))
-            throw "wrong color format was passed to the function";
-        return colorMatch[color];
+    public static function colorToPoint3D(color):Point3D {
+        switch (color) {
+            case RGB(r, g, b):
+                return new Point3D(r, g, b);
+            case _:
+                return colorToPoint3D(colorToRgb(color));
+        }
+    }
+
+    public static function colorDist(color1:Color, color2:Color):Float {
+        return colorToPoint3D(color1).distTo(colorToPoint3D(color2));
     }
 }

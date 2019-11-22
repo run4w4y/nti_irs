@@ -3,6 +3,7 @@ import trik.Trik.*;
 import trik.color.Color;
 import trik.color.ColorTools.*;
 import trik.robot.keys.Key;
+import de.polygonal.ds.Graph;
 
 using Lambda;
 
