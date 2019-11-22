@@ -13,6 +13,10 @@ import trik.robot.motor.Motor;
 import trik.robot.objectSensor.ObjectSensor;
 import trik.robot.sensor.Sensor;
 
+import trik.color.Color;
+import trik.image.RawImage;
+import trik.image.Image;
+
 
 class Brick {
     public var accelerometer :Accelerometer;
@@ -55,8 +59,12 @@ class Brick {
         return untyped __js__("brick.objectSensor({0})", port);
     }
 
-    public function getPhoto():Array<Int> {
-        return untyped __js__("getPhoto()");
+    function getRawPhoto():RawImage {
+        return new RawImage(untyped __js__("getPhoto()"));
+    }
+
+    public function getPhoto():Image {
+        return getRawPhoto().toImage();
     }
 
     // TODO: complete

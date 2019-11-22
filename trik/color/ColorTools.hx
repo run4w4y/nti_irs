@@ -22,19 +22,6 @@ class ColorTools {
         return colorMatch[color];
     }
 
-    public static function rgb24ToRgb(rgb24_value:Color):Color {
-        switch (rgb24_value) {
-            case RGB24(val):
-                return return RGB(
-                    (val & 16711680) >> 16, 
-                    (val & 65280) >> 8, 
-                    val & 255
-                );
-            case _:
-                throw "wrong color format was passed, expected to get RGB24 value";
-        }
-    }
-
     public static function colorToRgb(color:Color):Color {
         var colorMatch:Map<Color, Color> = [
             Red     => RGB(255, 0, 0),     DarkRed     => RGB(127, 0, 0),
@@ -47,18 +34,28 @@ class ColorTools {
             Black   => RGB(0, 0, 0),
             White   => RGB(255, 255, 255) 
         ];
-
-        if (!colorMatch.exists(color))
-            throw "wrong color format was passed to the function";
-        return colorMatch[color];
+        
+        switch (color) {
+            case RGB(_, _, _):
+                return color;
+            case RGB24(val):
+                return return RGB(
+                    (val & 16711680) >> 16, 
+                    (val & 65280) >> 8, 
+                    val & 255
+                );
+            case _:
+                if (!colorMatch.exists(color))
+                    throw "wrong color format was passed to the function";
+                else 
+                    return colorMatch[color];
+        }        
     }
 
     public static function colorToPoint3D(color):Point3D {
         switch (color) {
             case RGB(r, g, b):
                 return new Point3D(r, g, b);
-            case RGB24(_):
-                return colorToPoint3D(rgb24ToRgb(color));
             case _:
                 return colorToPoint3D(colorToRgb(color));
         }
