@@ -6,6 +6,7 @@ import trik.color.ColorType in CT;
 import Math.*;
 
 using trik.tools.ColorTools;
+using Lambda;
 
 
 class ImageTools {
@@ -39,5 +40,11 @@ class ImageTools {
                         White
             ]
         ]);
+    }
+
+    public static function crop(image:Image, sides:{left:Int, top:Int, right:Int, bottom:Int}):Image {
+        return new Image(image.slice(sides.top, image.length - sides.bottom).map(
+            function(i) return i.slice(sides.left, i.length - sides.right)
+        ));
     }
 }
