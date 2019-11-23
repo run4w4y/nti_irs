@@ -5,6 +5,8 @@ import trik.color.ColorType in CT;
 import trik.geometry.Point3D;
 import Math.*;
 
+using Lambda;
+
 
 class ColorTools {
     static var literalRgbMatch:Map<Color, Color> = [
@@ -181,7 +183,20 @@ class ColorTools {
         }
     }
 
-    public static function compare(color1:Color, color2:Color):Bool {
-        return convert(color1, CT.RGB) == convert(color2, CT.RGB);
+    public static function compare(color1:Color, color2:Color, ?threshold:Int=0):Bool {
+        var color1Rgb = convert(color1, CT.RGB);
+        var color2Rgb = convert(color2, CT.RGB);
+        
+        switch (color1) {
+            case RGB(r1, b1, g1):
+                switch (color2) {
+                    case RGB(r2, b2, g2):
+                        return abs(r1 - r2) <= threshold && abs(g1 - g2) <= threshold && abs(b1 - b2) <= threshold;
+                    case _:
+                        return false;
+                }
+            case _:
+                return false;
+        }
     }
 }
