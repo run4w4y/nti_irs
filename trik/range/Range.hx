@@ -16,10 +16,10 @@ abstract Range(Array<Int>) {
         
         this = [start];
         if (start < end)
-            while (start < end)
+            while (start + step < end)
                 this.push(start += step);
         else
-            while (start > end)
+            while (start + step > end)
                 this.push(start += step);
     }
 }
