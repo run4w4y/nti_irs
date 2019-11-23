@@ -133,4 +133,12 @@ class ImageTools {
 
         return res;
     }
+
+    public static function inverse(image:Image) {
+        return new Image([
+            for (i in image) [
+                for (j in i) if (j == Black) White else Black
+            ]
+        ]);
+    }
 }
