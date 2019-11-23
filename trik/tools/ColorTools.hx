@@ -3,6 +3,7 @@ package trik.tools;
 import trik.color.Color;
 import trik.color.ColorType in CT;
 import trik.geometry.Point3D;
+import trik.ordering.Ordering;
 import Math.*;
 
 using Lambda;
@@ -183,20 +184,32 @@ class ColorTools {
         }
     }
 
-    public static function compare(color1:Color, color2:Color, ?threshold:Int=0):Bool {
-        var color1Rgb = convert(color1, CT.RGB);
-        var color2Rgb = convert(color2, CT.RGB);
-        
-        switch (color1) {
-            case RGB(r1, b1, g1):
-                switch (color2) {
-                    case RGB(r2, b2, g2):
-                        return abs(r1 - r2) <= threshold && abs(g1 - g2) <= threshold && abs(b1 - b2) <= threshold;
-                    case _:
-                        return false;
-                }
+    public static function compareMono(color1:Color, color2:Color, ?threshold:Int=0):Ordering {
+        var color1Mono = convert(color1, CT.Mono);
+        var color2Mono = convert(color2, CT.Mono);
+
+        if (getValue(color1Mono) < getValue(color2Mono))
+            return LT;
+        if (getValue(color1Mono) > getValue(color2Mono))
+            return GT;
+        return EQ;
+    }
+
+    public static function getRgb(color:Color):{r:Int, g:Int, b:Int} {
+        switch (color) {
+            case RGB(r, g, b):
+                return {r: r, g: g, b: b};
             case _:
-                return false;
+                throw "cant get r, g and b values from a color of not RGB constructor";
         }
+    }
+
+    public static function compare(color1:Color, color2:Color, ?threshold:Int=0):Bool {
+        var color1Rgb = getRgb(convert(color1, CT.RGB));
+        var color2Rgb = getRgb(convert(color2, CT.RGB));
+
+        return abs(color1Rgb.r - color2Rgb.r) <= threshold && 
+            abs(color1Rgb.g - color2Rgb.g) <= threshold && 
+            abs(color1Rgb.b - color2Rgb.b) <= threshold;
     }
 }
