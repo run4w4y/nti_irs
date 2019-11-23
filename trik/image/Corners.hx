@@ -4,8 +4,8 @@ import trik.image.Pixel;
 
 
 typedef Corners = {
-    leftTop:Pixel,
-    rightTop:Pixel,
-    rightBottom:Pixel,
-    leftBottom:Pixel
+    leftTop:Null<Pixel>,
+    rightTop:Null<Pixel>,
+    rightBottom:Null<Pixel>,
+    leftBottom:Null<Pixel>
 }
