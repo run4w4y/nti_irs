@@ -1,8 +1,12 @@
 package trik.tools;
 
 import trik.image.Image;
+import trik.image.Pixel;
+import trik.image.Corners;
+import trik.image.Sides;
 import trik.color.Color;
 import trik.color.ColorType in CT;
+import trik.range.Range;
 import Math.*;
 
 using trik.tools.ColorTools;
@@ -42,9 +46,91 @@ class ImageTools {
         ]);
     }
 
-    public static function crop(image:Image, sides:{left:Int, top:Int, right:Int, bottom:Int}):Image {
+    public static function crop(image:Image, sides:Sides):Image {
         return new Image(image.slice(sides.top, image.length - sides.bottom).map(
             function(i) return i.slice(sides.left, i.length - sides.right)
         ));
+    }
+
+    public static function findCorners(image:Image, ?color:Color):Corners {
+        color = if (color != null) color else Black; 
+
+        var res:Corners = {
+            leftTop: null,
+            rightTop: null,
+            rightBottom: null,
+            leftBottom: null
+        };
+        var width = image.length, height = image[0].length;
+
+        // left top
+        for (k in 0...width) {
+            var i = 0, j = k;
+
+            while (i < height && j >= 0) {
+                if (image[i][j].compare(color)) {
+                    res.leftTop = {x: i, y: j};
+                    break;
+                }
+
+                ++i;
+                --j;
+            }
+
+            if (res.leftTop != null) break;
+        }
+
+        // right top
+        for (k in new Range(width - 1, -1)) {
+            var i = 0, j = k;
+
+            while (i < height && j < width) {
+                if (image[i][j].compare(color)) {
+                    res.rightTop = {x: i, y: j};
+                    break;
+                }
+
+                ++i;
+                ++j;
+            }
+
+            if (res.rightTop != null) break;
+        }
+
+        // right bottom
+        for (k in new Range(width - 1, -1)) {
+            var i = height - 1, j = k;
+
+            while (i >= 0 && j < width) {
+                if (image[i][j].compare(color)) {
+                    res.rightBottom = {x: i, y: j};
+                    break;
+                }
+
+                --i;
+                ++j;
+            }
+
+            if (res.rightBottom != null) break;
+        }
+
+        // left bottom
+        for (k in 0...width) {
+            var i = height - 1, j = k;
+
+            while (i >= 0 && j >= 0) {
+                if (image[i][j].compare(color)) {
+                    res.leftBottom = {x: i, y: j};
+                    break;
+                }
+
+                --i;
+                --j;
+            }
+
+            if (res.leftBottom != null) break;
+        }
+
+        return res;
     }
 }
