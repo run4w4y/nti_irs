@@ -5,8 +5,9 @@ import trik.image.Pixel;
 import trik.image.Corners;
 import trik.image.Sides;
 import trik.color.Color;
-import trik.color.ColorType in CT;
+import trik.color.ColorType;
 import trik.range.Range;
+import trik.ordering.Ordering;
 import Math.*;
 
 using trik.tools.ColorTools;
@@ -18,7 +19,7 @@ class ImageTools {
         return new Image([
             for (i in 0...image.length) [
                 for (j in 0...image[0].length) 
-                    image[i][j].convert(CT.Mono)
+                    image[i][j].convert(MonoType)
             ]
         ]);
     }
@@ -27,7 +28,7 @@ class ImageTools {
         var darkestColor:Color = Mono(255);
         for (i in image)
             for (j in i)
-                if (j.convert(CT.Mono).getValue() < darkestColor.convert(CT.Mono).getValue())
+                if (j.convert(MonoType).getValue() < darkestColor.convert(MonoType).getValue())
                     darkestColor = j;
         return darkestColor.convert(image[0][0].getColorType());
     }
@@ -140,5 +141,33 @@ class ImageTools {
                 for (j in i) if (j == Black) White else Black
             ]
         ]);
+    }
+
+    public static function erode(image:Image, ?repeat:Int=1) {
+        if (repeat < 0)
+            throw "repeat value cant be lower than 0";
+        if (repeat == 0) return image;
+
+        var width = image.length, height = image[0].length;
+        var res:Array<Array<Color>> = [];
+
+        for (k in 0...repeat) {
+            for (i in 0...width) {
+                var newLine:Array<Color> = [];
+                for (j in 0...height) {
+                    var localMax = Mono(0);
+                    for (ai in (i-1)...(i+2))
+                        for (aj in (j-1)...(j+2))
+                            if (ai >= 0 && aj >= 0 && ai < height && aj < width && image[ai][aj].compareMono(localMax) == GT) 
+                                localMax = image[ai][aj];
+                    newLine.push(localMax);
+                }
+                res.push(newLine);
+            }
+        }
+
+        if (repeat > 0)
+            return erode(new Image(res), repeat - 1);
+        return new Image(res);
     }
 }
