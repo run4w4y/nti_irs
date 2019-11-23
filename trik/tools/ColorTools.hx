@@ -1,7 +1,7 @@
 package trik.tools;
 
 import trik.color.Color;
-import trik.color.ColorType in CT;
+import trik.color.ColorType;
 import trik.geometry.Point3D;
 import trik.ordering.Ordering;
 import Math.*;
@@ -139,11 +139,11 @@ class ColorTools {
         var colorRgb = colorToRgb(color);
 
         switch (targetColorType) {
-            case CT.RGB:
+            case RGBType:
                 return colorRgb;
-            case CT.HSV:
+            case HSVType:
                 return rgbToHsv(colorRgb);
-            case CT.Mono:
+            case MonoType:
                 return rgbToMono(colorRgb);
             case _:
                 throw "cant convert color to this ColorType";
@@ -176,17 +176,17 @@ class ColorTools {
 
     public static function getColorType(color:Color):CT {
         switch (color) {
-            case Mono(_):      return CT.Mono;
-            case RGB24(_):     return CT.RGB24;
-            case RGB(_, _, _): return CT.RGB;
-            case HSV(_, _, _): return CT.HSV;
-            case _:            return CT.Literal;
+            case Mono(_):      return MonoType;
+            case RGB24(_):     return RGB24Type;
+            case RGB(_, _, _): return RGBType;
+            case HSV(_, _, _): return HSVType;
+            case _:            return LiteralType;
         }
     }
 
     public static function compareMono(color1:Color, color2:Color, ?threshold:Int=0):Ordering {
-        var color1Mono = convert(color1, CT.Mono);
-        var color2Mono = convert(color2, CT.Mono);
+        var color1Mono = convert(color1, MonoType);
+        var color2Mono = convert(color2, MonoType);
 
         if (getValue(color1Mono) < getValue(color2Mono))
             return LT;
@@ -205,8 +205,8 @@ class ColorTools {
     }
 
     public static function compare(color1:Color, color2:Color, ?threshold:Int=0):Bool {
-        var color1Rgb = getRgb(convert(color1, CT.RGB));
-        var color2Rgb = getRgb(convert(color2, CT.RGB));
+        var color1Rgb = getRgb(convert(color1, RGBType));
+        var color2Rgb = getRgb(convert(color2, RGBType));
 
         return abs(color1Rgb.r - color2Rgb.r) <= threshold && 
             abs(color1Rgb.g - color2Rgb.g) <= threshold && 

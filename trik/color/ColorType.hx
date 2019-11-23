@@ -1,5 +1,5 @@
 package trik.color;
 
 enum ColorType {
-    RGB; HSV; Literal; Mono; RGB24;
+    RGBType; HSVType; LiteralType; MonoType; RGB24Type;
 }
