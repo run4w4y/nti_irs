@@ -101,22 +101,17 @@ class Labyrinth {
 	function path(nodeFrom:Node, nodeTo:Node): Array<Movement> {
 		var currentPath = new Array<Movement>();
 		while(previousTurn[nodeFrom][nodeTo] != null) {
-			// trace(nodeTo);
 			var currentTurn = previousTurn[nodeFrom][nodeTo];
 			currentPath.push(currentTurn);
 
 			switch (currentTurn) {
-				case Go:{
+				case Go: 
 					nodeTo = nodeTo.goBack();
-				}
-				case RotateLeft:{
+				case RotateLeft:
 					nodeTo = nodeTo.turnRight();
-				}
-				case RotateRight:{
+				case RotateRight:
 					nodeTo = nodeTo.turnLeft();
-				}
 			}
-			// trace(nodeTo);
 		}
 		currentPath.reverse();
 		return currentPath;
