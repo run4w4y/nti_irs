@@ -180,4 +180,8 @@ class ColorTools {
             case _:            return CT.Literal;
         }
     }
+
+    public static function compare(color1:Color, color2:Color):Bool {
+        return convert(color1, CT.RGB) == convert(color2, CT.RGB);
+    }
 }
