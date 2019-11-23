@@ -135,7 +135,7 @@ class ColorTools {
         }
     }
 
-    public static function convert(color:Color, targetColorType:CT):Color {
+    public static function convert(color:Color, targetColorType:ColorType):Color {
         var colorRgb = colorToRgb(color);
 
         switch (targetColorType) {
@@ -174,7 +174,7 @@ class ColorTools {
         }
     }
 
-    public static function getColorType(color:Color):CT {
+    public static function getColorType(color:Color):ColorType {
         switch (color) {
             case Mono(_):      return MonoType;
             case RGB24(_):     return RGB24Type;
