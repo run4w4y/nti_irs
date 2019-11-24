@@ -135,7 +135,7 @@ class ImageTools {
         return res;
     }
 
-    public static function inverse(image:Image) {
+    public static function inverse(image:Image):Image {
         return new Image([
             for (i in image) [
                 for (j in i) if (j == Black) White else Black
@@ -143,7 +143,7 @@ class ImageTools {
         ]);
     }
 
-    public static function erode(image:Image, ?repeat:Int=1) {
+    public static function erode(image:Image, ?repeat:Int=1):Image {
         if (repeat < 0)
             throw "repeat value cant be lower than 0";
         if (repeat == 0) return image;
@@ -156,18 +156,42 @@ class ImageTools {
                 var newLine:Array<Color> = [];
                 for (j in 0...height) {
                     var localMax = Mono(0);
-                    for (ai in (i-1)...(i+2))
-                        for (aj in (j-1)...(j+2))
-                            if (ai >= 0 && aj >= 0 && ai < height && aj < width && image[ai][aj].compareMono(localMax) == GT) 
-                                localMax = image[ai][aj];
+                    for (ii in (i-1)...(i+2))
+                        for (jj in (j-1)...(j+2))
+                            if (ii >= 0 && jj >= 0 && ii < height && jj < width && 
+                            image[ii][jj].compareMono(localMax) == GT) 
+                                localMax = image[ii][jj];
                     newLine.push(localMax);
                 }
                 res.push(newLine);
             }
         }
 
-        if (repeat > 0)
-            return erode(new Image(res), repeat - 1);
-        return new Image(res);
+        return erode(new Image(res), repeat - 1);
+    }
+
+    public static function downscale(image:Image, ?squareSize:Int=2, ?repeat:Int=1):Image {
+        if (repeat < 0)
+            throw "repeat value cant be less than 0";
+        if (squareSize < 2)
+            throw "squareSize value cant be less than 2";
+        if (repeat == 0) return image;
+
+        var width = image.length, height = image[0].length;
+        var res:Array<Array<Color>> = [];
+
+        for (i in new Range(0, height, squareSize)) {
+            var newLine:Array<Color> = [];
+            for (j in new Range(0, width, squareSize)) {
+                var blackCount:Int = 0;
+                for (ii in i...(i + squareSize)) 
+                    for (jj in j...(j + squareSize)) 
+                        if (image[ii][jj] == Black) ++blackCount;
+                newLine.push(if (blackCount >= pow(squareSize, 2)/2) Black else White);
+            }
+            res.push(newLine);
+        }
+
+        return downscale(new Image(res), squareSize, repeat - 1);
     }
 }
