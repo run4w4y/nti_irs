@@ -6,6 +6,7 @@ nix-shell --pure
 ### Installing dependencies
 ```bash
 haxelib install polygonal-ds 2.0.1
+haxelib install json2object
 ```
 
 Make sure you have haxelib configured
