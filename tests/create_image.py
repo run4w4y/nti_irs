@@ -7,7 +7,7 @@ pixels = []
 for i in range(0, height):
     tmp = []
     for j in range(0, width):
-        tmp.append(list(im.getpixel((i, j))))
+        tmp.append(list(im.getpixel((j, i))))
     pixels.append(tmp)
 
 with open('image.json', 'w') as f:
