@@ -23,13 +23,14 @@ class Main {
             )
         );
         var image = new Image(pixels);
-        var writer = new JsonWriter<Array<Array<Int>>>();
-        sys.io.File.write("tests/image_res.json").writeString(
-            writer.write(image.crop({left: 20, right:20, top:20, bottom:0}).map(
-                function(array:Array<Color>) return array.map(
-                    function(color:Color) return color.convert(MonoType).getValue()
-                )
-            ))
-        );
+        // var writer = new JsonWriter<Array<Array<Int>>>();
+        // sys.io.File.write("tests/image_res.json").writeString(
+        //     writer.write(image.toBinary(100).map(
+        //         function(array:Array<Color>) return array.map(
+        //             function(color:Color) return color.convert(MonoType).getValue()
+        //         )
+        //     ))
+        // );
+        trace(image.toBinary(100).findCorners());
     }
 }
