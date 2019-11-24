@@ -15,8 +15,13 @@ haxelib setup ./lib
 ```
 
 ### Building the code
+Compile the code to js
 ```bash
 haxe build.hxml
+```
+or run it locally for testing
+```bash
+haxe test.hxml
 ```
 
 ### Run linting server
