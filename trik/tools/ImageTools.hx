@@ -17,9 +17,9 @@ using Lambda;
 class ImageTools {
     public static function toGreyscale(image:Image):Image {
         return new Image([
-            for (i in 0...image.length) [
-                for (j in 0...image[0].length) 
-                    image[i][j].convert(MonoType)
+            for (i in image) [
+                for (j in i) 
+                    j.convert(MonoType)
             ]
         ]);
     }
@@ -34,12 +34,11 @@ class ImageTools {
     }
 
     public static function toBinary(image:Image, ?threshold:Int=20):Image {
-        var greyImage:Image = toGreyscale(image);
-        var darkestColor:Color = findDarkestColor(greyImage);
+        var darkestColor:Color = findDarkestColor(image);
         return new Image([
-            for (i in greyImage) [
+            for (i in image) [
                 for (j in i)
-                    if (abs(j.getValue() - darkestColor.getValue()) < threshold) 
+                    if (abs(j.convert(MonoType).getValue() - darkestColor.convert(MonoType).getValue()) <= threshold) 
                         Black 
                     else 
                         White

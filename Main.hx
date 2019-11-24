@@ -4,6 +4,7 @@
 // import trik.color.ColorTools.*;
 // import trik.robot.keys.Key;
 import trik.color.Color;
+import trik.color.ColorType;
 import trik.image.Image;
 import json2object.JsonParser;
 import json2object.JsonWriter;
@@ -24,9 +25,9 @@ class Main {
         var image = new Image(pixels);
         var writer = new JsonWriter<Array<Array<Int>>>();
         sys.io.File.write("tests/image_res.json").writeString(
-            writer.write(image.toGreyscale().map(
+            writer.write(image.toBinary(50).map(
                 function(array:Array<Color>) return array.map(
-                    function(color:Color) return color.getValue()
+                    function(color:Color) return color.convert(MonoType).getValue()
                 )
             ))
         );
