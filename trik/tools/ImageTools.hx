@@ -150,20 +150,18 @@ class ImageTools {
         var width = image.length, height = image[0].length;
         var res:Array<Array<Color>> = [];
 
-        for (k in 0...repeat) {
-            for (i in 0...width) {
-                var newLine:Array<Color> = [];
-                for (j in 0...height) {
-                    var localMax = Mono(0);
-                    for (ii in (i-1)...(i+2))
-                        for (jj in (j-1)...(j+2))
-                            if (ii >= 0 && jj >= 0 && ii < height && jj < width && 
-                            image[ii][jj].compareMono(localMax) == GT) 
-                                localMax = image[ii][jj];
-                    newLine.push(localMax);
-                }
-                res.push(newLine);
+        for (i in 0...width) {
+            var newLine:Array<Color> = [];
+            for (j in 0...height) {
+                var localMax = Mono(0);
+                for (ii in (i-1)...(i+2))
+                    for (jj in (j-1)...(j+2))
+                        if (ii >= 0 && jj >= 0 && ii < height && jj < width && 
+                        image[ii][jj].compareMono(localMax) == GT) 
+                            localMax = image[ii][jj];
+                newLine.push(localMax);
             }
+            res.push(newLine);
         }
 
         return erode(new Image(res), repeat - 1);

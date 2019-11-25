@@ -25,7 +25,7 @@ class Main {
         var image = new Image(pixels);
         var writer = new JsonWriter<Array<Array<Int>>>();
         sys.io.File.write("tests/image_res.json").writeString(
-            writer.write(image.toBinary(100).inverse().map(
+            writer.write(image.toBinary(100).erode(2).map(
                 function(array:Array<Color>) return array.map(
                     function(color:Color) return color.convert(MonoType).getValue()
                 )
