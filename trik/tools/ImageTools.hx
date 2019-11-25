@@ -46,10 +46,19 @@ class ImageTools {
         ]);
     }
 
-    public static function crop(image:Image, sides:Sides):Image {
+    public static function cropSides(image:Image, sides:Sides):Image {
         return new Image(image.slice(sides.top, image.length - sides.bottom).map(
             function(i) return i.slice(sides.left, i.length - sides.right)
         ));
+    }
+
+    public static function cropCorners(image:Image, corners:Corners):Image {
+        return cropSides(image, {
+            top:    round(min(corners.leftTop.y, corners.rightTop.y)),
+            left:   round(min(corners.leftTop.x, corners.leftBottom.x)),
+            right:  image.length    - round(max(corners.rightTop.x,   corners.rightBottom.x)),
+            bottom: image[0].length - round(max(corners.leftBottom.y, corners.rightBottom.y))
+        });
     }
 
     public static function findCorners(image:Image, ?color:Color):Corners {
