@@ -52,25 +52,24 @@ class ImageTools {
         ));
     }
 
-    public static function cropCorners(image:Image, corners:Corners):Image {
-        return cropSides(image, {
+    public static function cornersToSides(image:Image, corners:Corners):Sides {
+        return {
             top:    round(min(corners.leftTop.y, corners.rightTop.y)),
             left:   round(min(corners.leftTop.x, corners.leftBottom.x)),
-            right:  image.length    - round(max(corners.rightTop.x,   corners.rightBottom.x)),
-            bottom: image[0].length - round(max(corners.leftBottom.y, corners.rightBottom.y))
-        });
+            right:  image[0].length    - round(max(corners.rightTop.x,   corners.rightBottom.x)),
+            bottom: image.length - round(max(corners.leftBottom.y, corners.rightBottom.y))
+        };
+    }
+
+    public static function cropCorners(image:Image, corners:Corners):Image {
+        return cropSides(image, cornersToSides(image, corners));
     }
 
     public static function findCorners(image:Image, ?color:Color):Corners {
         color = if (color != null) color else Black; 
 
-        var res:Corners = {
-            leftTop: null,
-            rightTop: null,
-            rightBottom: null,
-            leftBottom: null
-        };
-        var width = image.length, height = image[0].length;
+        var res:Corners = new Corners();
+        var width = image[0].length, height = image.length;
 
         // left top
         for (k in 0...width) {
@@ -78,7 +77,7 @@ class ImageTools {
 
             while (i < height && j >= 0) {
                 if (image[i][j].compare(color)) {
-                    res.leftTop = {x: i, y: j};
+                    res.leftTop = new Pixel(j, i, width, height);
                     break;
                 }
 
@@ -95,7 +94,7 @@ class ImageTools {
 
             while (i < height && j < width) {
                 if (image[i][j].compare(color)) {
-                    res.rightTop = {x: i, y: j};
+                    res.rightTop = new Pixel(j, i, width, height);
                     break;
                 }
 
@@ -112,7 +111,7 @@ class ImageTools {
 
             while (i >= 0 && j < width) {
                 if (image[i][j].compare(color)) {
-                    res.rightBottom = {x: i, y: j};
+                    res.rightBottom = new Pixel(j, i, width, height);
                     break;
                 }
 
@@ -129,7 +128,7 @@ class ImageTools {
 
             while (i >= 0 && j >= 0) {
                 if (image[i][j].compare(color)) {
-                    res.leftBottom = {x: i, y: j};
+                    res.leftBottom = new Pixel(j, i, width, height);
                     break;
                 }
 
@@ -156,7 +155,7 @@ class ImageTools {
             throw "repeat value cant be lower than 0";
         if (repeat == 0) return image;
 
-        var width = image.length, height = image[0].length;
+        var width = image[0].length, height = image.length;
         var res:Array<Array<Color>> = [];
 
         for (i in 0...width) {
@@ -183,7 +182,7 @@ class ImageTools {
             throw "squareSize value cant be less than 2";
         if (repeat == 0) return image;
 
-        var width = image.length, height = image[0].length;
+        var width = image[0].length, height = image.length;
         var res:Array<Array<Color>> = [];
 
         for (i in new Range(0, height, squareSize)) {
