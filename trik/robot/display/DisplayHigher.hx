@@ -4,8 +4,7 @@ import trik.robot.display.Display;
 import trik.robot.display.Pixel;
 import trik.robot.display.Rectangle;
 import trik.robot.display.Line;
-import trik.color.Color;
-import trik.color.ColorTools.*;
+import trik.color.LiteralColor;
 
 
 abstract DisplayHigher(Display) {
@@ -37,17 +36,11 @@ abstract DisplayHigher(Display) {
         this.drawRect(rect.points[0].x, rect.points[0].y, rect.length, rect.height);
     }
 
-    public function setBackground(color:Color):Void {
-        try 
-            this.setBackground(colorToNativeText(color))
-        catch (err:String)
-            throw "unacceptable color format for the setBackground function";
+    public function setBackground(color:LiteralColor):Void {
+        this.setBackground(color.name);
     }
 
-    public function setPainterColor(color:Color):Void {
-        try 
-            this.setPainterColor(colorToNativeText(color))
-        catch (err:String)
-            throw "unacceptable color format for the setPainterColor function";
+    public function setPainterColor(color:LiteralColor):Void {
+        this.setPainterColor(color.name);
     }
 }
