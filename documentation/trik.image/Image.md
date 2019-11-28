@@ -23,5 +23,5 @@ Returns a row of pixels by the given `index`. You also can use `[]` operator ins
 ### set(index, value): Void
 Sets the `value` row on the given `index`. You also can use `[]` operator instead of this method.
 #### Arguments:
-- `index: Int`. Index of the row that needs to be changed;
-- `value: Array<C>`
+- `index: Int`. Index of the row that needs to be changed.
+- `value: Array<C>`. Value that needs to be set.
