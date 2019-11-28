@@ -5,7 +5,12 @@ import trik.image.Pixel;
 import trik.image.Corners;
 import trik.image.Sides;
 import trik.color.Color;
-import trik.color.ColorType;
+import trik.color.RGBColor;
+import trik.color.HSVColor;
+import trik.color.MonoColor;
+import trik.color.LiteralColors.*;
+import trik.color.BinaryColor;
+import trik.tools.ColorTools.*;
 import trik.range.Range;
 import trik.ordering.Ordering;
 import Math.*;
@@ -15,44 +20,49 @@ using Lambda;
 
 
 class ImageTools {
-    public static function toGreyscale(image:Image):Image {
-        return new Image([
+    @:generic
+    public static function toGreyscale<C:Color>(image:Image<C>):Image<MonoColor> {
+        return new Image<MonoColor>([
             for (i in image) [
                 for (j in i) 
-                    j.convert(MonoType)
+                    toMono(j)
             ]
         ]);
     }
 
-    public static function findDarkestColor(image:Image):Color {
-        var darkestColor:Color = Mono(255);
+    @:generic
+    public static function findDarkestColor<C:Color>(image:Image<C>):C {
+        var darkestColor = image[0][0];
         for (i in image)
             for (j in i)
-                if (j.convert(MonoType).getValue() < darkestColor.convert(MonoType).getValue())
+                if (toMono(j).compareMono(toMono(darkestColor)) == LT)
                     darkestColor = j;
-        return darkestColor.convert(image[0][0].getColorType());
+        return darkestColor;
     }
 
-    public static function toBinary(image:Image, ?threshold:Int=20):Image {
-        var darkestColor:Color = findDarkestColor(image);
+    @:generic
+    public static function toBinary<C:Color>(image:Image<C>, ?threshold:Int=20):Image<BinaryColor> {
+        var darkestColor = findDarkestColor(image);
         return new Image([
             for (i in image) [
                 for (j in i)
-                    if (abs(j.convert(MonoType).getValue() - darkestColor.convert(MonoType).getValue()) <= threshold) 
-                        Black 
+                    if (abs(toMono(j).value - toMono(darkestColor).value) <= threshold) 
+                        new BinaryColor(true)
                     else 
-                        White
+                        new BinaryColor(false)
             ]
         ]);
     }
 
-    public static function cropSides(image:Image, sides:Sides):Image {
-        return new Image(image.slice(sides.top, image.length - sides.bottom).map(
+    @:generic
+    public static function cropSides<C:Color>(image:Image<C>, sides:Sides):Image<C> {
+        return new Image<C>(image.slice(sides.top, image.length - sides.bottom).map(
             function(i) return i.slice(sides.left, i.length - sides.right)
         ));
     }
 
-    public static function cornersToSides(image:Image, corners:Corners):Sides {
+    @:generic
+    public static function cornersToSides<C:Color>(image:Image<C>, corners:Corners):Sides {
         return {
             top:    round(min(corners.leftTop.y, corners.rightTop.y)),
             left:   round(min(corners.leftTop.x, corners.leftBottom.x)),
@@ -61,12 +71,14 @@ class ImageTools {
         };
     }
 
-    public static function cropCorners(image:Image, corners:Corners):Image {
+    @:generic
+    public static function cropCorners<C:Color>(image:Image<C>, corners:Corners):Image<C> {
         return cropSides(image, cornersToSides(image, corners));
     }
 
-    public static function findCorners(image:Image, ?color:Color):Corners {
-        color = if (color != null) color else Black; 
+    @:generic
+    public static function findCorners<C:Color>(image:Image<C>, ?color:C):Corners {
+        var targetColor = if (color != null) color else new BinaryColor(true); 
 
         var res:Corners = new Corners();
         var width = image[0].length, height = image.length;
@@ -76,7 +88,7 @@ class ImageTools {
             var i = 0, j = k;
 
             while (i < height && j >= 0) {
-                if (image[i][j].compare(color)) {
+                if (compare(image[i][j], targetColor)) {
                     res.leftTop = new Pixel(j, i, width, height);
                     break;
                 }
@@ -93,7 +105,7 @@ class ImageTools {
             var i = 0, j = k;
 
             while (i < height && j < width) {
-                if (image[i][j].compare(color)) {
+                if (compare(image[i][j], targetColor)) {
                     res.rightTop = new Pixel(j, i, width, height);
                     break;
                 }
@@ -110,7 +122,7 @@ class ImageTools {
             var i = height - 1, j = k;
 
             while (i >= 0 && j < width) {
-                if (image[i][j].compare(color)) {
+                if (compare(targetColor, image[i][j])) {
                     res.rightBottom = new Pixel(j, i, width, height);
                     break;
                 }
@@ -127,7 +139,7 @@ class ImageTools {
             var i = height - 1, j = k;
 
             while (i >= 0 && j >= 0) {
-                if (image[i][j].compare(color)) {
+                if (compare(image[i][j], targetColor)) {
                     res.leftBottom = new Pixel(j, i, width, height);
                     break;
                 }
@@ -142,40 +154,40 @@ class ImageTools {
         return res;
     }
 
-    public static function inverse(image:Image):Image {
+    public static function inverse(image:Image<BinaryColor>):Image<BinaryColor> {
         return new Image([
             for (i in image) [
-                for (j in i) if (j == Black) White else Black
+                for (j in i) if (j.value) new BinaryColor(false) else new BinaryColor(true)
             ]
         ]);
     }
 
-    public static function erode(image:Image, ?repeat:Int=1):Image {
+    public static function erode(image:Image<BinaryColor>, ?repeat:Int=1):Image<BinaryColor> {
         if (repeat < 0)
             throw "repeat value cant be lower than 0";
         if (repeat == 0) return image;
 
         var width = image[0].length, height = image.length;
-        var res:Array<Array<Color>> = [];
+        var res:Array<Array<BinaryColor>> = [];
 
         for (i in 0...width) {
-            var newLine:Array<Color> = [];
+            var newLine:Array<BinaryColor> = [];
             for (j in 0...height) {
-                var localMax = Mono(0);
+                var localMax = new BinaryColor(false);
                 for (ii in (i-1)...(i+2))
                     for (jj in (j-1)...(j+2))
                         if (ii >= 0 && jj >= 0 && ii < height && jj < width && 
-                        image[ii][jj].compareMono(localMax) == GT) 
+                        image[ii][jj].value && !localMax.value)
                             localMax = image[ii][jj];
                 newLine.push(localMax);
             }
             res.push(newLine);
         }
 
-        return erode(new Image(res), repeat - 1);
+        return erode(new Image<BinaryColor>(res), repeat - 1);
     }
 
-    public static function downscale(image:Image, ?squareSize:Int=2, ?repeat:Int=1):Image {
+    public static function downscale(image:Image<BinaryColor>, ?squareSize:Int=2, ?repeat:Int=1):Image<BinaryColor> {
         if (repeat < 0)
             throw "repeat value cant be less than 0";
         if (squareSize < 2)
@@ -183,16 +195,16 @@ class ImageTools {
         if (repeat == 0) return image;
 
         var width = image[0].length, height = image.length;
-        var res:Array<Array<Color>> = [];
+        var res:Array<Array<BinaryColor>> = [];
 
         for (i in new Range(0, height, squareSize)) {
-            var newLine:Array<Color> = [];
+            var newLine:Array<BinaryColor> = [];
             for (j in new Range(0, width, squareSize)) {
                 var blackCount:Int = 0;
                 for (ii in i...(i + squareSize)) 
                     for (jj in j...(j + squareSize)) 
-                        if (image[ii][jj] == Black) ++blackCount;
-                newLine.push(if (blackCount >= pow(squareSize, 2)/2) Black else White);
+                        if (image[ii][jj].value) ++blackCount;
+                newLine.push(if (blackCount >= pow(squareSize, 2)/2) new BinaryColor(true) else new BinaryColor(false));
             }
             res.push(newLine);
         }

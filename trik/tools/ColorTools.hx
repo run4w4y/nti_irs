@@ -6,6 +6,7 @@ import trik.color.RGBColor;
 import trik.color.HSVColor;
 import trik.color.RGB24Color;
 import trik.color.MonoColor;
+import trik.color.BinaryColor;
 import trik.geometry.Point3D;
 import trik.ordering.Ordering;
 import Math.*;
@@ -68,6 +69,9 @@ class ColorTools {
                     round(res[1] * 255), 
                     round(res[2] * 255)
                 );
+            case BinaryColor:
+                var value = if (color.value) 1 else 0;
+                return new RGBColor(value*255, value*255, value*255);
             case _:
                 throw "unknown color class was passed to the generic function colorToRgb";
         }
