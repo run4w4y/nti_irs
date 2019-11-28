@@ -8,5 +8,5 @@ Exrternal JS class for accessing the on-board accelerometer. It doesn't have a c
 
 Methods:
 -------
-### read()
-- Returns an `Array<Int>` of length 7 with read values  
+### read(): Array<Int>
+Returns an `Array<Int>` of length 7 with read values  
