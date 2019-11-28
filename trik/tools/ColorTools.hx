@@ -70,8 +70,10 @@ class ColorTools {
                     round(res[2] * 255)
                 );
             case BinaryColor:
-                var value = if (color.value) 1 else 0;
-                return new RGBColor(value*255, value*255, value*255);
+                if (color.value)
+                    return new RGBColor(0, 0, 0);
+                else
+                    return new RGBColor(255, 255, 255);
             case _:
                 throw "unknown color class was passed to the generic function colorToRgb";
         }
