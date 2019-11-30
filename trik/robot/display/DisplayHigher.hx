@@ -7,6 +7,7 @@ import trik.robot.display.Line;
 import trik.color.LiteralColor;
 
 
+@:forward
 abstract DisplayHigher(Display) {
     public function new():Void {
         this = untyped __js__("brick.display()");
