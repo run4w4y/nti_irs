@@ -1,41 +1,86 @@
-// import trik.robot.motor.Motor;
-// import trik.Trik.*;
-// import trik.color.Color;
-// import trik.color.ColorTools.*;
-// import trik.robot.keys.Key;
-import trik.color.Color;
-import trik.color.RGBColor;
-import trik.color.HSVColor;
-import trik.color.MonoColor;
-import trik.color.BinaryColor;
-import trik.color.LiteralColors.*;
-import trik.tools.ColorTools.*;
-import trik.image.Image;
-import trik.tools.ImageTools.*;
-import json2object.JsonParser;
-import json2object.JsonWriter;
-// import trik.artag.Artag;
+import trik.robot.motor.Motor;
+import trik.robotModel.RobotModel;
+import trik.robot.display.Pixel;
+import trik.time.Time;
+import trik.Trik.*;
+import Math.*;
 
 using Lambda;
-// using trik.tools.ImageTools;
 
 
 class Main {
+    static var leftMotor    = brick.motor("M3");
+    static var rightMotor   = brick.motor("M4");
+    static var leftEncoder  = brick.encoder("E3");
+    static var rightEncoder = brick.encoder("E4");
+
+    static function stop() {
+        leftMotor.setPower(0);
+        rightMotor.setPower(0);
+        script.wait(Seconds(2));
+    }
+    
+    static function readGyro():Float {
+        return brick.gyroscope.read()[6]/1000;
+    }
+
+    static function move(speed:Int = 100) {
+        var error = readGyro();
+        var up:Float = error * 10;
+
+        leftMotor.setPower(round(speed + up));
+        rightMotor.setPower(round(speed - up));
+
+        script.wait(Milliseconds(10));
+    }
+
     public static function main() {
-        var parser = new JsonParser<Array<Array<Array<Int>>>>();
-        var pixels:Array<Array<RGBColor>> = parser.fromJson(sys.io.File.read("tests/image.json").readLine(), "errors.txt").map(
-            function(array:Array<Array<Int>>) return array.map(
-                function (triple:Array<Int>) return new RGBColor(triple[0], triple[1], triple[2])
-            )
-        );
-        var image = new Image<RGBColor>(pixels);
-        var writer = new JsonWriter<Array<Array<Int>>>();
-        sys.io.File.write("tests/image_res.json").writeString(
-            writer.write(downscale(toBinary(image, 100)).map(
-                function(array:Array<BinaryColor>) return array.map(
-                    function(color:BinaryColor) return toMono(color).value
-                )
-            ))
-        );
+
+
+        var frontSensor  = brick.sensor("D1");
+        var leftSensor   = brick.sensor("D2");
+
+        var leftStart = leftSensor.read();
+        var leftMax = leftStart;
+        var maxIndex = -1;
+        var count = 0;
+        var countLock = false;
+        var readPrev = leftStart;
+        
+        while (frontSensor.read() > 25) {
+            move(90);
+            var readVal = leftSensor.read();
+
+            if (!countLock && readPrev - readVal < -10) {
+                ++count;
+                countLock = true;
+            }
+            if (countLock && readPrev - readVal > 10)
+                countLock = false;
+            if (abs(readVal - leftStart) > 10 && readVal >= leftMax) 
+                leftMax = readVal;
+            
+            readPrev = readVal;
+        }
+
+        stop();
+        print(leftMax);
+
+        while (leftMax > leftSensor.read())
+            move(-90);
+
+        stop();
+
+        while (readGyro() > -75) {
+            leftMotor.setPower(10);
+            rightMotor.setPower(-10);
+        }
+
+        while (frontSensor.read() > 25) {
+            leftMotor.setPower(100);
+            rightMotor.setPower(100);
+        }
+
+        brick.display.addLabel("finish", new Pixel(0, 0));
     }
 }

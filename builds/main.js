@@ -6,1982 +6,293 @@ function $extend(from, fields) {
 	if( fields.toString !== Object.prototype.toString ) proto.toString = fields.toString;
 	return proto;
 }
+var HxOverrides = function() { };
+HxOverrides.__name__ = true;
+HxOverrides.cca = function(s,index) {
+	var x = s.charCodeAt(index);
+	if(x != x) {
+		return undefined;
+	}
+	return x;
+};
+var trik_robot_Brick = function() {
+	this.accelerometer = brick.accelerometer();
+	this.battery = brick.battery();
+	this.display = trik_robot_display__$DisplayHigher_DisplayHigher_$Impl_$._new();
+	this.keys = trik_robot_keys__$KeysHigher_KeysHigher_$Impl_$._new();
+	this.led = brick.led();
+	this.gyroscope = brick.gyroscope();
+};
+trik_robot_Brick.__name__ = true;
+trik_robot_Brick.prototype = {
+	encoder: function(port) {
+		return brick.encoder(port);
+	}
+	,motor: function(port) {
+		return brick.motor(port);
+	}
+	,colorSensor: function(port) {
+		return brick.colorSensor(port);
+	}
+	,playSound: function(filename) {
+		brick.playSound(filename);
+	}
+	,say: function(phrase) {
+		brick.say(phrase);
+	}
+	,sensor: function(port) {
+		return brick.sensor(port);
+	}
+	,stop: function() {
+		brick.stop();
+	}
+	,objectSensor: function(port) {
+		return brick.objectSensor(port);
+	}
+	,getRawPhoto: function() {
+		return trik_image__$RawImage_RawImage_$Impl_$._new(getPhoto());
+	}
+	,getPhoto: function() {
+		return trik_image__$RawImage_RawImage_$Impl_$.toImage(this.getRawPhoto());
+	}
+	,__class__: trik_robot_Brick
+};
+var trik_robot_display__$DisplayHigher_DisplayHigher_$Impl_$ = {};
+trik_robot_display__$DisplayHigher_DisplayHigher_$Impl_$.__name__ = true;
+trik_robot_display__$DisplayHigher_DisplayHigher_$Impl_$._new = function() {
+	var this1 = brick.display();
+	return this1;
+};
+trik_robot_display__$DisplayHigher_DisplayHigher_$Impl_$.addLabel = function(this1,text,pixel) {
+	this1.addLabel(text,pixel.x,pixel.y);
+};
+trik_robot_display__$DisplayHigher_DisplayHigher_$Impl_$.drawArc = function(this1,rect,from,to) {
+	this1.drawArc(rect.points[0].x,rect.points[0].y,rect.length,rect.height,from,to);
+};
+trik_robot_display__$DisplayHigher_DisplayHigher_$Impl_$.drawEllipse = function(this1,rect) {
+	this1.drawEllipse(rect.points[0].x,rect.points[0].y,rect.length,rect.height);
+};
+trik_robot_display__$DisplayHigher_DisplayHigher_$Impl_$.drawLine = function(this1,line) {
+	this1.drawLine(line.first.x,line.first.y,line.second.x,line.second.y);
+};
+trik_robot_display__$DisplayHigher_DisplayHigher_$Impl_$.drawPixel = function(this1,pixel) {
+	this1.drawPoint(pixel.x,pixel.y);
+};
+trik_robot_display__$DisplayHigher_DisplayHigher_$Impl_$.drawRect = function(this1,rect) {
+	this1.drawRect(rect.points[0].x,rect.points[0].y,rect.length,rect.height);
+};
+trik_robot_display__$DisplayHigher_DisplayHigher_$Impl_$.setBackground = function(this1,color) {
+	this1.setBackground(color.name);
+};
+trik_robot_display__$DisplayHigher_DisplayHigher_$Impl_$.setPainterColor = function(this1,color) {
+	this1.setPainterColor(color.name);
+};
+var trik_robot_keys__$KeysHigher_KeysHigher_$Impl_$ = {};
+trik_robot_keys__$KeysHigher_KeysHigher_$Impl_$.__name__ = true;
+trik_robot_keys__$KeysHigher_KeysHigher_$Impl_$.keyToCode = function(this1,key) {
+	var res = 0;
+	switch(key[1]) {
+	case 0:
+		res = 105;
+		break;
+	case 1:
+		res = 103;
+		break;
+	case 2:
+		res = 108;
+		break;
+	case 3:
+		res = 28;
+		break;
+	case 4:
+		res = 106;
+		break;
+	case 5:
+		res = 116;
+		break;
+	case 6:
+		res = 1;
+		break;
+	}
+	return res;
+};
+trik_robot_keys__$KeysHigher_KeysHigher_$Impl_$.isPressed = function(this1,key) {
+	return this1.isPressed(trik_robot_keys__$KeysHigher_KeysHigher_$Impl_$.keyToCode(this1,key));
+};
+trik_robot_keys__$KeysHigher_KeysHigher_$Impl_$.wasPressed = function(this1,key) {
+	return this1.wasPressed(trik_robot_keys__$KeysHigher_KeysHigher_$Impl_$.keyToCode(this1,key));
+};
+trik_robot_keys__$KeysHigher_KeysHigher_$Impl_$._new = function() {
+	var this1 = brick.keys();
+	return this1;
+};
+var trik_robot_Mailbox = function() {
+};
+trik_robot_Mailbox.__name__ = true;
+trik_robot_Mailbox.prototype = {
+	connect: function(ip,port) {
+		if(port == null) {
+			port = -1;
+		}
+		if(port == -1) {
+			mailbox.connect(ip);
+		} else {
+			mailbox.connect(ip, port);
+		}
+	}
+	,hasMessages: function() {
+		return mailbox.hasMessages();
+	}
+	,myHullNumber: function() {
+		return mailbox.myHullNumber();
+	}
+	,receive: function() {
+		return mailbox.receive();
+	}
+	,send: function(message,robotNumber) {
+		if(robotNumber == null) {
+			robotNumber = -1;
+		}
+		if(robotNumber == -1) {
+			mailbox.send(message);
+		} else {
+			mailbox.send(robotNumber, message);
+		}
+	}
+	,__class__: trik_robot_Mailbox
+};
+var trik_robot_Script = function() {
+};
+trik_robot_Script.__name__ = true;
+trik_robot_Script.prototype = {
+	quit: function() {
+		script.quit();
+	}
+	,random: function(from,to) {
+		return script.random(from, to);
+	}
+	,readAll: function(filename) {
+		return script.readAll(filename);
+	}
+	,removeFile: function(filename) {
+		script.removeFile(filename);
+	}
+	,run: function() {
+		script.run();
+	}
+	,system: function(command) {
+		script.system(command);
+	}
+	,time: function() {
+		return script.time();
+	}
+	,wait: function(duration) {
+		return script.wait(duration);
+	}
+	,writeToFile: function(filename,content) {
+		return script.writeToFile(filename, content);
+	}
+	,__class__: trik_robot_Script
+};
+var trik_robot_Concurrency = function() {
+};
+trik_robot_Concurrency.__name__ = true;
+trik_robot_Concurrency.prototype = {
+	joinThread: function(threadId) {
+		Threading.joinThread(threadId);
+	}
+	,killThread: function(threadId) {
+		Threading.killThread(threadId);
+	}
+	,receiveMessage: function(wait) {
+		return Threading.receiveMessage(wait);
+	}
+	,sendMessage: function(threadId,message) {
+		Threading.sendMessage(threadId, message);
+		return;
+	}
+	,startThread: function(threadId,functionName) {
+		Threading.startThread(threadId, functionName);
+		return;
+	}
+	,__class__: trik_robot_Concurrency
+};
+var trik_Trik = function() { };
+trik_Trik.__name__ = true;
+trik_Trik.print = function(text) {
+	print(text);
+};
 var Main = function() { };
 Main.__name__ = true;
+Main.stop = function() {
+	Main.leftMotor.setPower(0);
+	Main.rightMotor.setPower(0);
+	trik_Trik.script.wait(2000);
+};
+Main.readGyro = function() {
+	return trik_Trik.brick.gyroscope.read()[6] / 1000;
+};
+Main.move = function(speed) {
+	if(speed == null) {
+		speed = 100;
+	}
+	var error = Main.readGyro();
+	var up = error * 10;
+	Main.leftMotor.setPower(Math.round(speed + up));
+	Main.rightMotor.setPower(Math.round(speed - up));
+	trik_Trik.script.wait(10);
+};
 Main.main = function() {
-	trik_Trik.script.wait(3000);
-	trik_Trik.print(trik_robot_keys__$KeysHigher_KeysHigher_$Impl_$.wasPressed(trik_Trik.brick.keys,trik_robot_keys_Key.Left));
+	var frontSensor = trik_Trik.brick.sensor("D1");
+	var leftSensor = trik_Trik.brick.sensor("D2");
+	var leftStart = leftSensor.read();
+	var leftMax = leftStart;
+	var maxIndex = -1;
+	var count = 0;
+	var countLock = false;
+	var readPrev = leftStart;
+	while(frontSensor.read() > 25) {
+		Main.move(90);
+		var readVal = leftSensor.read();
+		if(!countLock && readPrev - readVal < -10) {
+			++count;
+			countLock = true;
+		}
+		if(countLock && readPrev - readVal > 10) {
+			countLock = false;
+		}
+		if(Math.abs(readVal - leftStart) > 10 && readVal >= leftMax) {
+			leftMax = readVal;
+		}
+		readPrev = readVal;
+	}
+	Main.stop();
+	trik_Trik.print(leftMax);
+	while(leftMax > leftSensor.read()) Main.move(-90);
+	Main.stop();
+	while(Main.readGyro() > -75) {
+		Main.leftMotor.setPower(10);
+		Main.rightMotor.setPower(-10);
+	}
+	while(frontSensor.read() > 25) {
+		Main.leftMotor.setPower(100);
+		Main.rightMotor.setPower(100);
+	}
+	trik_robot_display__$DisplayHigher_DisplayHigher_$Impl_$.addLabel(trik_Trik.brick.display,"finish",new trik_robot_display_Pixel(0,0));
 };
 Math.__name__ = true;
-var Reflect = function() { };
-Reflect.__name__ = true;
-Reflect.compare = function(a,b) {
-	if(a == b) {
-		return 0;
-	} else if(a > b) {
-		return 1;
-	} else {
-		return -1;
-	}
-};
-Reflect.isEnumValue = function(v) {
-	if(v != null) {
-		return v.__enum__ != null;
-	} else {
-		return false;
-	}
-};
 var Std = function() { };
 Std.__name__ = true;
-Std.string = function(s) {
-	return js_Boot.__string_rec(s,"");
-};
-var de_polygonal_ds_Cloneable = function() { };
-de_polygonal_ds_Cloneable.__name__ = true;
-de_polygonal_ds_Cloneable.prototype = {
-	__class__: de_polygonal_ds_Cloneable
-};
-var de_polygonal_ds_Hashable = function() { };
-de_polygonal_ds_Hashable.__name__ = true;
-de_polygonal_ds_Hashable.prototype = {
-	__class__: de_polygonal_ds_Hashable
-};
-var de_polygonal_ds_Collection = function() { };
-de_polygonal_ds_Collection.__name__ = true;
-de_polygonal_ds_Collection.__interfaces__ = [de_polygonal_ds_Hashable];
-de_polygonal_ds_Collection.prototype = {
-	__class__: de_polygonal_ds_Collection
-};
-var de_polygonal_ds_Graph = function() {
-	this.mQueSize = 16;
-	this.mStackSize = 16;
-	this.mIterator = null;
-	this.mSize = 0;
-	this.mNodeList = null;
-	this.reuseIterator = false;
-	this.autoClearMarks = false;
-	this.key = de_polygonal_ds_HashKey.next();
-	var len = this.mStackSize;
-	this.mStack = new Array(len);
-	var len1 = this.mQueSize;
-	this.mQue = new Array(len1);
-};
-de_polygonal_ds_Graph.__name__ = true;
-de_polygonal_ds_Graph.__interfaces__ = [de_polygonal_ds_Collection];
-de_polygonal_ds_Graph.prototype = {
-	getNodeList: function() {
-		return this.mNodeList;
-	}
-	,findNode: function(val) {
-		var found = false;
-		var n = this.mNodeList;
-		while(n != null) {
-			if(n.val == val) {
-				found = true;
-				break;
-			}
-			n = n.next;
-		}
-		if(found) {
-			return n;
-		} else {
-			return null;
-		}
-	}
-	,add: function(val) {
-		return this.addNode(new de_polygonal_ds_GraphNode(val));
-	}
-	,addNode: function(node) {
-		if(node.mGraph != null) {
-			return node;
-		}
-		this.mSize++;
-		node.next = this.mNodeList;
-		if(node.next != null) {
-			node.next.prev = node;
-		}
-		this.mNodeList = node;
-		node.mGraph = this;
-		return node;
-	}
-	,removeNode: function(node) {
-		if(this.mSize == 0 || node.mGraph == null) {
-			return this;
-		}
-		this.unlink(node);
-		if(node.prev != null) {
-			node.prev.next = node.next;
-		}
-		if(node.next != null) {
-			node.next.prev = node.prev;
-		}
-		if(this.mNodeList == node) {
-			this.mNodeList = node.next;
-		}
-		this.mSize--;
-		node.mGraph = null;
-		return this;
-	}
-	,addSingleArc: function(source,target) {
-		var walker = this.mNodeList;
-		while(walker != null) {
-			if(walker == source) {
-				var sourceNode = walker;
-				walker = this.mNodeList;
-				while(walker != null) {
-					if(walker == target) {
-						sourceNode.addArc(walker);
-						break;
-					}
-					walker = walker.next;
-				}
-				break;
-			}
-			walker = walker.next;
-		}
-		return this;
-	}
-	,addMutualArc: function(source,target) {
-		var walker = this.mNodeList;
-		while(walker != null) {
-			if(walker == source) {
-				var sourceNode = walker;
-				walker = this.mNodeList;
-				while(walker != null) {
-					if(walker == target) {
-						sourceNode.addArc(walker);
-						walker.addArc(sourceNode);
-						break;
-					}
-					walker = walker.next;
-				}
-				break;
-			}
-			walker = walker.next;
-		}
-		return this;
-	}
-	,unlink: function(node) {
-		if(node.mGraph == null) {
-			return node;
-		}
-		var arc0 = node.arcList;
-		while(arc0 != null) {
-			var node1 = arc0.node;
-			var arc1 = node1.arcList;
-			while(arc1 != null) {
-				var hook = arc1.next;
-				if(arc1.node == node) {
-					if(arc1.prev != null) {
-						arc1.prev.next = hook;
-					}
-					if(hook != null) {
-						hook.prev = arc1.prev;
-					}
-					if(node1.arcList == arc1) {
-						node1.arcList = hook;
-					}
-					arc1.free();
-					node1.numArcs--;
-					if(this.returnArc != null) {
-						this.returnArc(arc1);
-					}
-				}
-				arc1 = hook;
-			}
-			var hook1 = arc0.next;
-			if(arc0.prev != null) {
-				arc0.prev.next = hook1;
-			}
-			if(hook1 != null) {
-				hook1.prev = arc0.prev;
-			}
-			if(node.arcList == arc0) {
-				node.arcList = hook1;
-			}
-			arc0.free();
-			node.numArcs--;
-			if(this.returnArc != null) {
-				this.returnArc(arc0);
-			}
-			arc0 = hook1;
-		}
-		node.arcList = null;
-		return node;
-	}
-	,clearMarks: function() {
-		var node = this.mNodeList;
-		while(node != null) {
-			node.marked = false;
-			node = node.next;
-		}
-		return this;
-	}
-	,clearParent: function() {
-		var node = this.mNodeList;
-		while(node != null) {
-			node.parent = null;
-			node = node.next;
-		}
-		return this;
-	}
-	,dfs: function(preflight,seed,process,userData,recursive) {
-		if(recursive == null) {
-			recursive = false;
-		}
-		if(preflight == null) {
-			preflight = false;
-		}
-		var _gthis = this;
-		if(this.mSize == 0) {
-			return this;
-		}
-		if(this.autoClearMarks) {
-			this.clearMarks();
-		}
-		var c = 1;
-		if(seed == null) {
-			seed = this.mNodeList;
-		}
-		var max = this.mStackSize;
-		var s = this.mStack;
-		s[0] = seed;
-		seed.parent = seed;
-		seed.depth = 0;
-		if(preflight) {
-			if(process == null) {
-				if(recursive) {
-					var v = seed.val;
-					if(v.visit(true,userData)) {
-						this.dfsRecursiveVisit(seed,true,userData);
-					}
-				} else {
-					var v1 = null;
-					var n = s[0];
-					v1 = n.val;
-					if(!v1.visit(true,userData)) {
-						return this;
-					}
-					while(c > 0) {
-						var n1 = s[--c];
-						if(n1.marked) {
-							continue;
-						}
-						n1.marked = true;
-						v1 = n1.val;
-						if(!v1.visit(false,userData)) {
-							break;
-						}
-						var a = n1.arcList;
-						while(a != null) {
-							v1 = n1.val;
-							a.node.parent = n1;
-							a.node.depth = n1.depth + 1;
-							if(v1.visit(true,userData)) {
-								var x = a.node;
-								if(c == max) {
-									s = _gthis.resizeStack(max *= 2);
-								}
-								s[c++] = x;
-							}
-							a = a.next;
-						}
-					}
-				}
-			} else if(recursive) {
-				if(process(seed,true,userData)) {
-					this.dfsRecursiveProcess(seed,process,true,userData);
-				}
-			} else {
-				var n2 = s[0];
-				if(!process(n2,true,userData)) {
-					return this;
-				}
-				while(c > 0) {
-					var n3 = s[--c];
-					if(n3.marked) {
-						continue;
-					}
-					n3.marked = true;
-					if(!process(n3,false,userData)) {
-						break;
-					}
-					var a1 = n3.arcList;
-					while(a1 != null) {
-						a1.node.parent = n3;
-						a1.node.depth = n3.depth + 1;
-						if(process(a1.node,true,userData)) {
-							var x1 = a1.node;
-							if(c == max) {
-								s = _gthis.resizeStack(max *= 2);
-							}
-							s[c++] = x1;
-						}
-						a1 = a1.next;
-					}
-				}
-			}
-		} else if(process == null) {
-			if(recursive) {
-				this.dfsRecursiveVisit(seed,false,userData);
-			} else {
-				var v2 = null;
-				while(c > 0) {
-					var n4 = s[--c];
-					if(n4.marked) {
-						continue;
-					}
-					n4.marked = true;
-					v2 = n4.val;
-					if(!v2.visit(false,userData)) {
-						break;
-					}
-					var a2 = n4.arcList;
-					while(a2 != null) {
-						var x2 = a2.node;
-						if(c == max) {
-							s = _gthis.resizeStack(max *= 2);
-						}
-						s[c++] = x2;
-						a2.node.parent = n4;
-						a2.node.depth = n4.depth + 1;
-						a2 = a2.next;
-					}
-				}
-			}
-		} else if(recursive) {
-			this.dfsRecursiveProcess(seed,process,false,userData);
-		} else {
-			while(c > 0) {
-				var n5 = s[--c];
-				if(n5.marked) {
-					continue;
-				}
-				n5.marked = true;
-				if(!process(n5,false,userData)) {
-					break;
-				}
-				var a3 = n5.arcList;
-				while(a3 != null) {
-					var x3 = a3.node;
-					if(c == max) {
-						s = _gthis.resizeStack(max *= 2);
-					}
-					s[c++] = x3;
-					a3.node.parent = n5;
-					a3.node.depth = n5.depth + 1;
-					a3 = a3.next;
-				}
-			}
-		}
-		return this;
-	}
-	,bfs: function(preflight,seed,process,userData) {
-		if(preflight == null) {
-			preflight = false;
-		}
-		var _gthis = this;
-		if(this.mSize == 0) {
-			return this;
-		}
-		if(this.autoClearMarks) {
-			this.clearMarks();
-		}
-		var front = 0;
-		var c = 1;
-		var q = this.mQue;
-		var max = this.mQueSize;
-		if(seed == null) {
-			seed = this.mNodeList;
-		}
-		q[0] = seed;
-		seed.marked = true;
-		seed.parent = seed;
-		seed.depth = 0;
-		if(preflight) {
-			if(process == null) {
-				var v = null;
-				var n = q[front];
-				v = n.val;
-				if(!v.visit(true,userData)) {
-					return this;
-				}
-				while(c > 0) {
-					n = q[front];
-					v = n.val;
-					if(!v.visit(false,userData)) {
-						return this;
-					}
-					var a = n.arcList;
-					while(a != null) {
-						var m = a.node;
-						if(m.marked) {
-							a = a.next;
-							continue;
-						}
-						m.marked = true;
-						m.parent = n;
-						m.depth = n.depth + 1;
-						v = m.val;
-						if(v.visit(true,userData)) {
-							var i = c++ + front;
-							if(i == max) {
-								_gthis.resizeQue(max *= 2);
-								q = _gthis.mQue;
-							}
-							q[i] = m;
-						}
-						a = a.next;
-					}
-					++front;
-					--c;
-				}
-			} else {
-				var n1 = q[front];
-				if(!process(n1,true,userData)) {
-					return this;
-				}
-				while(c > 0) {
-					n1 = q[front];
-					if(!process(n1,false,userData)) {
-						return this;
-					}
-					var a1 = n1.arcList;
-					while(a1 != null) {
-						var m1 = a1.node;
-						if(m1.marked) {
-							a1 = a1.next;
-							continue;
-						}
-						m1.marked = true;
-						m1.parent = n1;
-						m1.depth = n1.depth + 1;
-						if(process(m1,true,userData)) {
-							var i1 = c++ + front;
-							if(i1 == max) {
-								_gthis.resizeQue(max *= 2);
-								q = _gthis.mQue;
-							}
-							q[i1] = m1;
-						}
-						a1 = a1.next;
-					}
-					++front;
-					--c;
-				}
-			}
-		} else if(process == null) {
-			var v1 = null;
-			while(c > 0) {
-				var n2 = q[front];
-				v1 = n2.val;
-				if(!v1.visit(false,userData)) {
-					return this;
-				}
-				var a2 = n2.arcList;
-				while(a2 != null) {
-					var m2 = a2.node;
-					if(m2.marked) {
-						a2 = a2.next;
-						continue;
-					}
-					m2.marked = true;
-					m2.parent = n2;
-					m2.depth = n2.depth + 1;
-					var i2 = c++ + front;
-					if(i2 == max) {
-						_gthis.resizeQue(max *= 2);
-						q = _gthis.mQue;
-					}
-					q[i2] = m2;
-					a2 = a2.next;
-				}
-				++front;
-				--c;
-			}
-		} else {
-			while(c > 0) {
-				var n3 = q[front];
-				if(!process(n3,false,userData)) {
-					return this;
-				}
-				var a3 = n3.arcList;
-				while(a3 != null) {
-					var m3 = a3.node;
-					if(m3.marked) {
-						a3 = a3.next;
-						continue;
-					}
-					m3.marked = true;
-					m3.parent = n3;
-					m3.depth = n3.depth + 1;
-					var i3 = c++ + front;
-					if(i3 == max) {
-						_gthis.resizeQue(max *= 2);
-						q = _gthis.mQue;
-					}
-					q[i3] = m3;
-					a3 = a3.next;
-				}
-				++front;
-				--c;
-			}
-		}
-		return this;
-	}
-	,dlbfs: function(maxDepth,preflight,seed,process,userData) {
-		if(preflight == null) {
-			preflight = false;
-		}
-		var _gthis = this;
-		if(this.mSize == 0) {
-			return this;
-		}
-		if(this.autoClearMarks) {
-			this.clearMarks();
-		}
-		var front = 0;
-		var c = 1;
-		var q = this.mQue;
-		var max = this.mQueSize;
-		var node = this.mNodeList;
-		while(node != null) {
-			node.depth = 0;
-			node = node.next;
-		}
-		if(seed == null) {
-			seed = this.mNodeList;
-		}
-		seed.marked = true;
-		seed.parent = seed;
-		q[0] = seed;
-		if(preflight) {
-			if(process == null) {
-				var v = null;
-				var n = q[front];
-				v = n.val;
-				if(!v.visit(true,userData)) {
-					return this;
-				}
-				while(c > 0) {
-					n = q[front];
-					v = n.val;
-					if(!v.visit(false,userData)) {
-						return this;
-					}
-					var a = n.arcList;
-					while(a != null) {
-						var m = a.node;
-						if(m.marked) {
-							a = a.next;
-							continue;
-						}
-						m.marked = true;
-						m.parent = n;
-						m.depth = n.depth + 1;
-						if(m.depth <= maxDepth) {
-							v = m.val;
-							if(v.visit(true,userData)) {
-								var i = c++ + front;
-								if(i == max) {
-									_gthis.resizeQue(max *= 2);
-									q = _gthis.mQue;
-								}
-								q[i] = m;
-							}
-						}
-						a = a.next;
-					}
-					++front;
-					--c;
-				}
-			} else {
-				var n1 = q[front];
-				if(!process(n1,true,userData)) {
-					return this;
-				}
-				while(c > 0) {
-					n1 = q[front];
-					if(!process(n1,false,userData)) {
-						return this;
-					}
-					var a1 = n1.arcList;
-					while(a1 != null) {
-						var m1 = a1.node;
-						if(m1.marked) {
-							a1 = a1.next;
-							continue;
-						}
-						m1.marked = true;
-						m1.parent = n1;
-						m1.depth = n1.depth + 1;
-						if(m1.depth <= maxDepth) {
-							if(process(m1,true,userData)) {
-								var i1 = c++ + front;
-								if(i1 == max) {
-									_gthis.resizeQue(max *= 2);
-									q = _gthis.mQue;
-								}
-								q[i1] = m1;
-							}
-						}
-						a1 = a1.next;
-					}
-					++front;
-					--c;
-				}
-			}
-		} else if(process == null) {
-			var v1 = null;
-			while(c > 0) {
-				var n2 = q[front];
-				v1 = n2.val;
-				if(!v1.visit(false,userData)) {
-					return this;
-				}
-				var a2 = n2.arcList;
-				while(a2 != null) {
-					var m2 = a2.node;
-					if(m2.marked) {
-						a2 = a2.next;
-						continue;
-					}
-					m2.marked = true;
-					m2.depth = n2.depth + 1;
-					m2.parent = n2.parent;
-					if(m2.depth <= maxDepth) {
-						var i2 = c++ + front;
-						if(i2 == max) {
-							_gthis.resizeQue(max *= 2);
-							q = _gthis.mQue;
-						}
-						q[i2] = m2;
-					}
-					a2 = a2.next;
-				}
-				++front;
-				--c;
-			}
-		} else {
-			while(c > 0) {
-				var n3 = q[front];
-				if(n3.depth > maxDepth) {
-					continue;
-				}
-				if(!process(n3,false,userData)) {
-					return this;
-				}
-				var a3 = n3.arcList;
-				while(a3 != null) {
-					var m3 = a3.node;
-					if(m3.marked) {
-						a3 = a3.next;
-						continue;
-					}
-					m3.marked = true;
-					m3.depth = n3.depth + 1;
-					m3.parent = n3.parent;
-					if(m3.depth <= maxDepth) {
-						var i3 = c++ + front;
-						if(i3 == max) {
-							_gthis.resizeQue(max *= 2);
-							q = _gthis.mQue;
-						}
-						q[i3] = m3;
-					}
-					a3 = a3.next;
-				}
-				++front;
-				--c;
-			}
-		}
-		return this;
-	}
-	,iter: function(f) {
-		var node = this.mNodeList;
-		while(node != null) {
-			f(node.val);
-			node = node.next;
-		}
-		return this;
-	}
-	,serialize: function(getVal) {
-		var vals = [];
-		var arcs = [];
-		var node = this.mNodeList;
-		var arc;
-		var indexLut_h = { };
-		var i = 0;
-		while(node != null) {
-			indexLut_h[node.key] = i++;
-			node = node.next;
-		}
-		i = 0;
-		node = this.mNodeList;
-		while(node != null) {
-			vals[i] = getVal(node.val);
-			arc = node.arcList;
-			while(arc != null) {
-				arcs.push(i);
-				arcs.push(indexLut_h[arc.node.key]);
-				arc = arc.next;
-			}
-			node = node.next;
-			++i;
-		}
-		return { arcs : arcs, vals : vals};
-	}
-	,unserialize: function(data,setVal) {
-		this.clear(true);
-		var nodes = [];
-		var vals = data.vals;
-		var i = 0;
-		var k = vals.length;
-		while(i < k) nodes.push(new de_polygonal_ds_GraphNode(setVal(vals[i++])));
-		i = k;
-		while(i > 0) this.addNode(nodes[--i]);
-		var arcs = data.arcs;
-		i = arcs.length;
-		while(i > 0) {
-			var target = arcs[--i];
-			var source = arcs[--i];
-			this.addSingleArc(nodes[source],nodes[target]);
-		}
-	}
-	,toString: function() {
-		var tmp = [];
-		var printNode = function(n) {
-			var arc;
-			var i = 0;
-			if(n.arcList != null) {
-				arc = n.arcList;
-				while(arc != null) {
-					tmp[i++] = Std.string(arc.node.val);
-					arc = arc.next;
-				}
-			}
-			while(tmp.length > i) tmp.pop();
-			if(i > 0) {
-				return Std.string(n.val) + " -> " + tmp.join(",");
-			} else {
-				return Std.string(n.val) + "";
-			}
-		};
-		var b_b = "";
-		b_b += Std.string("[ Graph size=" + this.mSize);
-		if(this.mSize == 0) {
-			b_b += " ]";
-			return b_b;
-		}
-		b_b += "\n";
-		var node = this.mNodeList;
-		while(node != null) {
-			b_b += "  ";
-			b_b += Std.string(printNode(node));
-			b_b += "\n";
-			node = node.next;
-		}
-		b_b += "]";
-		return b_b;
-	}
-	,get_size: function() {
-		return this.mSize;
-	}
-	,free: function() {
-		var node = this.mNodeList;
-		while(node != null) {
-			var nextNode = node.next;
-			var arc = node.arcList;
-			while(arc != null) {
-				var nextArc = arc.next;
-				arc.next = arc.prev = null;
-				arc.node = null;
-				arc = nextArc;
-			}
-			node.free();
-			node = nextNode;
-		}
-		this.mNodeList = null;
-		de_polygonal_ds_tools_NativeArrayTools.nullify(this.mStack);
-		this.mStack = null;
-		de_polygonal_ds_tools_NativeArrayTools.nullify(this.mQue);
-		this.mQue = null;
-		if(this.mIterator != null) {
-			this.mIterator.free();
-			this.mIterator = null;
-		}
-		this.borrowArc = null;
-		this.returnArc = null;
-	}
-	,contains: function(val) {
-		var node = this.mNodeList;
-		while(node != null) {
-			if(node.val == val) {
-				return true;
-			}
-			node = node.next;
-		}
-		return false;
-	}
-	,remove: function(val) {
-		var found = false;
-		var node = this.mNodeList;
-		while(node != null) {
-			var nextNode = node.next;
-			if(node.val == val) {
-				this.unlink(node);
-				if(node == this.mNodeList) {
-					this.mNodeList = nextNode;
-				}
-				node.val = null;
-				node.next = node.prev = null;
-				node.arcList = null;
-				found = true;
-				this.mSize--;
-			}
-			node = nextNode;
-		}
-		return found;
-	}
-	,clear: function(gc) {
-		if(gc == null) {
-			gc = false;
-		}
-		if(gc) {
-			var node = this.mNodeList;
-			while(node != null) {
-				var hook = node.next;
-				var arc = node.arcList;
-				while(arc != null) {
-					var hook1 = arc.next;
-					arc.free();
-					arc = hook1;
-				}
-				node.free();
-				node = hook;
-			}
-			de_polygonal_ds_tools_NativeArrayTools.nullify(this.mStack);
-			de_polygonal_ds_tools_NativeArrayTools.nullify(this.mQue);
-		}
-		this.mNodeList = null;
-		this.mSize = 0;
-	}
-	,iterator: function() {
-		if(this.reuseIterator) {
-			if(this.mIterator == null) {
-				this.mIterator = new de_polygonal_ds_GraphIterator(this);
-			} else {
-				var _this = this.mIterator;
-				_this.mNode = _this.mObject.mNodeList;
-			}
-			return this.mIterator;
-		} else {
-			return new de_polygonal_ds_GraphIterator(this);
-		}
-	}
-	,nodeIterator: function() {
-		return new de_polygonal_ds_GraphNodeIterator(this);
-	}
-	,arcIterator: function() {
-		return new de_polygonal_ds_GraphArcIterator(this);
-	}
-	,isEmpty: function() {
-		return this.mSize == 0;
-	}
-	,toArray: function() {
-		if(this.mSize == 0) {
-			return [];
-		}
-		var i = 0;
-		var len = this.mSize;
-		var a = new Array(len);
-		var out = a;
-		var node = this.mNodeList;
-		while(node != null) {
-			out[i++] = node.val;
-			node = node.next;
-		}
-		return out;
-	}
-	,clone: function(byRef,copier) {
-		if(byRef == null) {
-			byRef = true;
-		}
-		var copy = new de_polygonal_ds_Graph();
-		if(this.mNodeList == null) {
-			return copy;
-		}
-		var t = [];
-		var i = 0;
-		var n = this.mNodeList;
-		var m;
-		if(byRef) {
-			while(n != null) {
-				m = copy.add(n.val);
-				t[i++] = m;
-				n = n.next;
-			}
-		} else if(copier == null) {
-			while(n != null) {
-				m = copy.add((js_Boot.__cast(n.val , de_polygonal_ds_Cloneable)).clone());
-				t[i++] = m;
-				n = n.next;
-			}
-		} else {
-			while(n != null) {
-				m = copy.add(copier(n.val));
-				t[i++] = m;
-				n = n.next;
-			}
-		}
-		i = 0;
-		n = this.mNodeList;
-		var a;
-		while(n != null) {
-			m = t[i++];
-			a = n.arcList;
-			while(a != null) {
-				m.addArc(a.node,a.userData);
-				a = a.next;
-			}
-			n = n.next;
-		}
-		return copy;
-	}
-	,dfsRecursiveVisit: function(node,preflight,userData) {
-		node.marked = true;
-		var v = node.val;
-		if(!v.visit(false,userData)) {
-			return false;
-		}
-		var a = node.arcList;
-		while(a != null) {
-			var m = a.node;
-			if(m.marked) {
-				a = a.next;
-				continue;
-			}
-			a.node.parent = node;
-			a.node.depth = node.depth + 1;
-			if(preflight) {
-				v = m.val;
-				if(v.visit(true,userData)) {
-					if(!this.dfsRecursiveVisit(m,true,userData)) {
-						return false;
-					}
-				}
-			} else if(!this.dfsRecursiveVisit(m,false,userData)) {
-				return false;
-			}
-			a = a.next;
-		}
-		return true;
-	}
-	,dfsRecursiveProcess: function(node,process,preflight,userData) {
-		node.marked = true;
-		if(!process(node,false,userData)) {
-			return false;
-		}
-		var a = node.arcList;
-		while(a != null) {
-			var m = a.node;
-			if(m.marked) {
-				a = a.next;
-				continue;
-			}
-			a.node.parent = node;
-			a.node.depth = node.depth + 1;
-			if(preflight) {
-				if(process(m,true,userData)) {
-					if(!this.dfsRecursiveProcess(m,process,true,userData)) {
-						return false;
-					}
-				}
-			} else if(!this.dfsRecursiveProcess(m,process,false,userData)) {
-				return false;
-			}
-			a = a.next;
-		}
-		return true;
-	}
-	,resizeStack: function(newSize) {
-		var t = new Array(newSize);
-		de_polygonal_ds_tools_NativeArrayTools.blit(this.mStack,0,t,0,this.mStackSize);
-		this.mStack = t;
-		this.mStackSize = newSize;
-		return this.mStack;
-	}
-	,resizeQue: function(newSize) {
-		var t = new Array(newSize);
-		de_polygonal_ds_tools_NativeArrayTools.blit(this.mQue,0,t,0,this.mQueSize);
-		this.mQue = t;
-		this.mQueSize = newSize;
-	}
-	,__class__: de_polygonal_ds_Graph
-};
-var de_polygonal_ds_Itr = function() { };
-de_polygonal_ds_Itr.__name__ = true;
-de_polygonal_ds_Itr.prototype = {
-	__class__: de_polygonal_ds_Itr
-};
-var de_polygonal_ds_GraphIterator = function(x) {
-	this.mObject = x;
-	this.mNode = this.mObject.mNodeList;
-};
-de_polygonal_ds_GraphIterator.__name__ = true;
-de_polygonal_ds_GraphIterator.__interfaces__ = [de_polygonal_ds_Itr];
-de_polygonal_ds_GraphIterator.prototype = {
-	free: function() {
-		this.mObject = null;
-		this.mNode = null;
-	}
-	,reset: function() {
-		this.mNode = this.mObject.mNodeList;
-		return this;
-	}
-	,hasNext: function() {
-		return this.mNode != null;
-	}
-	,next: function() {
-		var x = this.mNode.val;
-		this.mNode = this.mNode.next;
-		return x;
-	}
-	,remove: function() {
-		throw new js__$Boot_HaxeError("unsupported operation");
-	}
-	,__class__: de_polygonal_ds_GraphIterator
-};
-var de_polygonal_ds_GraphNodeIterator = function(x) {
-	this.mObject = x;
-	this.mNode = this.mObject.mNodeList;
-};
-de_polygonal_ds_GraphNodeIterator.__name__ = true;
-de_polygonal_ds_GraphNodeIterator.__interfaces__ = [de_polygonal_ds_Itr];
-de_polygonal_ds_GraphNodeIterator.prototype = {
-	reset: function() {
-		this.mNode = this.mObject.mNodeList;
-		return this;
-	}
-	,hasNext: function() {
-		return this.mNode != null;
-	}
-	,next: function() {
-		var x = this.mNode;
-		this.mNode = this.mNode.next;
-		return x;
-	}
-	,remove: function() {
-		throw new js__$Boot_HaxeError("unsupported operation");
-	}
-	,__class__: de_polygonal_ds_GraphNodeIterator
-};
-var de_polygonal_ds_GraphArcIterator = function(x) {
-	this.mObject = x;
-	this.mNode = this.mObject.mNodeList;
-	this.mArc = this.mNode.arcList;
-};
-de_polygonal_ds_GraphArcIterator.__name__ = true;
-de_polygonal_ds_GraphArcIterator.__interfaces__ = [de_polygonal_ds_Itr];
-de_polygonal_ds_GraphArcIterator.prototype = {
-	reset: function() {
-		this.mNode = this.mObject.mNodeList;
-		this.mArc = this.mNode.arcList;
-		return this;
-	}
-	,hasNext: function() {
-		if(this.mArc != null) {
-			return this.mNode != null;
-		} else {
-			return false;
-		}
-	}
-	,next: function() {
-		var x = this.mArc;
-		this.mArc = this.mArc.next;
-		if(this.mArc == null) {
-			this.mNode = this.mNode.next;
-			if(this.mNode != null) {
-				this.mArc = this.mNode.arcList;
-			}
-		}
-		return x;
-	}
-	,remove: function() {
-		throw new js__$Boot_HaxeError("unsupported operation");
-	}
-	,__class__: de_polygonal_ds_GraphArcIterator
-};
-var de_polygonal_ds_GraphArc = function(node,userData) {
-	this.key = de_polygonal_ds_HashKey.next();
-	this.node = node;
-	this.userData = userData;
-	this.next = null;
-	this.prev = null;
-};
-de_polygonal_ds_GraphArc.__name__ = true;
-de_polygonal_ds_GraphArc.__interfaces__ = [de_polygonal_ds_Hashable];
-de_polygonal_ds_GraphArc.prototype = {
-	get_val: function() {
-		return this.node.val;
-	}
-	,free: function() {
-		this.node = null;
-		this.next = this.prev = null;
-	}
-	,__class__: de_polygonal_ds_GraphArc
-};
-var de_polygonal_ds_GraphNode = function(val) {
-	this.mGraph = null;
-	this.numArcs = 0;
-	this.key = de_polygonal_ds_HashKey.next();
-	this.val = val;
-	this.arcList = null;
-	this.marked = false;
-};
-de_polygonal_ds_GraphNode.__name__ = true;
-de_polygonal_ds_GraphNode.__interfaces__ = [de_polygonal_ds_Hashable];
-de_polygonal_ds_GraphNode.prototype = {
-	free: function() {
-		this.val = null;
-		this.next = this.prev = null;
-		this.arcList = null;
-		this.mGraph = null;
-	}
-	,iterator: function() {
-		return new de_polygonal_ds_NodeValIterator(this);
-	}
-	,isConnected: function(target) {
-		return this.getArc(target) != null;
-	}
-	,isMutuallyConnected: function(target) {
-		if(this.getArc(target) != null) {
-			return target.getArc(this) != null;
-		} else {
-			return false;
-		}
-	}
-	,getArc: function(target) {
-		var found = false;
-		var a = this.arcList;
-		while(a != null) {
-			if(a.node == target) {
-				found = true;
-				break;
-			}
-			a = a.next;
-		}
-		if(found) {
-			return a;
-		} else {
-			return null;
-		}
-	}
-	,addArc: function(target,userData) {
-		if(userData == null) {
-			userData = 1;
-		}
-		var arc = this.mGraph.borrowArc != null ? this.mGraph.borrowArc(target,userData) : new de_polygonal_ds_GraphArc(target,userData);
-		arc.next = this.arcList;
-		if(this.arcList != null) {
-			this.arcList.prev = arc;
-		}
-		this.arcList = arc;
-		this.numArcs++;
-		return this;
-	}
-	,removeArc: function(target) {
-		var arc = this.getArc(target);
-		if(arc != null) {
-			if(arc.prev != null) {
-				arc.prev.next = arc.next;
-			}
-			if(arc.next != null) {
-				arc.next.prev = arc.prev;
-			}
-			if(this.arcList == arc) {
-				this.arcList = arc.next;
-			}
-			arc.next = null;
-			arc.prev = null;
-			arc.node = null;
-			if(this.mGraph.returnArc != null) {
-				this.mGraph.returnArc(arc);
-			}
-			this.numArcs--;
-			return true;
-		}
-		return false;
-	}
-	,removeSingleArcs: function() {
-		var arc = this.arcList;
-		while(arc != null) {
-			this.removeArc(arc.node);
-			arc = arc.next;
-		}
-		this.numArcs = 0;
-		return this;
-	}
-	,removeMutualArcs: function() {
-		var arc = this.arcList;
-		while(arc != null) {
-			arc.node.removeArc(this);
-			this.removeArc(arc.node);
-			arc = arc.next;
-		}
-		this.arcList = null;
-		this.numArcs = 0;
-		return this;
-	}
-	,toString: function() {
-		var t = [];
-		var arc;
-		if(this.arcList != null) {
-			arc = this.arcList;
-			while(arc != null) {
-				t.push(Std.string(arc.node.val));
-				arc = arc.next;
-			}
-		}
-		if(t.length > 0) {
-			return "{ GraphNode val=" + Std.string(this.val) + ", arcs=" + t.join(",") + " }";
-		} else {
-			return "{ GraphNode val=" + Std.string(this.val) + " }";
-		}
-	}
-	,__class__: de_polygonal_ds_GraphNode
-};
-var de_polygonal_ds_NodeValIterator = function(x) {
-	this.mObject = x;
-	this.mArcList = this.mObject.arcList;
-};
-de_polygonal_ds_NodeValIterator.__name__ = true;
-de_polygonal_ds_NodeValIterator.__interfaces__ = [de_polygonal_ds_Itr];
-de_polygonal_ds_NodeValIterator.prototype = {
-	reset: function() {
-		this.mArcList = this.mObject.arcList;
-		return this;
-	}
-	,hasNext: function() {
-		return this.mArcList != null;
-	}
-	,next: function() {
-		var val = this.mArcList.node.val;
-		this.mArcList = this.mArcList.next;
-		return val;
-	}
-	,remove: function() {
-		throw new js__$Boot_HaxeError("unsupported operation");
-	}
-	,__class__: de_polygonal_ds_NodeValIterator
-};
-var de_polygonal_ds_HashKey = function() { };
-de_polygonal_ds_HashKey.__name__ = true;
-de_polygonal_ds_HashKey.next = function() {
-	if(de_polygonal_ds_HashKey._counter == null) {
-		de_polygonal_ds_HashKey._counter = 0;
-	}
-	return de_polygonal_ds_HashKey._counter++;
-};
-var de_polygonal_ds_Visitable = function() { };
-de_polygonal_ds_Visitable.__name__ = true;
-de_polygonal_ds_Visitable.prototype = {
-	__class__: de_polygonal_ds_Visitable
-};
-var de_polygonal_ds_tools_ArrayTools = function() { };
-de_polygonal_ds_tools_ArrayTools.__name__ = true;
-de_polygonal_ds_tools_ArrayTools.alloc = function(len) {
-	var a = new Array(len);
-	return a;
-};
-de_polygonal_ds_tools_ArrayTools.trim = function(a,len) {
-	if(a.length > len) {
-		a.length = len;
-		return a;
-	} else {
-		return a;
-	}
-};
-de_polygonal_ds_tools_ArrayTools.swap = function(array,a,b) {
-	if(a != b) {
-		var x = array[a];
-		array[a] = array[b];
-		array[b] = x;
-	}
-};
-de_polygonal_ds_tools_ArrayTools.getFront = function(array,index) {
-	if(index != 0) {
-		var x = array[index];
-		array[index] = array[0];
-		array[0] = x;
-	}
-	return array[0];
-};
-de_polygonal_ds_tools_ArrayTools.init = function(a,val,first,n) {
-	if(n == null) {
-		n = 0;
-	}
-	if(first == null) {
-		first = 0;
-	}
-	var min = first;
-	var max = n <= 0 ? a.length : min + n;
-	while(min < max) a[min++] = val;
-	return a;
-};
-de_polygonal_ds_tools_ArrayTools.blit = function(src,srcPos,dst,dstPos,n) {
-	if(n > 0) {
-		if(src == dst) {
-			if(srcPos < dstPos) {
-				var i = srcPos + n;
-				var j = dstPos + n;
-				var _g1 = 0;
-				var _g = n;
-				while(_g1 < _g) {
-					var k = _g1++;
-					--i;
-					--j;
-					src[j] = src[i];
-				}
-			} else if(srcPos > dstPos) {
-				var i1 = srcPos;
-				var j1 = dstPos;
-				var _g11 = 0;
-				var _g2 = n;
-				while(_g11 < _g2) {
-					var k1 = _g11++;
-					src[j1] = src[i1];
-					++i1;
-					++j1;
-				}
-			}
-		} else if(srcPos == 0 && dstPos == 0) {
-			var _g12 = 0;
-			var _g3 = n;
-			while(_g12 < _g3) {
-				var i2 = _g12++;
-				dst[i2] = src[i2];
-			}
-		} else if(srcPos == 0) {
-			var _g13 = 0;
-			var _g4 = n;
-			while(_g13 < _g4) {
-				var i3 = _g13++;
-				dst[dstPos + i3] = src[i3];
-			}
-		} else if(dstPos == 0) {
-			var _g14 = 0;
-			var _g5 = n;
-			while(_g14 < _g5) {
-				var i4 = _g14++;
-				dst[i4] = src[srcPos + i4];
-			}
-		} else {
-			var _g15 = 0;
-			var _g6 = n;
-			while(_g15 < _g6) {
-				var i5 = _g15++;
-				dst[dstPos + i5] = src[srcPos + i5];
-			}
-		}
-	}
-};
-de_polygonal_ds_tools_ArrayTools.iter = function(src,f,n) {
-	if(n == null) {
-		n = 0;
-	}
-	if(n == 0) {
-		n = src.length;
-	}
-	var _g1 = 0;
-	var _g = n;
-	while(_g1 < _g) {
-		var i = _g1++;
-		f(src[i]);
-	}
-};
-de_polygonal_ds_tools_ArrayTools.binarySearchCmp = function(a,x,min,max,comparator) {
-	var l = min;
-	var m;
-	var h = max + 1;
-	while(l < h) {
-		m = l + (h - l >> 1);
-		if(comparator(a[m],x) < 0) {
-			l = m + 1;
-		} else {
-			h = m;
-		}
-	}
-	if(l <= max && comparator(a[l],x) == 0) {
-		return l;
-	} else {
-		return ~l;
-	}
-};
-de_polygonal_ds_tools_ArrayTools.binarySearchf = function(a,x,min,max) {
-	var l = min;
-	var m;
-	var h = max + 1;
-	while(l < h) {
-		m = l + (h - l >> 1);
-		if(a[m] < x) {
-			l = m + 1;
-		} else {
-			h = m;
-		}
-	}
-	if(l <= max && a[l] == x) {
-		return l;
-	} else {
-		return ~l;
-	}
-};
-de_polygonal_ds_tools_ArrayTools.binarySearchi = function(a,x,min,max) {
-	var l = min;
-	var m;
-	var h = max + 1;
-	while(l < h) {
-		m = l + (h - l >> 1);
-		if(a[m] < x) {
-			l = m + 1;
-		} else {
-			h = m;
-		}
-	}
-	if(l <= max && a[l] == x) {
-		return l;
-	} else {
-		return ~l;
-	}
-};
-de_polygonal_ds_tools_ArrayTools.shuffle = function(a,rvals) {
-	var s = a.length;
-	if(rvals == null) {
-		while(--s > 1) {
-			var i = de_polygonal_ds_tools_Shuffle._f() * s | 0;
-			var t = a[s];
-			a[s] = a[i];
-			a[i] = t;
-		}
-	} else {
-		var j = 0;
-		while(--s > 1) {
-			var i1 = rvals[j++] * s | 0;
-			var t1 = a[s];
-			a[s] = a[i1];
-			a[i1] = t1;
-		}
-	}
-};
-de_polygonal_ds_tools_ArrayTools.sortRange = function(a,cmp,useInsertionSort,first,n) {
-	var k = a.length;
-	if(k > 1) {
-		if(useInsertionSort) {
-			var _g1 = first + 1;
-			var _g = first + n;
-			while(_g1 < _g) {
-				var i = _g1++;
-				var x = a[i];
-				var j = i;
-				while(j > first) {
-					var y = a[j - 1];
-					if(cmp(y,x) > 0) {
-						a[j] = y;
-						--j;
-					} else {
-						break;
-					}
-				}
-				a[j] = x;
-			}
-		} else {
-			de_polygonal_ds_tools_ArrayTools._quickSort(a,first,n,cmp);
-		}
-	}
-};
-de_polygonal_ds_tools_ArrayTools.quickPerm = function(n) {
-	var results = [];
-	var a = [];
-	var p = [];
-	var i;
-	var j;
-	var t;
-	var _g1 = 0;
-	var _g = n;
-	while(_g1 < _g) {
-		var i1 = _g1++;
-		a[i1] = i1 + 1;
-		p[i1] = 0;
-	}
-	results.push(a.slice());
-	i = 1;
-	while(i < n) if(p[i] < i) {
-		j = i % 2 * p[i];
-		t = a[j];
-		a[j] = a[i];
-		a[i] = t;
-		results.push(a.slice());
-		p[i]++;
-		i = 1;
-	} else {
-		p[i] = 0;
-		++i;
-	}
-	return results;
-};
-de_polygonal_ds_tools_ArrayTools.equals = function(a,b) {
-	if(a.length != b.length) {
-		return false;
-	}
-	var _g1 = 0;
-	var _g = a.length;
-	while(_g1 < _g) {
-		var i = _g1++;
-		if(a[i] != b[i]) {
-			return false;
-		}
-	}
-	return true;
-};
-de_polygonal_ds_tools_ArrayTools.split = function(a,n,k) {
-	var out = [];
-	var b = null;
-	var _g1 = 0;
-	var _g = n;
-	while(_g1 < _g) {
-		var i = _g1++;
-		if(i % k == 0) {
-			b = [];
-			out[i / k | 0] = b;
-		}
-		b.push(a[i]);
-	}
-	return out;
-};
-de_polygonal_ds_tools_ArrayTools.pairwise = function(input,visit) {
-	var i = 0;
-	var k = input.length;
-	while(i < k) {
-		visit(i << 1,input[i],input[i + 1]);
-		i += 2;
-	}
-};
-de_polygonal_ds_tools_ArrayTools._quickSort = function(a,first,n,cmp) {
-	var last = first + n - 1;
-	var lo = first;
-	var hi = last;
-	if(n > 1) {
-		var i0 = first;
-		var i1 = i0 + (n >> 1);
-		var i2 = i0 + n - 1;
-		var t0 = a[i0];
-		var t1 = a[i1];
-		var t2 = a[i2];
-		var mid;
-		var t = cmp(t0,t2);
-		if(t < 0 && cmp(t0,t1) < 0) {
-			if(cmp(t1,t2) < 0) {
-				mid = i1;
-			} else {
-				mid = i2;
-			}
-		} else if(cmp(t1,t0) < 0 && cmp(t1,t2) < 0) {
-			if(t < 0) {
-				mid = i0;
-			} else {
-				mid = i2;
-			}
-		} else if(cmp(t2,t0) < 0) {
-			mid = i1;
-		} else {
-			mid = i0;
-		}
-		var pivot = a[mid];
-		a[mid] = a[first];
-		while(lo < hi) {
-			while(cmp(pivot,a[hi]) < 0 && lo < hi) --hi;
-			if(hi != lo) {
-				a[lo] = a[hi];
-				++lo;
-			}
-			while(cmp(pivot,a[lo]) > 0 && lo < hi) ++lo;
-			if(hi != lo) {
-				a[hi] = a[lo];
-				--hi;
-			}
-		}
-		a[lo] = pivot;
-		de_polygonal_ds_tools_ArrayTools._quickSort(a,first,lo - first,cmp);
-		de_polygonal_ds_tools_ArrayTools._quickSort(a,lo + 1,last - lo,cmp);
-	}
-};
-var de_polygonal_ds_tools_Assert = function() { };
-de_polygonal_ds_tools_Assert.__name__ = true;
-var de_polygonal_ds_tools_NativeArrayTools = function() { };
-de_polygonal_ds_tools_NativeArrayTools.__name__ = true;
-de_polygonal_ds_tools_NativeArrayTools.alloc = function(len) {
-	return new Array(len);
-};
-de_polygonal_ds_tools_NativeArrayTools.get = function(src,index) {
-	return src[index];
-};
-de_polygonal_ds_tools_NativeArrayTools.set = function(dst,index,val) {
-	dst[index] = val;
-};
-de_polygonal_ds_tools_NativeArrayTools.size = function(a) {
-	return a.length;
-};
-de_polygonal_ds_tools_NativeArrayTools.toArray = function(src,first,len,dst) {
-	if(len == 0) {
-		return [];
-	}
-	var a = new Array(len);
-	var out = a;
-	if(first == 0) {
-		var _g1 = 0;
-		var _g = len;
-		while(_g1 < _g) {
-			var i = _g1++;
-			out[i] = src[i];
-		}
-	} else {
-		var _g11 = first;
-		var _g2 = first + len;
-		while(_g11 < _g2) {
-			var i1 = _g11++;
-			out[i1 - first] = src[i1];
-		}
-	}
-	return out;
-};
-de_polygonal_ds_tools_NativeArrayTools.ofArray = function(src) {
-	return src.slice(0,src.length);
-};
-de_polygonal_ds_tools_NativeArrayTools.blit = function(src,srcPos,dst,dstPos,n) {
-	if(n > 0) {
-		if(src == dst) {
-			if(srcPos < dstPos) {
-				var i = srcPos + n;
-				var j = dstPos + n;
-				var _g1 = 0;
-				var _g = n;
-				while(_g1 < _g) {
-					var k = _g1++;
-					--i;
-					--j;
-					src[j] = src[i];
-				}
-			} else if(srcPos > dstPos) {
-				var i1 = srcPos;
-				var j1 = dstPos;
-				var _g11 = 0;
-				var _g2 = n;
-				while(_g11 < _g2) {
-					var k1 = _g11++;
-					src[j1] = src[i1];
-					++i1;
-					++j1;
-				}
-			}
-		} else if(srcPos == 0 && dstPos == 0) {
-			var _g12 = 0;
-			var _g3 = n;
-			while(_g12 < _g3) {
-				var i2 = _g12++;
-				dst[i2] = src[i2];
-			}
-		} else if(srcPos == 0) {
-			var _g13 = 0;
-			var _g4 = n;
-			while(_g13 < _g4) {
-				var i3 = _g13++;
-				dst[dstPos + i3] = src[i3];
-			}
-		} else if(dstPos == 0) {
-			var _g14 = 0;
-			var _g5 = n;
-			while(_g14 < _g5) {
-				var i4 = _g14++;
-				dst[i4] = src[srcPos + i4];
-			}
-		} else {
-			var _g15 = 0;
-			var _g6 = n;
-			while(_g15 < _g6) {
-				var i5 = _g15++;
-				dst[dstPos + i5] = src[srcPos + i5];
-			}
-		}
-	}
-};
-de_polygonal_ds_tools_NativeArrayTools.copy = function(src) {
-	return src.slice(0);
-};
-de_polygonal_ds_tools_NativeArrayTools.zero = function(dst,first,n) {
-	if(n == null) {
-		n = 0;
-	}
-	if(first == null) {
-		first = 0;
-	}
-	var min = first;
-	var max = n <= 0 ? dst.length : min + n;
-	var val = 0;
-	while(min < max) dst[min++] = val;
-	return dst;
-};
-de_polygonal_ds_tools_NativeArrayTools.init = function(a,val,first,n) {
-	if(n == null) {
-		n = 0;
-	}
-	if(first == null) {
-		first = 0;
-	}
-	var min = first;
-	var max = n <= 0 ? a.length : min + n;
-	while(min < max) a[min++] = val;
-	return a;
-};
-de_polygonal_ds_tools_NativeArrayTools.nullify = function(a,first,n) {
-	if(n == null) {
-		n = 0;
-	}
-	if(first == null) {
-		first = 0;
-	}
-	var min = first;
-	var max = n <= 0 ? a.length : min + n;
-	while(min < max) a[min++] = null;
-	return a;
-};
-de_polygonal_ds_tools_NativeArrayTools.binarySearchCmp = function(a,val,min,max,cmp) {
-	var l = min;
-	var m;
-	var h = max + 1;
-	while(l < h) {
-		m = l + (h - l >> 1);
-		if(cmp(a[m],val) < 0) {
-			l = m + 1;
-		} else {
-			h = m;
-		}
-	}
-	if(l <= max && cmp(a[l],val) == 0) {
-		return l;
-	} else {
-		return ~l;
-	}
-};
-de_polygonal_ds_tools_NativeArrayTools.binarySearchf = function(a,val,min,max) {
-	var l = min;
-	var m;
-	var h = max + 1;
-	while(l < h) {
-		m = l + (h - l >> 1);
-		if(a[m] < val) {
-			l = m + 1;
-		} else {
-			h = m;
-		}
-	}
-	if(l <= max && a[l] == val) {
-		return l;
-	} else {
-		return ~l;
-	}
-};
-de_polygonal_ds_tools_NativeArrayTools.binarySearchi = function(a,val,min,max) {
-	var l = min;
-	var m;
-	var h = max + 1;
-	while(l < h) {
-		m = l + (h - l >> 1);
-		if(a[m] < val) {
-			l = m + 1;
-		} else {
-			h = m;
-		}
-	}
-	if(l <= max && a[l] == val) {
-		return l;
-	} else {
-		return ~l;
-	}
-};
-var de_polygonal_ds_tools_Shuffle = function() { };
-de_polygonal_ds_tools_Shuffle.__name__ = true;
-de_polygonal_ds_tools_Shuffle._f = function() {
-	return Math.random();
-};
-de_polygonal_ds_tools_Shuffle.setRandom = function(f) {
-	de_polygonal_ds_tools_Shuffle._f = f;
-};
-de_polygonal_ds_tools_Shuffle.frand = function() {
-	return de_polygonal_ds_tools_Shuffle._f();
-};
-var haxe_IMap = function() { };
-haxe_IMap.__name__ = true;
-var haxe_ds_BalancedTree = function() {
-};
-haxe_ds_BalancedTree.__name__ = true;
-haxe_ds_BalancedTree.prototype = {
-	set: function(key,value) {
-		this.root = this.setLoop(key,value,this.root);
-	}
-	,get: function(key) {
-		var node = this.root;
-		while(node != null) {
-			var c = this.compare(key,node.key);
-			if(c == 0) {
-				return node.value;
-			}
-			if(c < 0) {
-				node = node.left;
-			} else {
-				node = node.right;
-			}
-		}
+Std.parseInt = function(x) {
+	var v = parseInt(x,10);
+	if(v == 0 && (HxOverrides.cca(x,1) == 120 || HxOverrides.cca(x,1) == 88)) {
+		v = parseInt(x);
+	}
+	if(isNaN(v)) {
 		return null;
 	}
-	,exists: function(key) {
-		var node = this.root;
-		while(node != null) {
-			var c = this.compare(key,node.key);
-			if(c == 0) {
-				return true;
-			} else if(c < 0) {
-				node = node.left;
-			} else {
-				node = node.right;
-			}
-		}
-		return false;
-	}
-	,setLoop: function(k,v,node) {
-		if(node == null) {
-			return new haxe_ds_TreeNode(null,k,v,null);
-		}
-		var c = this.compare(k,node.key);
-		if(c == 0) {
-			return new haxe_ds_TreeNode(node.left,k,v,node.right,node == null ? 0 : node._height);
-		} else if(c < 0) {
-			var nl = this.setLoop(k,v,node.left);
-			return this.balance(nl,node.key,node.value,node.right);
-		} else {
-			var nr = this.setLoop(k,v,node.right);
-			return this.balance(node.left,node.key,node.value,nr);
-		}
-	}
-	,balance: function(l,k,v,r) {
-		var hl = l == null ? 0 : l._height;
-		var hr = r == null ? 0 : r._height;
-		if(hl > hr + 2) {
-			var _this = l.left;
-			var _this1 = l.right;
-			if((_this == null ? 0 : _this._height) >= (_this1 == null ? 0 : _this1._height)) {
-				return new haxe_ds_TreeNode(l.left,l.key,l.value,new haxe_ds_TreeNode(l.right,k,v,r));
-			} else {
-				return new haxe_ds_TreeNode(new haxe_ds_TreeNode(l.left,l.key,l.value,l.right.left),l.right.key,l.right.value,new haxe_ds_TreeNode(l.right.right,k,v,r));
-			}
-		} else if(hr > hl + 2) {
-			var _this2 = r.right;
-			var _this3 = r.left;
-			if((_this2 == null ? 0 : _this2._height) > (_this3 == null ? 0 : _this3._height)) {
-				return new haxe_ds_TreeNode(new haxe_ds_TreeNode(l,k,v,r.left),r.key,r.value,r.right);
-			} else {
-				return new haxe_ds_TreeNode(new haxe_ds_TreeNode(l,k,v,r.left.left),r.left.key,r.left.value,new haxe_ds_TreeNode(r.left.right,r.key,r.value,r.right));
-			}
-		} else {
-			return new haxe_ds_TreeNode(l,k,v,r,(hl > hr ? hl : hr) + 1);
-		}
-	}
-	,compare: function(k1,k2) {
-		return Reflect.compare(k1,k2);
-	}
-	,__class__: haxe_ds_BalancedTree
+	return v;
 };
-var haxe_ds_TreeNode = function(l,k,v,r,h) {
-	if(h == null) {
-		h = -1;
-	}
-	this.left = l;
-	this.key = k;
-	this.value = v;
-	this.right = r;
-	if(h == -1) {
-		var tmp;
-		var _this = this.left;
-		var _this1 = this.right;
-		if((_this == null ? 0 : _this._height) > (_this1 == null ? 0 : _this1._height)) {
-			var _this2 = this.left;
-			if(_this2 == null) {
-				tmp = 0;
-			} else {
-				tmp = _this2._height;
-			}
-		} else {
-			var _this3 = this.right;
-			if(_this3 == null) {
-				tmp = 0;
-			} else {
-				tmp = _this3._height;
-			}
-		}
-		this._height = tmp + 1;
-	} else {
-		this._height = h;
-	}
-};
-haxe_ds_TreeNode.__name__ = true;
-haxe_ds_TreeNode.prototype = {
-	__class__: haxe_ds_TreeNode
-};
-var haxe_ds_EnumValueMap = function() {
-	haxe_ds_BalancedTree.call(this);
-};
-haxe_ds_EnumValueMap.__name__ = true;
-haxe_ds_EnumValueMap.__interfaces__ = [haxe_IMap];
-haxe_ds_EnumValueMap.__super__ = haxe_ds_BalancedTree;
-haxe_ds_EnumValueMap.prototype = $extend(haxe_ds_BalancedTree.prototype,{
-	compare: function(k1,k2) {
-		var d = k1[1] - k2[1];
-		if(d != 0) {
-			return d;
-		}
-		var p1 = k1.slice(2);
-		var p2 = k2.slice(2);
-		if(p1.length == 0 && p2.length == 0) {
-			return 0;
-		}
-		return this.compareArgs(p1,p2);
-	}
-	,compareArgs: function(a1,a2) {
-		var ld = a1.length - a2.length;
-		if(ld != 0) {
-			return ld;
-		}
-		var _g1 = 0;
-		var _g = a1.length;
-		while(_g1 < _g) {
-			var i = _g1++;
-			var d = this.compareArg(a1[i],a2[i]);
-			if(d != 0) {
-				return d;
-			}
-		}
-		return 0;
-	}
-	,compareArg: function(v1,v2) {
-		if(Reflect.isEnumValue(v1) && Reflect.isEnumValue(v2)) {
-			return this.compare(v1,v2);
-		} else if((v1 instanceof Array) && v1.__enum__ == null && ((v2 instanceof Array) && v2.__enum__ == null)) {
-			return this.compareArgs(v1,v2);
-		} else {
-			return Reflect.compare(v1,v2);
-		}
-	}
-	,__class__: haxe_ds_EnumValueMap
-});
 var js__$Boot_HaxeError = function(val) {
 	Error.call(this);
 	this.val = val;
@@ -2177,13 +488,6 @@ js_Boot.__instanceof = function(o,cl) {
 		return o.__enum__ == cl;
 	}
 };
-js_Boot.__cast = function(o,t) {
-	if(js_Boot.__instanceof(o,t)) {
-		return o;
-	} else {
-		throw new js__$Boot_HaxeError("Cannot cast " + Std.string(o) + " to " + Std.string(t));
-	}
-};
 js_Boot.__nativeClassName = function(o) {
 	var name = js_Boot.__toStr.call(o).slice(8,-1);
 	if(name == "Object" || name == "Function" || name == "Math" || name == "JSON") {
@@ -2197,335 +501,90 @@ js_Boot.__isNativeObj = function(o) {
 js_Boot.__resolveNativeClass = function(name) {
 	return $global[name];
 };
-var trik_robot_Brick = function() {
-	this.accelerometer = brick.accelerometer();
-	this.battery = brick.battery();
-	this.display = trik_robot_display__$DisplayHigher_DisplayHigher_$Impl_$._new();
-	this.keys = trik_robot_keys__$KeysHigher_KeysHigher_$Impl_$._new();
-	this.led = brick.led();
-	this.gyroscope = brick.gyroscope();
+var trik_color_Color = function() { };
+trik_color_Color.__name__ = true;
+trik_color_Color.prototype = {
+	__class__: trik_color_Color
 };
-trik_robot_Brick.__name__ = true;
-trik_robot_Brick.prototype = {
-	encoder: function(port) {
-		return brick.encoder(port);
-	}
-	,motor: function(port) {
-		return brick.motor(port);
-	}
-	,colorSensor: function(port) {
-		return brick.colorSensor(port);
-	}
-	,playSound: function(filename) {
-		brick.playSound(filename);
-	}
-	,say: function(phrase) {
-		brick.say(phrase);
-	}
-	,sensor: function(port) {
-		return brick.sensor(port);
-	}
-	,stop: function() {
-		brick.stop();
-	}
-	,objectSensor: function(port) {
-		return brick.objectSensor(port);
-	}
-	,getPhoto: function() {
-		return getPhoto();
-	}
-	,__class__: trik_robot_Brick
+var trik_color_BinaryColor = function(value) {
+	this.value = value;
 };
-var trik_robot_display__$DisplayHigher_DisplayHigher_$Impl_$ = {};
-trik_robot_display__$DisplayHigher_DisplayHigher_$Impl_$.__name__ = true;
-trik_robot_display__$DisplayHigher_DisplayHigher_$Impl_$._new = function() {
-	var this1 = brick.display();
-	return this1;
+trik_color_BinaryColor.__name__ = true;
+trik_color_BinaryColor.__interfaces__ = [trik_color_Color];
+trik_color_BinaryColor.prototype = {
+	inverse: function() {
+		return new trik_color_BinaryColor(!this.value);
+	}
+	,__class__: trik_color_BinaryColor
 };
-trik_robot_display__$DisplayHigher_DisplayHigher_$Impl_$.addLabel = function(this1,text,pixel) {
-	this1.addLabel(text,pixel.x,pixel.y);
+var trik_color_HSVColor = function(h,s,v) {
+	if(h < 0 || h > 360) {
+		throw new js__$Boot_HaxeError("h value must be in the range [0; 360]");
+	}
+	if(s < 0 || s > 1) {
+		throw new js__$Boot_HaxeError("s value must be in the range [0; 1]");
+	}
+	if(v < 0 || v > 1) {
+		throw new js__$Boot_HaxeError("v value must be in the range [0; 1]");
+	}
+	this.h = h;
+	this.s = s;
+	this.v = v;
 };
-trik_robot_display__$DisplayHigher_DisplayHigher_$Impl_$.drawArc = function(this1,rect,from,to) {
-	this1.drawArc(rect.points[0].x,rect.points[0].y,rect.length,rect.height,from,to);
+trik_color_HSVColor.__name__ = true;
+trik_color_HSVColor.__interfaces__ = [trik_color_Color];
+trik_color_HSVColor.prototype = {
+	__class__: trik_color_HSVColor
 };
-trik_robot_display__$DisplayHigher_DisplayHigher_$Impl_$.drawEllipse = function(this1,rect) {
-	this1.drawEllipse(rect.points[0].x,rect.points[0].y,rect.length,rect.height);
+var trik_color_RGBColor = function(r,g,b) {
+	if(r < 0 || r > 255) {
+		throw new js__$Boot_HaxeError("r value must be in the range [0; 255]");
+	}
+	if(g < 0 || g > 255) {
+		throw new js__$Boot_HaxeError("g value must be in the range [0; 255]");
+	}
+	if(b < 0 || b > 255) {
+		throw new js__$Boot_HaxeError("b value must be in the range [0; 255]");
+	}
+	this.r = r;
+	this.g = g;
+	this.b = b;
 };
-trik_robot_display__$DisplayHigher_DisplayHigher_$Impl_$.drawLine = function(this1,line) {
-	this1.drawLine(line.first.x,line.first.y,line.second.x,line.second.y);
+trik_color_RGBColor.__name__ = true;
+trik_color_RGBColor.__interfaces__ = [trik_color_Color];
+trik_color_RGBColor.prototype = {
+	__class__: trik_color_RGBColor
 };
-trik_robot_display__$DisplayHigher_DisplayHigher_$Impl_$.drawPixel = function(this1,pixel) {
-	this1.drawPoint(pixel.x,pixel.y);
+var trik_color_LiteralColor = function(r,g,b,name) {
+	trik_color_RGBColor.call(this,r,g,b);
+	this.name = name;
 };
-trik_robot_display__$DisplayHigher_DisplayHigher_$Impl_$.drawRect = function(this1,rect) {
-	this1.drawRect(rect.points[0].x,rect.points[0].y,rect.length,rect.height);
+trik_color_LiteralColor.__name__ = true;
+trik_color_LiteralColor.__super__ = trik_color_RGBColor;
+trik_color_LiteralColor.prototype = $extend(trik_color_RGBColor.prototype,{
+	__class__: trik_color_LiteralColor
+});
+var trik_color_MonoColor = function(value) {
+	if(value < 0 || value > 255) {
+		throw new js__$Boot_HaxeError("value of mono color has to be in the range [0; 255]");
+	}
+	this.value = value;
 };
-trik_robot_display__$DisplayHigher_DisplayHigher_$Impl_$.setBackground = function(this1,color) {
-	try {
-		this1.setBackground(trik_color_ColorTools.colorToNativeText(color));
-	} catch( err ) {
-		if (err instanceof js__$Boot_HaxeError) err = err.val;
-		if( js_Boot.__instanceof(err,String) ) {
-			throw new js__$Boot_HaxeError("unacceptable color format for the setBackground function");
-		} else throw(err);
-	}
+trik_color_MonoColor.__name__ = true;
+trik_color_MonoColor.__interfaces__ = [trik_color_Color];
+trik_color_MonoColor.prototype = {
+	__class__: trik_color_MonoColor
 };
-trik_robot_display__$DisplayHigher_DisplayHigher_$Impl_$.setPainterColor = function(this1,color) {
-	try {
-		this1.setPainterColor(trik_color_ColorTools.colorToNativeText(color));
-	} catch( err ) {
-		if (err instanceof js__$Boot_HaxeError) err = err.val;
-		if( js_Boot.__instanceof(err,String) ) {
-			throw new js__$Boot_HaxeError("unacceptable color format for the setPainterColor function");
-		} else throw(err);
-	}
+var trik_color_RGB24Color = function(value) {
+	this.value = value;
+	this.r = null;
+	this.g = null;
+	this.b = null;
 };
-var trik_robot_keys__$KeysHigher_KeysHigher_$Impl_$ = {};
-trik_robot_keys__$KeysHigher_KeysHigher_$Impl_$.__name__ = true;
-trik_robot_keys__$KeysHigher_KeysHigher_$Impl_$.keyToCode = function(this1,key) {
-	var res = 0;
-	switch(key[1]) {
-	case 0:
-		res = 105;
-		break;
-	case 1:
-		res = 103;
-		break;
-	case 2:
-		res = 108;
-		break;
-	case 3:
-		res = 28;
-		break;
-	case 4:
-		res = 106;
-		break;
-	case 5:
-		res = 116;
-		break;
-	case 6:
-		res = 1;
-		break;
-	}
-	return res;
-};
-trik_robot_keys__$KeysHigher_KeysHigher_$Impl_$.isPressed = function(this1,key) {
-	return this1.isPressed(trik_robot_keys__$KeysHigher_KeysHigher_$Impl_$.keyToCode(this1,key));
-};
-trik_robot_keys__$KeysHigher_KeysHigher_$Impl_$.wasPressed = function(this1,key) {
-	return this1.wasPressed(trik_robot_keys__$KeysHigher_KeysHigher_$Impl_$.keyToCode(this1,key));
-};
-trik_robot_keys__$KeysHigher_KeysHigher_$Impl_$._new = function() {
-	var this1 = brick.keys();
-	return this1;
-};
-var trik_robot_Mailbox = function() {
-};
-trik_robot_Mailbox.__name__ = true;
-trik_robot_Mailbox.prototype = {
-	connect: function(ip,port) {
-		if(port == null) {
-			port = -1;
-		}
-		if(port == -1) {
-			mailbox.connect(ip);
-		} else {
-			mailbox.connect(ip, port);
-		}
-	}
-	,hasMessages: function() {
-		return mailbox.hasMessages();
-	}
-	,myHullNumber: function() {
-		return mailbox.myHullNumber();
-	}
-	,receive: function() {
-		return mailbox.receive();
-	}
-	,send: function(message,robotNumber) {
-		if(robotNumber == null) {
-			robotNumber = -1;
-		}
-		if(robotNumber == -1) {
-			mailbox.send(message);
-		} else {
-			mailbox.send(robotNumber, message);
-		}
-	}
-	,__class__: trik_robot_Mailbox
-};
-var trik_robot_Script = function() {
-};
-trik_robot_Script.__name__ = true;
-trik_robot_Script.prototype = {
-	quit: function() {
-		script.quit();
-	}
-	,random: function(from,to) {
-		return script.random(from, to);
-	}
-	,readAll: function(filename) {
-		return script.readAll(filename);
-	}
-	,removeFile: function(filename) {
-		script.removeFile(filename);
-	}
-	,run: function() {
-		script.run();
-	}
-	,system: function(command) {
-		script.system(command);
-	}
-	,time: function() {
-		return script.time();
-	}
-	,wait: function(duration) {
-		return script.wait(duration);
-	}
-	,writeToFile: function(filename,content) {
-		return script.writeToFile(filename, content);
-	}
-	,__class__: trik_robot_Script
-};
-var trik_robot_Concurrency = function() {
-};
-trik_robot_Concurrency.__name__ = true;
-trik_robot_Concurrency.prototype = {
-	joinThread: function(threadId) {
-		Threading.joinThread(threadId);
-	}
-	,killThread: function(threadId) {
-		Threading.killThread(threadId);
-	}
-	,receiveMessage: function(wait) {
-		return Threading.receiveMessage(wait);
-	}
-	,sendMessage: function(threadId,message) {
-		Threading.sendMessage(threadId, message);
-		return;
-	}
-	,startThread: function(threadId,functionName) {
-		Threading.startThread(threadId, functionName);
-		return;
-	}
-	,__class__: trik_robot_Concurrency
-};
-var trik_Trik = function() { };
-trik_Trik.__name__ = true;
-trik_Trik.print = function(text) {
-	print(text);
-};
-var trik_color_Color = { __ename__ : true, __constructs__ : ["Red","DarkRed","Green","DarkGreen","Blue","DarkBlue","Cyan","DarkCyan","Magenta","DarkMagenta","Yellow","DarkYellow","Grey","DarkGrey","LightGrey","Black","White","RGB","RGB24"] };
-trik_color_Color.Red = ["Red",0];
-trik_color_Color.Red.__enum__ = trik_color_Color;
-trik_color_Color.DarkRed = ["DarkRed",1];
-trik_color_Color.DarkRed.__enum__ = trik_color_Color;
-trik_color_Color.Green = ["Green",2];
-trik_color_Color.Green.__enum__ = trik_color_Color;
-trik_color_Color.DarkGreen = ["DarkGreen",3];
-trik_color_Color.DarkGreen.__enum__ = trik_color_Color;
-trik_color_Color.Blue = ["Blue",4];
-trik_color_Color.Blue.__enum__ = trik_color_Color;
-trik_color_Color.DarkBlue = ["DarkBlue",5];
-trik_color_Color.DarkBlue.__enum__ = trik_color_Color;
-trik_color_Color.Cyan = ["Cyan",6];
-trik_color_Color.Cyan.__enum__ = trik_color_Color;
-trik_color_Color.DarkCyan = ["DarkCyan",7];
-trik_color_Color.DarkCyan.__enum__ = trik_color_Color;
-trik_color_Color.Magenta = ["Magenta",8];
-trik_color_Color.Magenta.__enum__ = trik_color_Color;
-trik_color_Color.DarkMagenta = ["DarkMagenta",9];
-trik_color_Color.DarkMagenta.__enum__ = trik_color_Color;
-trik_color_Color.Yellow = ["Yellow",10];
-trik_color_Color.Yellow.__enum__ = trik_color_Color;
-trik_color_Color.DarkYellow = ["DarkYellow",11];
-trik_color_Color.DarkYellow.__enum__ = trik_color_Color;
-trik_color_Color.Grey = ["Grey",12];
-trik_color_Color.Grey.__enum__ = trik_color_Color;
-trik_color_Color.DarkGrey = ["DarkGrey",13];
-trik_color_Color.DarkGrey.__enum__ = trik_color_Color;
-trik_color_Color.LightGrey = ["LightGrey",14];
-trik_color_Color.LightGrey.__enum__ = trik_color_Color;
-trik_color_Color.Black = ["Black",15];
-trik_color_Color.Black.__enum__ = trik_color_Color;
-trik_color_Color.White = ["White",16];
-trik_color_Color.White.__enum__ = trik_color_Color;
-trik_color_Color.RGB = function(r,g,b) { var $x = ["RGB",17,r,g,b]; $x.__enum__ = trik_color_Color; return $x; };
-trik_color_Color.RGB24 = function(value) { var $x = ["RGB24",18,value]; $x.__enum__ = trik_color_Color; return $x; };
-var trik_color_ColorTools = function() { };
-trik_color_ColorTools.__name__ = true;
-trik_color_ColorTools.colorToNativeText = function(color) {
-	var _g = new haxe_ds_EnumValueMap();
-	_g.set(trik_color_Color.Red,"red");
-	_g.set(trik_color_Color.DarkRed,"darkRed");
-	_g.set(trik_color_Color.Green,"green");
-	_g.set(trik_color_Color.DarkGreen,"darkGreen");
-	_g.set(trik_color_Color.Blue,"blue");
-	_g.set(trik_color_Color.DarkBlue,"darkBlue");
-	_g.set(trik_color_Color.Cyan,"cyan");
-	_g.set(trik_color_Color.DarkCyan,"darkCyan");
-	_g.set(trik_color_Color.Magenta,"magenta");
-	_g.set(trik_color_Color.DarkMagenta,"darkMagenta");
-	_g.set(trik_color_Color.Yellow,"yellow");
-	_g.set(trik_color_Color.DarkYellow,"darkYellow");
-	_g.set(trik_color_Color.Grey,"grey");
-	_g.set(trik_color_Color.DarkGrey,"darkGrey");
-	_g.set(trik_color_Color.LightGrey,"lightGrey");
-	_g.set(trik_color_Color.Black,"black");
-	var colorMatch = _g;
-	if(!colorMatch.exists(color)) {
-		throw new js__$Boot_HaxeError("no native string for the passed color is available");
-	}
-	return colorMatch.get(color);
-};
-trik_color_ColorTools.rgb24ToRgb = function(rgb24_value) {
-	if(rgb24_value[1] == 18) {
-		var val = rgb24_value[2];
-		return trik_color_Color.RGB((val & 16711680) >> 16,(val & 65280) >> 8,val & 255);
-	} else {
-		throw new js__$Boot_HaxeError("wrong color format was passed, expected to get RGB24 value");
-	}
-};
-trik_color_ColorTools.colorToRgb = function(color) {
-	var _g = new haxe_ds_EnumValueMap();
-	_g.set(trik_color_Color.Red,trik_color_Color.RGB(255,0,0));
-	_g.set(trik_color_Color.DarkRed,trik_color_Color.RGB(127,0,0));
-	_g.set(trik_color_Color.Green,trik_color_Color.RGB(0,255,0));
-	_g.set(trik_color_Color.DarkGreen,trik_color_Color.RGB(0,127,0));
-	_g.set(trik_color_Color.Blue,trik_color_Color.RGB(0,0,255));
-	_g.set(trik_color_Color.DarkBlue,trik_color_Color.RGB(0,0,127));
-	_g.set(trik_color_Color.Cyan,trik_color_Color.RGB(0,255,255));
-	_g.set(trik_color_Color.DarkCyan,trik_color_Color.RGB(0,127,127));
-	_g.set(trik_color_Color.Magenta,trik_color_Color.RGB(255,0,255));
-	_g.set(trik_color_Color.DarkMagenta,trik_color_Color.RGB(127,0,127));
-	_g.set(trik_color_Color.Yellow,trik_color_Color.RGB(255,255,0));
-	_g.set(trik_color_Color.DarkYellow,trik_color_Color.RGB(127,127,0));
-	_g.set(trik_color_Color.Grey,trik_color_Color.RGB(127,127,127));
-	_g.set(trik_color_Color.DarkGrey,trik_color_Color.RGB(191,191,191));
-	_g.set(trik_color_Color.LightGrey,trik_color_Color.RGB(65,65,65));
-	_g.set(trik_color_Color.Black,trik_color_Color.RGB(0,0,0));
-	_g.set(trik_color_Color.White,trik_color_Color.RGB(255,255,255));
-	var colorMatch = _g;
-	if(!colorMatch.exists(color)) {
-		throw new js__$Boot_HaxeError("wrong color format was passed to the function");
-	}
-	return colorMatch.get(color);
-};
-trik_color_ColorTools.colorToPoint3D = function(color) {
-	switch(color[1]) {
-	case 17:
-		var b = color[4];
-		var g = color[3];
-		var r = color[2];
-		return new trik_geometry_Point3D(r,g,b);
-	case 18:
-		return trik_color_ColorTools.colorToPoint3D(trik_color_ColorTools.rgb24ToRgb(color));
-	default:
-		return trik_color_ColorTools.colorToPoint3D(trik_color_ColorTools.colorToRgb(color));
-	}
-};
-trik_color_ColorTools.colorDist = function(color1,color2) {
-	return trik_color_ColorTools.colorToPoint3D(color1).distTo(trik_color_ColorTools.colorToPoint3D(color2));
+trik_color_RGB24Color.__name__ = true;
+trik_color_RGB24Color.__interfaces__ = [trik_color_Color];
+trik_color_RGB24Color.prototype = {
+	__class__: trik_color_RGB24Color
 };
 var trik_geometry_Point = function(x,y) {
 	if(y == null) {
@@ -2597,6 +656,68 @@ trik_geometry_Point3D.prototype = {
 	}
 	,__class__: trik_geometry_Point3D
 };
+var trik_image__$Image_Image_$Impl_$ = {};
+trik_image__$Image_Image_$Impl_$.__name__ = true;
+trik_image__$Image_Image_$Impl_$._new = function(pixels) {
+	var this1;
+	var _g = 0;
+	while(_g < pixels.length) {
+		var i = pixels[_g];
+		++_g;
+		if(i.length != pixels[0].length) {
+			throw new js__$Boot_HaxeError("all row arrays must have the same length");
+		}
+	}
+	this1 = pixels;
+	return this1;
+};
+trik_image__$Image_Image_$Impl_$.get = function(this1,index) {
+	return this1[index];
+};
+trik_image__$Image_Image_$Impl_$.set = function(this1,index,val) {
+	this1[index] = val;
+	return val;
+};
+var trik_image__$RawImage_RawImage_$Impl_$ = {};
+trik_image__$RawImage_RawImage_$Impl_$.__name__ = true;
+trik_image__$RawImage_RawImage_$Impl_$._new = function(raw_photo) {
+	var this1;
+	var _g = [];
+	var _g2 = 0;
+	var _g1 = raw_photo.length;
+	while(_g2 < _g1) {
+		var i = _g2++;
+		_g.push(new trik_color_RGB24Color(Std.parseInt(raw_photo.charAt(i))));
+	}
+	this1 = _g;
+	return this1;
+};
+trik_image__$RawImage_RawImage_$Impl_$.toImage = function(this1) {
+	var w = 160;
+	var h = 120;
+	var res = [];
+	var _g1 = 0;
+	var _g = h;
+	while(_g1 < _g) {
+		var i = _g1++;
+		var tmp = [];
+		var _g3 = 0;
+		var _g2 = w;
+		while(_g3 < _g2) {
+			var j = _g3++;
+			tmp.push(trik_tools_ColorTools.toRGB(this1[w * i + j]));
+		}
+		res.push(tmp);
+	}
+	return trik_image__$Image_Image_$Impl_$._new(res);
+};
+var trik_ordering_Ordering = { __ename__ : true, __constructs__ : ["EQ","GT","LT"] };
+trik_ordering_Ordering.EQ = ["EQ",0];
+trik_ordering_Ordering.EQ.__enum__ = trik_ordering_Ordering;
+trik_ordering_Ordering.GT = ["GT",1];
+trik_ordering_Ordering.GT.__enum__ = trik_ordering_Ordering;
+trik_ordering_Ordering.LT = ["LT",2];
+trik_ordering_Ordering.LT.__enum__ = trik_ordering_Ordering;
 var trik_robot_display_Line = function(first,second) {
 	this.first = first;
 	this.second = second;
@@ -2656,6 +777,126 @@ trik_robot_keys_Key.Power = ["Power",5];
 trik_robot_keys_Key.Power.__enum__ = trik_robot_keys_Key;
 trik_robot_keys_Key.Esc = ["Esc",6];
 trik_robot_keys_Key.Esc.__enum__ = trik_robot_keys_Key;
+var trik_tools_ColorTools = function() { };
+trik_tools_ColorTools.__name__ = true;
+trik_tools_ColorTools.toRGB = function(color) {
+	var o = color;
+	var _g = o == null ? null : js_Boot.getClass(o);
+	switch(_g) {
+	case trik_color_BinaryColor:
+		if(color.value) {
+			return new trik_color_RGBColor(0,0,0);
+		} else {
+			return new trik_color_RGBColor(255,255,255);
+		}
+		break;
+	case trik_color_HSVColor:
+		var h = color.h;
+		var s = color.s;
+		var v = color.v;
+		var fH = Math.max(0,Math.min(360,h)) / 60;
+		var fS = Math.max(0,Math.min(1,s));
+		var fV = Math.max(0,Math.min(1,v));
+		if(fS == 0) {
+			return new trik_color_RGBColor(Math.round(v * 255),Math.round(v * 255),Math.round(v * 255));
+		}
+		var i = Math.floor(h);
+		var f = h - i;
+		var p = v * (1 - s);
+		var q = v * (1 - s * f);
+		var t = v * (1 - s * (1 - f));
+		var res;
+		switch(i) {
+		case 0:
+			res = [v,t,p];
+			break;
+		case 1:
+			res = [q,v,p];
+			break;
+		case 2:
+			res = [p,v,t];
+			break;
+		case 3:
+			res = [p,q,v];
+			break;
+		case 4:
+			res = [t,p,v];
+			break;
+		default:
+			res = [v,p,q];
+		}
+		return new trik_color_RGBColor(Math.round(res[0] * 255),Math.round(res[1] * 255),Math.round(res[2] * 255));
+	case trik_color_MonoColor:
+		return new trik_color_RGBColor(color.value,color.value,color.value);
+	case trik_color_RGB24Color:
+		return new trik_color_RGBColor((color.value & 16711680) >> 16,(color.value & 65280) >> 8,color.value & 255);
+	case trik_color_RGBColor:
+		return color;
+	default:
+		throw new js__$Boot_HaxeError("unknown color class was passed to the generic function colorToRgb");
+	}
+};
+trik_tools_ColorTools.toHSV = function(color) {
+	var o = color;
+	var _g = o == null ? null : js_Boot.getClass(o);
+	if(_g == trik_color_HSVColor) {
+		return color;
+	} else {
+		var rgbColor = trik_tools_ColorTools.toRGB(color);
+		var r = rgbColor.r;
+		var g = rgbColor.g;
+		var b = rgbColor.b;
+		var fR = r / 255;
+		var fG = g / 255;
+		var fB = b / 255;
+		var minRGB = Math.min(fR,Math.min(fG,fB));
+		var maxRGB = Math.max(fR,Math.max(fG,fB));
+		if(minRGB == maxRGB) {
+			return new trik_color_HSVColor(0,0,minRGB);
+		}
+		var d = fR == minRGB ? fG - fB : fB == minRGB ? fR - fG : fB - fR;
+		var h = fR == minRGB ? 3 : fB == minRGB ? 1 : 5;
+		return new trik_color_HSVColor(60 * (h - d / (maxRGB - minRGB)),(maxRGB - minRGB) / maxRGB,maxRGB);
+	}
+};
+trik_tools_ColorTools.toMono = function(color) {
+	var o = color;
+	var _g = o == null ? null : js_Boot.getClass(o);
+	if(_g == trik_color_MonoColor) {
+		return color;
+	} else {
+		var rgbColor = trik_tools_ColorTools.toRGB(color);
+		return new trik_color_MonoColor(Math.floor((rgbColor.r + rgbColor.g + rgbColor.b) / 3));
+	}
+};
+trik_tools_ColorTools.toPoint3D = function(color) {
+	var rgbColor = trik_tools_ColorTools.toRGB(color);
+	return new trik_geometry_Point3D(rgbColor.r,rgbColor.g,rgbColor.b);
+};
+trik_tools_ColorTools.compareMono = function(color1,color2,threshold) {
+	if(threshold == null) {
+		threshold = 0;
+	}
+	if(color1.value < color2.value) {
+		return trik_ordering_Ordering.LT;
+	}
+	if(color1.value > color2.value) {
+		return trik_ordering_Ordering.GT;
+	}
+	return trik_ordering_Ordering.EQ;
+};
+trik_tools_ColorTools.compare = function(color1,color2,threshold) {
+	if(threshold == null) {
+		threshold = 0;
+	}
+	var color1Rgb = trik_tools_ColorTools.toRGB(color1);
+	var color2Rgb = trik_tools_ColorTools.toRGB(color2);
+	if(Math.abs(color1Rgb.r - color2Rgb.r) <= threshold && Math.abs(color1Rgb.g - color2Rgb.g) <= threshold) {
+		return Math.abs(color1Rgb.b - color2Rgb.b) <= threshold;
+	} else {
+		return false;
+	}
+};
 String.prototype.__class__ = String;
 String.__name__ = true;
 Array.__name__ = true;
@@ -2667,10 +908,14 @@ var Bool = Boolean;
 Bool.__ename__ = ["Bool"];
 var Class = { __name__ : ["Class"]};
 var Enum = { };
-js_Boot.__toStr = ({ }).toString;
 trik_Trik.brick = new trik_robot_Brick();
 trik_Trik.script = new trik_robot_Script();
 trik_Trik.mailbox = new trik_robot_Mailbox();
 trik_Trik.threading = new trik_robot_Concurrency();
+Main.leftMotor = trik_Trik.brick.motor("M3");
+Main.rightMotor = trik_Trik.brick.motor("M4");
+Main.leftEncoder = trik_Trik.brick.encoder("E3");
+Main.rightEncoder = trik_Trik.brick.encoder("E4");
+js_Boot.__toStr = ({ }).toString;
 Main.main();
 })(typeof window != "undefined" ? window : typeof global != "undefined" ? global : typeof self != "undefined" ? self : this);
