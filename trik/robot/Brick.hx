@@ -5,7 +5,7 @@ import trik.robot.accelerometer.Accelerometer;
 import trik.robot.battery.Battery;
 import trik.robot.colorSensor.ColorSensor;
 import trik.robot.encoder.Encoder;
-import trik.robot.gyroscope.Gyroscope;
+import trik.robot.gyroscope.GyroscopeHigher;
 import trik.robot.keys.KeysHigher;
 import trik.robot.led.Led;
 import trik.robot.lineSensor.LineSensor;
@@ -13,7 +13,7 @@ import trik.robot.motor.Motor;
 import trik.robot.objectSensor.ObjectSensor;
 import trik.robot.sensor.Sensor;
 
-import trik.color.Color;
+import trik.color.RGBColor;
 import trik.image.RawImage;
 import trik.image.Image;
 
@@ -24,7 +24,7 @@ class Brick {
     public var display       :DisplayHigher;
     public var keys          :KeysHigher;
     public var led           :Led;
-    public var gyroscope     :Gyroscope;
+    public var gyroscope     :GyroscopeHigher;
     public var lineSensor    :LineSensor;
     
     public function encoder(port:String):Encoder {
@@ -63,7 +63,7 @@ class Brick {
         return new RawImage(untyped __js__("getPhoto()"));
     }
 
-    public function getPhoto():Image {
+    public function getPhoto():Image<RGBColor> {
         return getRawPhoto().toImage();
     }
 
@@ -76,6 +76,6 @@ class Brick {
         this.display = new DisplayHigher();
         this.keys = new KeysHigher();
         this.led = untyped __js__("brick.led()");
-        this.gyroscope = untyped __js__("brick.gyroscope()");
+        this.gyroscope = new GyroscopeHigher();
     }
 }
