@@ -3,6 +3,7 @@ package trik.robot.keys;
 import trik.robot.keys.Keys;
 import trik.robot.keys.Key;
 
+@:forward
 abstract KeysHigher(Keys) {
     public function keyToCode (key:Key):Int {
         var res:Int = 0;
