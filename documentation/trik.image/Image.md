@@ -1,4 +1,4 @@
-trik.image.Image<C>
+`trik.image.Image<C>`
 ===================
 
 Explanation:
@@ -10,17 +10,17 @@ var image = new Image<RGBColor>([[]]);
 
 Methods:
 --------
-### new(pixels): Void
+### `new(pixels): Void`
 Class constructor.
 #### Arguments:
 - `pixels: Array<Array<C>>`. Represents pixels of an image.
 
-### get(index): Array<C>
+### `get(index): Array<C>`
 Returns a row of pixels by the given `index`. You also can use `[]` operator instead of this method.
 #### Argumetns:
 - `index: Int`. Index of the row that needs to be returned. 
 
-### set(index, value): Void
+### `set(index, value): Void`
 Sets the `value` row on the given `index`. You also can use `[]` operator instead of this method.
 #### Arguments:
 - `index: Int`. Index of the row that needs to be changed.
