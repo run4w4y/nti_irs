@@ -25,23 +25,60 @@ class FinalModel extends RobotModel {
         this.leftSensor  = args.leftSensor;
     }
 
+    public function moveWall(speed:Int=100, setpoint:Float, ?condition:(Void -> Bool), ?interval:Time):Void {
+        move(speed, setpoint, function() {
+            var readVal = leftSensor.read();
+            return 
+                if (abs(readVal - setpoint) > 3) 
+                    setpoint
+                else 
+                    readVal;
+        }, {kp: 0.65}, condition, interval);
+    }
+
     public function solution():Void {
         var leftStart = leftSensor.read();
         var leftMax = leftStart;
+        var maxIndex = -1;
+        var count = 0;
+        var countLock = false;
+        var readPrev = leftStart;
 
-        moveP(90, function() {
+        moveWall(90, leftStart, function() {
             var readVal = leftSensor.read();
 
-            if (abs(readVal - leftStart) > 10 && readVal >= leftMax) 
+            if (!countLock && readPrev - readVal < -4) {
+                ++count;
+                countLock = true;
+            }
+            if (countLock && readPrev - readVal > 4)
+                countLock = false;
+            
+            if (abs(readVal - leftStart) > 10 && readVal > leftMax) {
                 leftMax = readVal;
+                maxIndex = count;
+                print("new min found " + leftMax + " " + maxIndex);
+            }
 
+            readPrev = readVal;
             return frontSensor.read() > 25;
         });
 
         stop(Seconds(0.5));
         
-        moveP(-90, function() {
-            return leftMax > leftSensor.read();
+        moveGyro(-90, function() {
+            print(count);
+            var readVal = leftSensor.read();
+
+            if (!countLock && readPrev - readVal < -10) {
+                --count;
+                countLock = true;
+            }
+            if (countLock && readPrev - readVal > 10)
+                countLock = false;
+
+            readPrev = readVal;
+            return count != maxIndex - 1;
         });
 
         stop(Seconds(0.5));
@@ -50,7 +87,7 @@ class FinalModel extends RobotModel {
 
         stop(Seconds(0.5));
 
-        moveP(90, function() {
+        moveGyro(90, function() {
             return frontSensor.read() > (leftMax - leftStart) / 2;
         });
 
