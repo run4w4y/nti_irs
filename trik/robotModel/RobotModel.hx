@@ -12,6 +12,7 @@ import trik.pid.PIDKoefficients;
 import Math.*;
 
 using Lambda;
+using trik.tools.NullTools;
 
 
 class RobotModel {
@@ -23,13 +24,8 @@ class RobotModel {
     public var environment  :Environment;
     public var rotateCount = 0;
 
-    @:generic
-    function nullcoalescence<T>(value:Null<T>, defaultValue:T):T {
-        return if (value == null) defaultValue else value;
-    }
-
     public function stop(?delayTime:Time):Void {
-        delayTime = nullcoalescence(delayTime, Milliseconds(0));
+        delayTime = delayTime.coalesce(Milliseconds(0));
         this.leftMotor.setPower(0);
         this.rightMotor.setPower(0);
         script.wait(delayTime);
@@ -41,7 +37,7 @@ class RobotModel {
     }
 
     public function calibrateGyro(?duration:Time) {
-        duration = nullcoalescence(duration, Seconds(10));
+        duration = duration.coalesce(Seconds(10));
         brick.gyroscope.calibrate(duration);
     }
 
@@ -55,7 +51,7 @@ class RobotModel {
 
     public function move(speed:Int=100, setpoint:Float, readF:(Void -> Float), 
     koefficients:PIDKoefficients, ?condition:(Void -> Bool), ?interval:Time):Void {
-        interval = nullcoalescence(interval, Seconds(0.1));
+        interval = interval.coalesce(Seconds(0.1));
         resetEncoders();
 
         var pid = new PID(interval, -100, 100, koefficients);
@@ -115,7 +111,7 @@ class RobotModel {
         this.rightMotor   = args.rightMotor;
         this.leftEncoder  = args.leftEncoder;
         this.rightEncoder = args.rightEncoder;
-        this.cameraPort   = nullcoalescence(args.cameraPort, "video1");
+        this.cameraPort   = args.cameraPort.coalesce("video1");
         this.environment  = args.environment;
     }
 }
