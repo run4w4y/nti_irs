@@ -25,7 +25,6 @@ class Brick {
     public var keys          :KeysHigher;
     public var led           :Led;
     public var gyroscope     :GyroscopeHigher;
-    public var lineSensor    :LineSensor;
     
     public function encoder(port:String):Encoder {
         return untyped __js__("brick.encoder({0})", port);
