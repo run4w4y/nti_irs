@@ -1,6 +1,7 @@
 package trik.geometry;
 
 import Math.*;
+import trik.exceptions.SamePointException;
 
 
 class Point {
@@ -51,7 +52,7 @@ class Point {
     public function distToLine(a:Point, b:Point) {
         var d:Float = a.distTo(b);
         if (d == 0) 
-            throw "cant define a line with two same points";
+            throw new SamePointException("cant define a line with two same points");
         var s:Float = (this.sub(a)).vector_product(this.sub(b));
         return abs(s)/d;
     }
