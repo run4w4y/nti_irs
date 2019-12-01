@@ -1,4 +1,4 @@
-trik.image.Sides
+`trik.image.Sides`
 ================
 
 Explanation:
@@ -7,11 +7,11 @@ Type representing padding from each side of an image. One of the trik.tools.Imag
 
 Fields:
 -------
-### left: Int
+### `left: Int`
 Padding from the left side of an image.
-### right: Int
+### `right: Int`
 Padding from the right side of an image.
-### top: Int
+### `top: Int`
 Padding from the top of an image.
-### bottom: Int
+### `bottom: Int`
 Padding from the bottom of an image.
