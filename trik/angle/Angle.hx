@@ -7,7 +7,11 @@ class Angle {
         this.value = value % 360;
     }
 
-    public function getDelta(degrees:Angle):Float {
-        return (this.value - degrees.value + 900) % 360 - 180;
+    public function add(angle:Angle):Angle {
+        return new Angle(this.value + angle.value);
+    }
+
+    public function getDelta(angle:Angle):Float {
+        return (this.value - angle.value + 900) % 360 - 180;
     }
 }
