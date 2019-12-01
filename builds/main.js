@@ -128,7 +128,7 @@ FinalModel.prototype = $extend(trik_robotModel_RobotModel.prototype,{
 			} else {
 				return readVal;
 			}
-		},{ kp : 0.65},condition,interval);
+		},{ kp : 0.5},condition,interval);
 	}
 	,solution: function() {
 		var _gthis = this;
@@ -155,7 +155,7 @@ FinalModel.prototype = $extend(trik_robotModel_RobotModel.prototype,{
 			readPrev = readVal;
 			return _gthis.frontSensor.read() > 25;
 		});
-		this.stop(trik_time_Time.Seconds(0.5));
+		this.stop(trik_time_Time.Seconds(.5));
 		this.moveGyro(-90,function() {
 			trik_Trik.print(count);
 			var readVal1 = _gthis.leftSensor.read();
@@ -169,9 +169,9 @@ FinalModel.prototype = $extend(trik_robotModel_RobotModel.prototype,{
 			readPrev = readVal1;
 			return count != maxIndex - 1;
 		});
-		this.stop(trik_time_Time.Seconds(0.5));
+		this.stop(trik_time_Time.Seconds(.5));
 		this.turn(-90,25);
-		this.stop(trik_time_Time.Seconds(0.5));
+		this.stop(trik_time_Time.Seconds(.5));
 		this.moveGyro(90,function() {
 			return _gthis.frontSensor.read() > (leftMax - leftStart) / 2;
 		});
@@ -977,6 +977,8 @@ trik_robotModel_Environment.Real = ["Real",0];
 trik_robotModel_Environment.Real.__enum__ = trik_robotModel_Environment;
 trik_robotModel_Environment.Simulator = ["Simulator",1];
 trik_robotModel_Environment.Simulator.__enum__ = trik_robotModel_Environment;
+var trik_sequence_Sequence = function() { };
+trik_sequence_Sequence.__name__ = true;
 var trik_time_Time = { __ename__ : true, __constructs__ : ["Milliseconds","Seconds","Minutes"] };
 trik_time_Time.Milliseconds = function(value) { var $x = ["Milliseconds",0,value]; $x.__enum__ = trik_time_Time; return $x; };
 trik_time_Time.Seconds = function(value) { var $x = ["Seconds",1,value]; $x.__enum__ = trik_time_Time; return $x; };
