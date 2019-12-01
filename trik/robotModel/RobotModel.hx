@@ -8,7 +8,7 @@ import trik.robot.encoder.Encoder;
 import trik.robotModel.Environment;
 import trik.robotModel.ModelArguments;
 import trik.pid.PID;
-import trik.pid.PIDKoefficients;
+import trik.pid.PIDCoefficients;
 import Math.*;
 
 using Lambda;
@@ -50,7 +50,7 @@ class RobotModel {
     }
 
     public function move(speed:Int=100, setpoint:Float, readF:(Void -> Float), 
-    koefficients:PIDKoefficients, ?condition:(Void -> Bool), ?interval:Time):Void {
+    koefficients:PIDCoefficients, ?condition:(Void -> Bool), ?interval:Time):Void {
         interval = interval.coalesce(Seconds(0.1));
         resetEncoders();
 

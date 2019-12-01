@@ -1,6 +1,6 @@
 package trik.pid;
 
-typedef PIDKoefficients = {
+typedef PIDCoefficients = {
     kp: Float,
     ?kd: Float,
     ?ki: Float

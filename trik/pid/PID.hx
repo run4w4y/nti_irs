@@ -1,7 +1,7 @@
 package trik.pid;
 
 import trik.time.Time;
-import trik.pid.PIDKoefficients;
+import trik.pid.PIDCoefficients;
 import Math.*;
 
 using trik.tools.TimeTools;
@@ -18,7 +18,7 @@ class PID {
     var prevError :Float = 0;
     var integral  :Float = 0;
 
-    public function new(interval:Time, min:Float, max:Float, ks:PIDKoefficients) {
+    public function new(interval:Time, min:Float, max:Float, ks:PIDCoefficients) {
         this.interval = interval;
         this.min = min;
         this.max = max;
