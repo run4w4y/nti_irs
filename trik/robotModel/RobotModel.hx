@@ -7,6 +7,8 @@ import trik.robot.sensor.Sensor;
 import trik.robot.encoder.Encoder;
 import trik.robotModel.Environment;
 import trik.robotModel.ModelArguments;
+import trik.pid.PID;
+import trik.pid.PIDKoefficients;
 import Math.*;
 
 using Lambda;
@@ -25,12 +27,6 @@ class RobotModel {
     function nullcoalescence<T>(value:Null<T>, defaultValue:T):T {
         return if (value == null) defaultValue else value;
     }
-
-    function sign(value:Float) {
-        if (value > 0) return 1;
-        else if (value < 0) return -1;
-        else return 0;
-    } 
 
     public function stop(?delayTime:Time):Void {
         delayTime = nullcoalescence(delayTime, Milliseconds(0));
@@ -57,24 +53,33 @@ class RobotModel {
         return (360 - readGyro()) % 360;
     }
 
-    public function moveP(speed:Int=100, ?condition:(Void -> Bool)):Void {
+    public function move(speed:Int=100, setpoint:Float, readF:(Void -> Float), 
+    koefficients:PIDKoefficients, ?condition:(Void -> Bool), ?interval:Time):Void {
+        interval = nullcoalescence(interval, Seconds(0.1));
         resetEncoders();
-        var direction = ((rotateCount + 2) % 4) - 2;
-        do {
-            var gyroValue = readGyro();
-            var error = 
-                if (direction == -2)
-                    gyroValue + sign(gyroValue) * direction * 90;
-                else
-                    gyroValue - direction * 90;
 
-            leftMotor.setPower(round(speed - error * 38));
-            rightMotor.setPower(round(speed + error * 38));
+        var pid = new PID(interval, -100, 100, koefficients);
+        
+        do {
+            var u = pid.calculate(readF(), setpoint);
+            
+            leftMotor.setPower(round(speed + u));
+            rightMotor.setPower(round(speed - u));
 
             if (condition == null) return;
-            script.wait(Milliseconds(1));
+            script.wait(interval);
         } while (condition());
+
         stop(Seconds(0.1));
+    }
+
+    public function moveGyro(speed:Int=100, ?condition:(Void -> Bool), ?interval:Time):Void {
+        var direction = ((rotateCount + 2) % 4) - 2;
+        move(speed, 90 * direction, readGyro, {
+            kp: 13,
+            kd: 8,
+            ki: 0.03
+        }, condition, interval);
     }
 
     function turnSimulator(angle, speed):Void {
