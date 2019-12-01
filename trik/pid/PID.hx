@@ -5,6 +5,7 @@ import trik.pid.PIDKoefficients;
 import Math.*;
 
 using trik.tools.TimeTools;
+using trik.tools.NullTools;
 
 
 class PID {
@@ -22,8 +23,8 @@ class PID {
         this.min = min;
         this.max = max;
         this.kp = ks.kp;
-        this.kd = if (ks.kd == null) 0 else ks.kd;
-        this.ki = if (ks.ki == null) 0 else ks.ki;
+        this.kd = ks.kd.coalesce(0);
+        this.ki = ks.ki.coalesce(0);
     }
 
     public function calculate(value:Float, ?setpoint:Float=0):Float {
