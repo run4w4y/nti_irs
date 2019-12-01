@@ -24,7 +24,7 @@ or run it locally for testing
 haxe test.hxml
 ```
 
-### Run linting server
+### Running linting server
 ```bash
 haxe --wait 6000 &
 ```
