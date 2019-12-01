@@ -9,6 +9,7 @@ import trik.robotModel.Environment;
 import trik.robotModel.ModelArguments;
 import trik.pid.PID;
 import trik.pid.PIDCoefficients;
+import trik.angle.Angle;
 import Math.*;
 
 using Lambda;
@@ -41,15 +42,12 @@ class RobotModel {
         brick.gyroscope.calibrate(duration);
     }
 
-    public function readGyro():Float {
-        return brick.gyroscope.read()[6]/1000;
+    public function readGyro():Angle {
+        return new Angle(360 - brick.gyroscope.read()[6]/1000);
     }
 
-    public function readGyro360():Float {
-        return (360 - readGyro()) % 360;
-    }
-
-    public function move(speed:Int=100, setpoint:Float, readF:(Void -> Float), 
+    @:generic
+    public function move<T>(speed:Int=100, setpoint:T, readF:(Void -> T), getError:(T -> T -> Float),
     koefficients:PIDCoefficients, ?condition:(Void -> Bool), ?interval:Time):Void {
         interval = interval.coalesce(Seconds(0.1));
         resetEncoders();
@@ -57,7 +55,7 @@ class RobotModel {
         var pid = new PID(interval, -100, 100, koefficients);
         
         do {
-            var u = pid.calculate(readF(), setpoint);
+            var u = pid.calculate(getError(readF(), setpoint));
             
             leftMotor.setPower(round(speed + u));
             rightMotor.setPower(round(speed - u));
@@ -71,9 +69,11 @@ class RobotModel {
 
     public function moveGyro(speed:Int=100, ?condition:(Void -> Bool), ?interval:Time):Void {
         var direction = ((rotateCount + 2) % 4) - 2;
-        move(speed, 90 * direction, readGyro, {
-            kp: 13,
-            kd: 8,
+        move(speed, new Angle(90 * (4 - direction)), readGyro, function(value, setpoint) {
+            return value.getDelta(setpoint);
+        }, {
+            kp: 12.5,
+            kd: 7.5,
             ki: 0.03
         }, condition, interval);
     }
