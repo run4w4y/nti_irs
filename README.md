@@ -28,3 +28,10 @@ haxe test.hxml
 ```bash
 haxe --wait 6000 &
 ```
+
+### Tips
+You might want to use `xclip` CLI tool, to copy and paste code in the TRIK Studio faster. Example usage:
+```bash
+xclip -sel cli < builds/main.js
+```
+This command copies the contents of `builds/main.js` to your clipboard.
