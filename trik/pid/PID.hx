@@ -27,9 +27,7 @@ class PID {
         this.ki = ks.ki.coalesce(0);
     }
 
-    public function calculate(value:Float, ?setpoint:Float=0):Float {
-        var error:Float = setpoint - value;
-        
+    public function calculate(error:Float):Float {
         var pOut:Float = error * kp;
         
         var derivative:Float;
