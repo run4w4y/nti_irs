@@ -7,8 +7,8 @@ import trik.image.Image;
 
 
 abstract RawImage(Array<RGB24Color>) {
-    public function new(raw_photo:String):Void {
-        this = [for (i in 0...raw_photo.length) new RGB24Color(Std.parseInt(raw_photo.charAt(i)))];
+    public function new(rawPhoto:String):Void {
+        this = [for (i in 0...rawPhoto.length) new RGB24Color(Std.parseInt(rawPhoto.charAt(i)))];
     }
 
     public function toImage():Image<RGBColor> {
