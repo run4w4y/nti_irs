@@ -34,6 +34,8 @@ class FinalModel extends RobotModel {
                     setpoint
                 else 
                     readVal;
+        }, function(value, setpoint) {
+            return setpoint - value;
         }, {kp: 0.5}, condition, interval);
     }
 
