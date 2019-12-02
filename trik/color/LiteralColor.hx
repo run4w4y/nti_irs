@@ -10,4 +10,8 @@ class LiteralColor extends RGBColor {
         super(r, g, b);
         this.name = name;
     }
+
+    override public function toString():String {
+        return 'LiteralColor($name)';
+    }
 }

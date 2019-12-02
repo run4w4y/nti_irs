@@ -14,4 +14,8 @@ class Angle {
     public function getDelta(angle:Angle):Float {
         return (this.value - angle.value + 900) % 360 - 180;
     }
+
+    public function toString():String {
+        return 'Angle($value)';
+    }
 }

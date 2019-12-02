@@ -14,4 +14,8 @@ class MonoColor implements Color {
 
         this.value = value;
     }
+
+    public function toString():String {
+        return 'MonoColor($value)';
+    }
 }

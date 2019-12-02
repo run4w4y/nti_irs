@@ -16,4 +16,8 @@ class BinaryColor implements Color {
     public function inverse():BinaryColor {
         return new BinaryColor(!this.value);
     }
+
+    public function toString():String {
+        return 'BinaryColor($value)';
+    }
 }

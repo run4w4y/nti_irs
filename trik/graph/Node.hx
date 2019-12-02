@@ -3,6 +3,9 @@ package trik.graph;
 import trik.hashmap.Hashable;
 import trik.graph.Direction;
 
+using trik.tools.NullTools;
+
+
 class Node extends Hashable {
 	var row:Int;
 	var col:Int;
@@ -27,28 +30,11 @@ class Node extends Hashable {
 		super();
 		this.row = row;
 		this.col = col;
-		this.direction = if (direction != null) direction else Up;
+		this.direction = direction.coalesce(Up);
 	}
 	
 	public function changeDirection(direction:Direction) {
 		return new Node(row, col, direction);
-	}
-	
-	public override function toString():String{
-		var str = "Node " + row + " " + col + " ";
-		switch (direction) {
-			case Left:
-				str += "Left";
-			case Right:
-				str += "Right";
-			case Down:
-				str += "Down";
-			case Up:
-				str += "Up";
-			case Undefined:
-				str += "Undefined";
-		}
-		return str;
 	}
 
 	public function go(?direction:Direction){
@@ -87,4 +73,7 @@ class Node extends Hashable {
 		return true;
 	}
 	
+	override public function toString():String {
+		return 'Node($row, $col, $direction)';
+	}
 }

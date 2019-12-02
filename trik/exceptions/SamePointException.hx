@@ -11,6 +11,6 @@ class SamePointException implements Exception {
     }
 
     public function toString():String {
-        return "SamePointException($errorMessage)";
+        return 'SamePointException($errorMessage)';
     }
 }

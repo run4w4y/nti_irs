@@ -20,4 +20,8 @@ class HSVColor implements Color {
         this.s = s;
         this.v = v;
     }
+
+    public function toString():String {
+        return 'HSVColor($h, $s, $v)';
+    }
 }

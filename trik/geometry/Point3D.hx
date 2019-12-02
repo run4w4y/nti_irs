@@ -17,4 +17,8 @@ class Point3D {
     public function distTo(point:Point3D):Float {
         return sqrt(pow(point.x - this.x, 2) + pow(point.y - this.y, 2) + pow(point.z - this.z, 2));
     }
+
+    public function toString():String {
+        return 'Point3d($x, $y, $z)';
+    }
 }

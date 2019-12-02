@@ -56,4 +56,8 @@ class Point {
         var s:Float = (this.sub(a)).vector_product(this.sub(b));
         return abs(s)/d;
     }
+
+    public function toString():String {
+        return 'Point($x, $y)';
+    }
 }

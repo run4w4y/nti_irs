@@ -15,4 +15,8 @@ class RGB24Color implements Color {
         this.g = null;
         this.b = null;
     }
+
+    public function toString():String {
+        return 'RGB24Color($value)';
+    }
 }

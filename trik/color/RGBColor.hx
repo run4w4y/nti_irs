@@ -17,4 +17,8 @@ class RGBColor implements Color {
         this.g = g;
         this.b = b;
     }
+
+    public function toString():String {
+        return 'RGBColor($r, $g, $b)';
+    }
 }

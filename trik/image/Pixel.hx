@@ -28,4 +28,8 @@ class Pixel {
         this.y += pixel.y;
         this.constrain();
     }
+
+    public function toString():String {
+        return 'Pixel($x, $y)';
+    }
 }
