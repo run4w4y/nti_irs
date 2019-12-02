@@ -12,7 +12,7 @@ class Trik {
     public static var mailbox = new Mailbox();
     public static var threading = new Concurrency();
 
-    public static function print(text:Any):Void {
-        untyped __js__("print({0})", text);
+    public static function print(obj:Dynamic):Void {
+        untyped __js__("print({0})", Std.string(obj));
     }
 }
