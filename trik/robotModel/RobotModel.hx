@@ -23,7 +23,13 @@ class RobotModel {
     public var rightEncoder :Encoder;
     public var cameraPort   :String;
     public var environment  :Environment;
-    public var rotateCount = 0;
+    public var currentDirection = new Angle(0);
+
+    function sign(n:Float):Int {
+        return if (n < 0) -1
+            else if (n > 0) 1
+            else 1;
+    }
 
     public function stop(?delayTime:Time):Void {
         delayTime = delayTime.coalesce(Milliseconds(0));
@@ -67,40 +73,35 @@ class RobotModel {
         stop(Seconds(0.1));
     }
 
-    public function moveGyro(speed:Int=100, ?condition:(Void -> Bool), ?interval:Time):Void {
-        var direction = ((rotateCount + 2) % 4) - 2;
-        move(speed, new Angle(90 * (4 - direction)), readGyro, function(value, setpoint) {
-            return value.getDelta(setpoint);
-        }, {
-            kp: 12.5,
-            kd: 7.5,
-            ki: 0.03
-        }, condition, interval);
+    public function moveGyro(speed:Int=100, ?condition:(Void -> Bool), ?interval:Time, ?coefficients:PIDCoefficients):Void {
+        var defaults:PIDCoefficients = {
+            kp: 1.05,
+            kd: 0.4,
+            ki: 0.0001
+        };
+        move(speed, currentDirection, readGyro, function(value, setpoint) {
+                return value.getDelta(setpoint);
+            }, 
+            if (coefficients == null) defaults else coefficients, 
+            condition, interval
+        );
     }
 
-    function turnSimulator(angle, speed):Void {
-        var deg = 250;
-        if (angle == 90) {
-            leftMotor.setPower(speed);
-            rightMotor.setPower(-speed);
-
-            while (leftEncoder.read() < deg) script.wait(Milliseconds(1));
-            rotateCount += 1;
-        } else {
-            leftMotor.setPower(-speed);
-            rightMotor.setPower(speed);
-            while (rightEncoder.read() < deg) script.wait(Milliseconds(1));
-            rotateCount -= 1;
-        }
+    function turnSimulator(angle:Float):Void {
+        currentDirection = currentDirection.add(angle);
+        moveGyro(0, function() {
+                return abs(currentDirection.getDelta(readGyro())) > 1;
+            }, Seconds(0.01), {kp: 1 }
+        );
         stop(Seconds(0.1));
     }
 
-    public function turn(angle, ?speed:Int=50):Void {
+    public function turn(angle:Float):Void {
         resetEncoders();
 
         switch (environment) {
             case Simulator:
-                turnSimulator(angle, speed);
+                turnSimulator(angle);
             case _:
                 return;
         }

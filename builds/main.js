@@ -7,59 +7,25 @@ function $extend(from, fields) {
 	return proto;
 }
 var trik_robotModel_RobotModel = function(args) {
-	this.rotateCount = 0;
+	this.currentDirection = new trik_angle_Angle(0);
 	this.leftMotor = args.leftMotor;
 	this.rightMotor = args.rightMotor;
 	this.leftEncoder = args.leftEncoder;
 	this.rightEncoder = args.rightEncoder;
-	this.cameraPort = this.nullcoalescence_String(args.cameraPort,"video1");
+	this.cameraPort = trik_tools_NullTools.coalesce_String(args.cameraPort,"video1");
 	this.environment = args.environment;
 };
 trik_robotModel_RobotModel.__name__ = true;
 trik_robotModel_RobotModel.prototype = {
-	nullcoalescence_trik_time_Time: function(value,defaultValue) {
-		if(value == null) {
-			return defaultValue;
-		} else {
-			return value;
-		}
-	}
-	,nullcoalescence_String: function(value,defaultValue) {
-		if(value == null) {
-			return defaultValue;
-		} else {
-			return value;
-		}
-	}
-	,stop: function(delayTime) {
-		delayTime = this.nullcoalescence_trik_time_Time(delayTime,trik_time_Time.Milliseconds(0));
-		this.leftMotor.setPower(0);
-		this.rightMotor.setPower(0);
-		trik_robot__$ScriptHigher_ScriptHigher_$Impl_$.wait(trik_Trik.script,delayTime);
-	}
-	,resetEncoders: function() {
-		this.leftEncoder.reset();
-		this.rightEncoder.reset();
-	}
-	,calibrateGyro: function(duration) {
-		duration = this.nullcoalescence_trik_time_Time(duration,trik_time_Time.Seconds(10));
-		trik_robot_gyroscope__$GyroscopeHigher_GyroscopeHigher_$Impl_$.calibrate(trik_Trik.brick.gyroscope,duration);
-	}
-	,readGyro: function() {
-		return trik_Trik.brick.gyroscope.read()[6] / 1000;
-	}
-	,readGyro360: function() {
-		return (360 - this.readGyro()) % 360;
-	}
-	,move: function(speed,setpoint,readF,koefficients,condition,interval) {
+	move_trik_angle_Angle: function(speed,setpoint,readF,getError,koefficients,condition,interval) {
 		if(speed == null) {
 			speed = 100;
 		}
-		interval = this.nullcoalescence_trik_time_Time(interval,trik_time_Time.Seconds(0.1));
+		interval = trik_tools_NullTools.coalesce_trik_time_Time(interval,trik_time_Time.Seconds(0.1));
 		this.resetEncoders();
 		var pid = new trik_pid_PID(interval,-100,100,koefficients);
 		while(true) {
-			var u = pid.calculate(readF(),setpoint);
+			var u = pid.calculate(getError(readF(),setpoint));
 			this.leftMotor.setPower(Math.round(speed + u));
 			this.rightMotor.setPower(Math.round(speed - u));
 			if(condition == null) {
@@ -72,36 +38,75 @@ trik_robotModel_RobotModel.prototype = {
 		}
 		this.stop(trik_time_Time.Seconds(0.1));
 	}
-	,moveGyro: function(speed,condition,interval) {
+	,move_Float: function(speed,setpoint,readF,getError,koefficients,condition,interval) {
 		if(speed == null) {
 			speed = 100;
 		}
-		var direction = (this.rotateCount + 2) % 4 - 2;
-		this.move(speed,90 * direction,$bind(this,this.readGyro),{ kp : 13, kd : 8, ki : 0.03},condition,interval);
-	}
-	,turnSimulator: function(angle,speed) {
-		var deg = 250;
-		if(angle == 90) {
-			this.leftMotor.setPower(speed);
-			this.rightMotor.setPower(-speed);
-			while(this.leftEncoder.read() < deg) trik_robot__$ScriptHigher_ScriptHigher_$Impl_$.wait(trik_Trik.script,trik_time_Time.Milliseconds(1));
-			this.rotateCount += 1;
-		} else {
-			this.leftMotor.setPower(-speed);
-			this.rightMotor.setPower(speed);
-			while(this.rightEncoder.read() < deg) trik_robot__$ScriptHigher_ScriptHigher_$Impl_$.wait(trik_Trik.script,trik_time_Time.Milliseconds(1));
-			this.rotateCount -= 1;
+		interval = trik_tools_NullTools.coalesce_trik_time_Time(interval,trik_time_Time.Seconds(0.1));
+		this.resetEncoders();
+		var pid = new trik_pid_PID(interval,-100,100,koefficients);
+		while(true) {
+			var u = pid.calculate(getError(readF(),setpoint));
+			this.leftMotor.setPower(Math.round(speed + u));
+			this.rightMotor.setPower(Math.round(speed - u));
+			if(condition == null) {
+				return;
+			}
+			trik_robot__$ScriptHigher_ScriptHigher_$Impl_$.wait(trik_Trik.script,interval);
+			if(!condition()) {
+				break;
+			}
 		}
 		this.stop(trik_time_Time.Seconds(0.1));
 	}
-	,turn: function(angle,speed) {
-		if(speed == null) {
-			speed = 50;
+	,sign: function(n) {
+		if(n < 0) {
+			return -1;
+		} else if(n > 0) {
+			return 1;
+		} else {
+			return 1;
 		}
+	}
+	,stop: function(delayTime) {
+		delayTime = trik_tools_NullTools.coalesce_trik_time_Time(delayTime,trik_time_Time.Milliseconds(0));
+		this.leftMotor.setPower(0);
+		this.rightMotor.setPower(0);
+		trik_robot__$ScriptHigher_ScriptHigher_$Impl_$.wait(trik_Trik.script,delayTime);
+	}
+	,resetEncoders: function() {
+		this.leftEncoder.reset();
+		this.rightEncoder.reset();
+	}
+	,calibrateGyro: function(duration) {
+		duration = trik_tools_NullTools.coalesce_trik_time_Time(duration,trik_time_Time.Seconds(10));
+		trik_robot_gyroscope__$GyroscopeHigher_GyroscopeHigher_$Impl_$.calibrate(trik_Trik.brick.gyroscope,duration);
+	}
+	,readGyro: function() {
+		return new trik_angle_Angle(360 - trik_Trik.brick.gyroscope.read()[6] / 1000);
+	}
+	,moveGyro: function(speed,condition,interval,coefficients) {
+		if(speed == null) {
+			speed = 100;
+		}
+		var defaults = { kp : 1.05, kd : 0.4, ki : 0.0001};
+		this.move_trik_angle_Angle(speed,this.currentDirection,$bind(this,this.readGyro),function(value,setpoint) {
+			return value.getDelta(setpoint);
+		},coefficients == null ? defaults : coefficients,condition,interval);
+	}
+	,turnSimulator: function(angle) {
+		var _gthis = this;
+		this.currentDirection = this.currentDirection.add(angle);
+		this.moveGyro(0,function() {
+			return Math.abs(_gthis.currentDirection.getDelta(_gthis.readGyro())) > 1;
+		},trik_time_Time.Seconds(0.01),{ kp : 1});
+		this.stop(trik_time_Time.Seconds(0.1));
+	}
+	,turn: function(angle) {
 		this.resetEncoders();
 		var _g = this.environment;
 		if(_g[1] == 1) {
-			this.turnSimulator(angle,speed);
+			this.turnSimulator(angle);
 		} else {
 			return;
 		}
@@ -121,13 +126,15 @@ FinalModel.prototype = $extend(trik_robotModel_RobotModel.prototype,{
 			speed = 100;
 		}
 		var _gthis = this;
-		this.move(speed,setpoint,function() {
+		this.move_Float(speed,setpoint,function() {
 			var readVal = _gthis.leftSensor.read();
 			if(Math.abs(readVal - setpoint) > 3) {
 				return setpoint;
 			} else {
 				return readVal;
 			}
+		},function(value,setpoint1) {
+			return setpoint1 - value;
 		},{ kp : 0.5},condition,interval);
 	}
 	,solution: function() {
@@ -170,7 +177,7 @@ FinalModel.prototype = $extend(trik_robotModel_RobotModel.prototype,{
 			return count != maxIndex - 1;
 		});
 		this.stop(trik_time_Time.Seconds(.5));
-		this.turn(-90,25);
+		this.turn(90);
 		this.stop(trik_time_Time.Seconds(.5));
 		this.moveGyro(90,function() {
 			return _gthis.frontSensor.read() > (leftMax - leftStart) / 2;
@@ -622,6 +629,19 @@ trik_Trik.__name__ = true;
 trik_Trik.print = function(text) {
 	print(text);
 };
+var trik_angle_Angle = function(value) {
+	this.value = (360 + value) % 360;
+};
+trik_angle_Angle.__name__ = true;
+trik_angle_Angle.prototype = {
+	add: function(angle) {
+		return new trik_angle_Angle(this.value + angle);
+	}
+	,getDelta: function(angle) {
+		return (this.value - angle.value + 900) % 360 - 180;
+	}
+	,__class__: trik_angle_Angle
+};
 var trik_color_Color = function() { };
 trik_color_Color.__name__ = true;
 trik_color_Color.prototype = {
@@ -707,6 +727,22 @@ trik_color_RGB24Color.__interfaces__ = [trik_color_Color];
 trik_color_RGB24Color.prototype = {
 	__class__: trik_color_RGB24Color
 };
+var trik_exceptions_Exception = function() { };
+trik_exceptions_Exception.__name__ = true;
+trik_exceptions_Exception.prototype = {
+	__class__: trik_exceptions_Exception
+};
+var trik_exceptions_SamePointException = function(errorMessage) {
+	this.errorMessage = errorMessage;
+};
+trik_exceptions_SamePointException.__name__ = true;
+trik_exceptions_SamePointException.__interfaces__ = [trik_exceptions_Exception];
+trik_exceptions_SamePointException.prototype = {
+	toString: function() {
+		return "SamePointException($errorMessage)";
+	}
+	,__class__: trik_exceptions_SamePointException
+};
 var trik_geometry_Point = function(x,y) {
 	if(y == null) {
 		y = 0;
@@ -749,7 +785,7 @@ trik_geometry_Point.prototype = {
 	,distToLine: function(a,b) {
 		var d = a.distTo(b);
 		if(d == 0) {
-			throw new js__$Boot_HaxeError("cant define a line with two same points");
+			throw new js__$Boot_HaxeError(new trik_exceptions_SamePointException("cant define a line with two same points"));
 		}
 		var s = this.sub(a).vector_product(this.sub(b));
 		return Math.abs(s) / d;
@@ -801,14 +837,14 @@ trik_image__$Image_Image_$Impl_$.set = function(this1,index,val) {
 };
 var trik_image__$RawImage_RawImage_$Impl_$ = {};
 trik_image__$RawImage_RawImage_$Impl_$.__name__ = true;
-trik_image__$RawImage_RawImage_$Impl_$._new = function(raw_photo) {
+trik_image__$RawImage_RawImage_$Impl_$._new = function(rawPhoto) {
 	var this1;
 	var _g = [];
 	var _g2 = 0;
-	var _g1 = raw_photo.length;
+	var _g1 = rawPhoto.length;
 	while(_g2 < _g1) {
 		var i = _g2++;
-		_g.push(new trik_color_RGB24Color(Std.parseInt(raw_photo.charAt(i))));
+		_g.push(new trik_color_RGB24Color(Std.parseInt(rawPhoto.charAt(i))));
 	}
 	this1 = _g;
 	return this1;
@@ -846,16 +882,12 @@ var trik_pid_PID = function(interval,min,max,ks) {
 	this.min = min;
 	this.max = max;
 	this.kp = ks.kp;
-	this.kd = ks.kd == null ? 0 : ks.kd;
-	this.ki = ks.ki == null ? 0 : ks.ki;
+	this.kd = trik_tools_NullTools.coalesce_Float(ks.kd,0);
+	this.ki = trik_tools_NullTools.coalesce_Float(ks.ki,0);
 };
 trik_pid_PID.__name__ = true;
 trik_pid_PID.prototype = {
-	calculate: function(value,setpoint) {
-		if(setpoint == null) {
-			setpoint = 0;
-		}
-		var error = setpoint - value;
+	calculate: function(error) {
 		var pOut = error * this.kp;
 		var derivative;
 		var _g = trik_tools_TimeTools.toMilliseconds(this.interval);
@@ -1101,6 +1133,29 @@ trik_tools_ColorTools.compare = function(color1,color2,threshold) {
 		return Math.abs(color1Rgb.b - color2Rgb.b) <= threshold;
 	} else {
 		return false;
+	}
+};
+var trik_tools_NullTools = function() { };
+trik_tools_NullTools.__name__ = true;
+trik_tools_NullTools.coalesce_Float = function(value,defaultValue) {
+	if(value == null) {
+		return defaultValue;
+	} else {
+		return value;
+	}
+};
+trik_tools_NullTools.coalesce_trik_time_Time = function(value,defaultValue) {
+	if(value == null) {
+		return defaultValue;
+	} else {
+		return value;
+	}
+};
+trik_tools_NullTools.coalesce_String = function(value,defaultValue) {
+	if(value == null) {
+		return defaultValue;
+	} else {
+		return value;
 	}
 };
 var trik_tools_TimeTools = function() { };

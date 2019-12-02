@@ -8,6 +8,7 @@ import trik.robot.display.Pixel;
 import Math.*;
 import trik.Trik.*;
 import trik.sequence.Sequence;
+import trik.angle.Angle;
 
 
 typedef FinalArguments = {
@@ -28,15 +29,16 @@ class FinalModel extends RobotModel {
 
     public function moveWall(speed:Int=100, setpoint:Float, ?condition:(Void -> Bool), ?interval:Time):Void {
         move(speed, setpoint, function() {
-            var readVal = leftSensor.read();
-            return 
-                if (abs(readVal - setpoint) > 3) 
-                    setpoint
-                else 
-                    readVal;
-        }, function(value, setpoint) {
-            return setpoint - value;
-        }, {kp: 0.5}, condition, interval);
+                var readVal = leftSensor.read();
+                return 
+                    if (abs(readVal - setpoint) > 3) 
+                        setpoint
+                    else 
+                        readVal;
+            }, function(value, setpoint) {
+                return setpoint - value;
+            }, {kp: 0.5}, condition, interval
+        );
     }
 
     public function solution():Void {
@@ -46,7 +48,7 @@ class FinalModel extends RobotModel {
         var count = 0;
         var countLock = false;
         var readPrev = leftStart;
-
+        
         Sequence.sequence(stop(Seconds(.5)),
             moveWall(90, leftStart, function() {
                 var readVal = leftSensor.read();
@@ -83,7 +85,7 @@ class FinalModel extends RobotModel {
                 return count != maxIndex - 1;
             }),
 
-            turn(-90, 25),
+            turn(90),
 
             moveGyro(90, function() {
                 return frontSensor.read() > (leftMax - leftStart) / 2;
