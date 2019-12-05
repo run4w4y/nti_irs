@@ -7,7 +7,7 @@ import trik.robot.Concurrency;
 
 
 typedef Printable = {
-    public function toString():String;
+    function toString():String;
 }
 
 class Trik {
