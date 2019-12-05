@@ -1,39 +1,44 @@
 package trik.geometry;
 
-import trik.geometry.PointInternal;
+import trik.geometry.PointLike;
 import Math.*;
 import trik.exceptions.SamePointException;
 
 
-@:forward
-abstract Point(PointInternal) {
+class Point {
+    public var x:Float;
+    public var y:Float;
+
     public function new(?x:Float=0, ?y:Float=0):Void {
-        this = new PointInternal(x, y);
+        this.x = x;
+        this.y = y;
     }
 
-    @:op(A + B)
-    public function sum(point:Point):Point {
-        return new Point(this.x + point.x, this.y + point.y);
+    @:generic
+    public function sum<T:PointLike>(pointLike:T):Point {
+        return new Point(this.x + pointLike.x, this.y + pointLike.y);
     }
 
-    @:op(-A)
     public function neg():Point {
         return new Point(-this.x, -this.y);
     }
 
-    @:op(A - B)
-    public function sub(point: Point):Point {
-        return new Point(this.x - point.x, this.y - point.y);
+    @:generic
+    public function sub<T:PointLike>(pointLike:T):Point {
+        return new Point(this.x - pointLike.x, this.y - pointLike.y);
     }
 
-    @:op(A * B)
     public function mul(k:Float):Point {
         return new Point(this.x * k, this.y * k);
     }
 
-    @:op(A / B)
     public function div(k:Float):Point {
         return new Point(this.x / k, this.y / k);
+    }
+
+    @:generic
+    public function distTo<T:PointLike>(pointLike:T):Float {
+        return sqrt(pow(this.x - pointLike.x, 2) + pow(this.y - pointLike.y, 2));
     }
 
     public function toString():String {
