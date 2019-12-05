@@ -8,6 +8,8 @@ import Math.*;
 
 
 class GeometryTools {
+    public static var epsilon = 1e-6;
+
     @:generic
     public static function distToLine<T:PointLike>(pointLike:T, line:Line) {
         var d:Float = line.point1.distTo(line.point2);
@@ -16,13 +18,27 @@ class GeometryTools {
         return abs(s)/d;
     }
 
-    static function det(line1:Line, line2:Line):Float {
-        return line1.a * line2.b - line1.b * line2.a;
+    static function det(a:Float, b:Float, c:Float, d:Float):Float {
+        return a * d - b * c;
     }
 
-    public static function getIntersectionPoint(line1:Line, line2:Line):Point {
-        var zn:Float = det(line1, line2);
+    public static function paralell(line1:Line, line2:Line) {
+        return abs(det(line1.a, line1.b, line2.a, line2.b)) <= epsilon;
+    }
 
-        return new Point();
+    public static function equivalent(line1:Line, line2:Line):Bool {
+        return abs(det(line1.a, line1.b, line2.a, line2.b)) < epsilon
+           && abs(det(line1.a, line1.c, line2.a, line2.c)) < epsilon
+           && abs(det(line1.b, line1.c, line2.b, line2.c)) < epsilon;
+    }
+
+    public static function getIntersectionPoint(line1:Line, line2:Line):Null<Point> {
+        if (paralell(line1, line2) || equivalent(line1, line2)) return null;
+        
+        var d = det(line1.a, line1.b, line2.a, line2.b);
+        return new Point(
+            (line2.b * line1.c - line1.b * line2.c) / d,
+            (line1.a * line2.c - line2.a * line1.c) / d
+        );
     }
 }
