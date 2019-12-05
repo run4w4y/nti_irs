@@ -23,7 +23,6 @@ class Vector extends Point {
         return new Vector(-this.x, -this.y);
     }
 
-    @:generic
     override public function sub<T:PointLike>(pointLike:T):Vector {
         return new Vector(this.x - pointLike.x, this.y - pointLike.y);
     }
