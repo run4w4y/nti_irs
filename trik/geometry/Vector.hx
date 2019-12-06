@@ -15,7 +15,7 @@ class Vector extends Point {
     }
 
     @:generic
-    override public function sum<T:PointLike>(pointLike:T):Vector {
+    override public function add<T:PointLike>(pointLike:T):Vector {
         return new Vector(this.x + pointLike.x, this.y + pointLike.y);
     }
 
