@@ -1,7 +1,9 @@
 package trik.geometry;
 
 import trik.exceptions.SamePointException;
+import trik.geometry.PointLike;
 import trik.geometry.Point;
+import Math.*;
 
 
 class Line {
@@ -11,16 +13,41 @@ class Line {
     public var point1:Point;
     public var point2:Point;
 
-    public function new(point1:Point, point2:Point) {
-        if (point1.distTo(point2) == 0) 
+    @:generic
+    public function new<T:PointLike>(pointLike1:T, pointLike2:T) {
+        if (abs(pointLike1.x - pointLike2.x) <= 1e-6 && abs(pointLike1.y - pointLike2.y) <= 1e-6) 
             throw new SamePointException('cant define a line with two same points');
         
-        this.point1 = point1;
-        this.point2 = point2;
+        this.point1 = new Point(pointLike1.x, pointLike1.y);
+        this.point2 = new Point(pointLike2.x, pointLike2.y);
 
-        a = point1.y - point2.y;
-        b = point2.x - point1.x;
-        c = -a * point1.x - b * point1.y;
+        a = pointLike1.y - pointLike2.y;
+        b = pointLike2.x - pointLike1.x;
+        c = -a * pointLike1.x - b * pointLike1.y;
+    }
+
+    public function moveX(value:Float):Line {
+        var delta = new Point(value, 0);
+        return new Line(
+            point1.add(delta),
+            point2.add(delta)
+        );
+    }
+
+    public function moveY(value:Float):Line {
+        var delta = new Point(0, value);
+        return new Line(
+            point1.add(delta),
+            point2.add(delta)
+        );
+    }
+
+    public function moveXY(valueX:Float, valueY:Float):Line {
+        var delta = new Point(valueX, valueY);
+        return new Line(
+            point1.add(delta),
+            point2.add(delta)
+        );
     }
 
     public function getX(y:Float):Float {
@@ -31,7 +58,15 @@ class Line {
         return -(a*x + c)/b;
     }
 
+    public function getPointX(x:Float):Point {
+        return new Point(x, getY(x));
+    }
+
+    public function getPointY(y:Float):Point {
+        return new Point(getX(y), y);
+    }
+
     public function toString():String {
-        return 'Line($point1, $point2)';
+        return 'Line($a, $b, $c)';
     }
 }
