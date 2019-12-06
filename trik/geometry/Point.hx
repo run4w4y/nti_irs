@@ -15,7 +15,7 @@ class Point {
     }
 
     @:generic
-    public function sum<T:PointLike>(pointLike:T):Point {
+    public function add<T:PointLike>(pointLike:T):Point {
         return new Point(this.x + pointLike.x, this.y + pointLike.y);
     }
 
@@ -34,11 +34,6 @@ class Point {
 
     public function div(k:Float):Point {
         return new Point(this.x / k, this.y / k);
-    }
-
-    @:generic
-    public function distTo<T:PointLike>(pointLike:T):Float {
-        return sqrt(pow(this.x - pointLike.x, 2) + pow(this.y - pointLike.y, 2));
     }
 
     public function toString():String {
