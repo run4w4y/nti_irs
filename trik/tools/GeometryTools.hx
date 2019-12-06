@@ -12,7 +12,7 @@ class GeometryTools {
 
     @:generic
     public static function distToLine<T:PointLike>(pointLike:T, line:Line) {
-        var d:Float = line.point1.distTo(line.point2);
+        var d:Float = distTo(line.point1, line.point2);
         var vector = Vector.fromPointLike(pointLike);
         var s:Float = (vector.sub(line.point1)).vector_product(vector.sub(line.point2));
         return abs(s)/d;
@@ -40,5 +40,15 @@ class GeometryTools {
             (line2.b * line1.c - line1.b * line2.c) / d,
             (line1.a * line2.c - line2.a * line1.c) / d
         );
+    }
+
+    @:generic
+    public static function toPoint<T:PointLike>(pointLike:T):Point {
+        return new Point(pointLike.x, pointLike.y);
+    }
+
+    @:generic
+    public static function distTo<T:PointLike>(pointLike1:T, pointLike2:T):Float {
+        return sqrt(pow(pointLike1.x - pointLike2.x, 2) + pow(pointLike1.y - pointLike2.y, 2));
     }
 }
