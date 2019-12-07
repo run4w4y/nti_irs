@@ -56,6 +56,9 @@ class Main {
                 )
             ))
         );
-        trace(artag.getCells());
+        trace(artag.marker.map(function(a) return a.map(
+            function(c) return if (c.value) 'True' else 'False' 
+        )));
+        // trace(artag.getCells());
     }
 }
