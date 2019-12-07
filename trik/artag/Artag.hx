@@ -86,8 +86,8 @@ class Artag {
 
         for (i in 0...markerSize + 1) {
             verticalLines.push(new Line(
-                invY(topLine.getPointX(corners.leftTop.x + topDist * i / markerSize)),
-                invY(bottomLine.getPointX(corners.leftBottom.x + bottomDist * i / markerSize))
+                topLine.getPointX(corners.leftTop.x + topDist * i / markerSize),
+                bottomLine.getPointX(corners.leftBottom.x + bottomDist * i / markerSize)
             ));
             horizontalLines.push(new Line(
                 invY(leftLine.getPointY(corners.leftTop.y + leftDist * i / markerSize)),
@@ -100,6 +100,8 @@ class Artag {
         for (i in 0...markerSize) {
             var tmp:Array<Corners> = [];
             for (j in 0...markerSize) {
+                // trace(verticalLines[j]);
+                // trace(horizontalLines[i]);
                 trace(verticalLines[j].getIntersectionPoint(horizontalLines[i]));
                 tmp.push(new Corners(
                     pointToPixel(verticalLines[j].getIntersectionPoint(horizontalLines[i])),
