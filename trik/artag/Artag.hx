@@ -95,19 +95,14 @@ class Artag {
             ));
         }
 
-        // trace(horizontalLines);
-
         for (i in 0...markerSize) {
             var tmp:Array<Corners> = [];
             for (j in 0...markerSize) {
-                // trace(verticalLines[j]);
-                // trace(horizontalLines[i]);
-                trace(verticalLines[j].getIntersectionPoint(horizontalLines[i]));
                 tmp.push(new Corners(
                     pointToPixel(verticalLines[j].getIntersectionPoint(horizontalLines[i])),
-                    pointToPixel(verticalLines[j].getIntersectionPoint(horizontalLines[i + 1])),
                     pointToPixel(verticalLines[j + 1].getIntersectionPoint(horizontalLines[i])),
-                    pointToPixel(verticalLines[j + 1].getIntersectionPoint(horizontalLines[i + 1]))
+                    pointToPixel(verticalLines[j + 1].getIntersectionPoint(horizontalLines[i + 1])),
+                    pointToPixel(verticalLines[j].getIntersectionPoint(horizontalLines[i + 1]))
                 ));
             }
             res.push(tmp);
@@ -125,7 +120,11 @@ class Artag {
             pixelToPoint(cell.rightTop),
             pixelToPoint(cell.leftBottom)
         );
-        var intersection = pointToPixel(line1.getIntersectionPoint(line2));
+        trace(cell);
+        trace(line1);
+        trace(line2);
+        var intersection:Pixel = pointToPixel(line1.getIntersectionPoint(line2));
+        // return new BinaryColor(true);
         return image[intersection.y][intersection.x];
     }
 
@@ -134,7 +133,7 @@ class Artag {
         this.markerSize = markerSize;
         this.image = filter(image);
         this.corners = this.image.findCorners();
-        // this.marker = new Image<BinaryColor>(getCells().map(function(a) return a.map(getCellColor)));
+        this.marker = new Image<BinaryColor>(getCells().map(function(a) return a.map(getCellColor)));
     }
 
     // public function read():ArtagValues {
