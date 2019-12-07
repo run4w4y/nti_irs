@@ -37,8 +37,8 @@ class GeometryTools {
         
         var d = det(line1.a, line1.b, line2.a, line2.b);
         return new Point(
-            (line2.b * line1.c - line1.b * line2.c) / d,
-            (line1.a * line2.c - line2.a * line1.c) / d
+            -det(line1.c, line1.b, line2.c, line2.b) / d,
+            -det(line1.a, line1.c, line2.a, line2.c) / d
         );
     }
 
