@@ -120,11 +120,7 @@ class Artag {
             pixelToPoint(cell.rightTop),
             pixelToPoint(cell.leftBottom)
         );
-        trace(cell);
-        trace(line1);
-        trace(line2);
         var intersection:Pixel = pointToPixel(line1.getIntersectionPoint(line2));
-        // return new BinaryColor(true);
         return image[intersection.y][intersection.x];
     }
 
