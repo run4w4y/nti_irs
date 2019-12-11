@@ -124,12 +124,25 @@ class Artag {
         return image[intersection.y][intersection.x];
     }
 
+    function checkMarker():Bool {
+        for (i in 0...markerSize)
+            if (
+                marker[0][i].value ||
+                marker[markerSize][i].value ||
+                marker[i][0].value ||
+                marker[i][markerSize].value
+            ) return false;
+
+        return true;
+    }
+
     @:generic
     public function new<C:Color>( image:Image<C>, ?markerSize:Int = 6 ) {
         this.markerSize = markerSize;
         this.image = filter(image);
         this.corners = this.image.findCorners();
         this.marker = new Image<BinaryColor>(getCells().map(function(a) return a.map(getCellColor)));
+        checkMarker();
     }
 
     // public function read():ArtagValues {
