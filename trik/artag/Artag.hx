@@ -11,6 +11,7 @@ import trik.geometry.Line;
 import trik.geometry.Point;
 import trik.geometry.Vector;
 import trik.geometry.PointLike;
+import trik.exceptions.ArtagException;
 import Math.*;
 
 using trik.tools.ImageTools;
@@ -142,7 +143,8 @@ class Artag {
         this.image = filter(image);
         this.corners = this.image.findCorners();
         this.marker = new Image<BinaryColor>(getCells().map(function(a) return a.map(getCellColor)));
-        checkMarker();
+        if (!checkMarker())
+            throw new ArtagException('Could not read marker properly');
     }
 
     // public function read():ArtagValues {
