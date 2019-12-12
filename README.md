@@ -35,3 +35,6 @@ You might want to use `xclip` CLI tool, to copy and paste code in the TRIK Studi
 xclip -sel cli < builds/main.js
 ```
 This command copies the contents of `builds/main.js` to your clipboard.
+
+### Documentation
+Documentation is currently being written and moved from the `documentation` folder to the Wiki. You can check out what's got documented so far in [Wiki](https://github.com/run4w4y/nti_irs/wiki)
