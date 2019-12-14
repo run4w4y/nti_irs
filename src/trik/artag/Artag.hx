@@ -129,9 +129,9 @@ class Artag {
         for (i in 0...markerSize)
             if (
                 marker[0][i].value ||
-                marker[markerSize][i].value ||
+                marker[markerSize - 1][i].value ||
                 marker[i][0].value ||
-                marker[i][markerSize].value
+                marker[i][markerSize - 1].value
             ) return false;
 
         return true;
