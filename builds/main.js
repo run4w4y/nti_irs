@@ -204,6 +204,9 @@ Main.main = function() {
 Math.__name__ = true;
 var Std = function() { };
 Std.__name__ = true;
+Std.string = function(s) {
+	return js_Boot.__string_rec(s,"");
+};
 Std.parseInt = function(x) {
 	var v = parseInt(x,10);
 	if(v == 0 && (HxOverrides.cca(x,1) == 120 || HxOverrides.cca(x,1) == 88)) {
@@ -626,8 +629,8 @@ trik_robot_Concurrency.prototype = {
 };
 var trik_Trik = function() { };
 trik_Trik.__name__ = true;
-trik_Trik.print = function(text) {
-	print(text);
+trik_Trik.print = function(obj) {
+	print(Std.string(obj));
 };
 var trik_angle_Angle = function(value) {
 	this.value = (360 + value) % 360;
@@ -639,6 +642,9 @@ trik_angle_Angle.prototype = {
 	}
 	,getDelta: function(angle) {
 		return (this.value - angle.value + 900) % 360 - 180;
+	}
+	,toString: function() {
+		return "Angle(" + this.value + ")";
 	}
 	,__class__: trik_angle_Angle
 };
@@ -655,6 +661,9 @@ trik_color_BinaryColor.__interfaces__ = [trik_color_Color];
 trik_color_BinaryColor.prototype = {
 	inverse: function() {
 		return new trik_color_BinaryColor(!this.value);
+	}
+	,toString: function() {
+		return "BinaryColor(" + Std.string(this.value) + ")";
 	}
 	,__class__: trik_color_BinaryColor
 };
@@ -675,7 +684,10 @@ var trik_color_HSVColor = function(h,s,v) {
 trik_color_HSVColor.__name__ = true;
 trik_color_HSVColor.__interfaces__ = [trik_color_Color];
 trik_color_HSVColor.prototype = {
-	__class__: trik_color_HSVColor
+	toString: function() {
+		return "HSVColor(" + this.h + ", " + this.s + ", " + this.v + ")";
+	}
+	,__class__: trik_color_HSVColor
 };
 var trik_color_RGBColor = function(r,g,b) {
 	if(r < 0 || r > 255) {
@@ -694,7 +706,10 @@ var trik_color_RGBColor = function(r,g,b) {
 trik_color_RGBColor.__name__ = true;
 trik_color_RGBColor.__interfaces__ = [trik_color_Color];
 trik_color_RGBColor.prototype = {
-	__class__: trik_color_RGBColor
+	toString: function() {
+		return "RGBColor(" + this.r + ", " + this.g + ", " + this.b + ")";
+	}
+	,__class__: trik_color_RGBColor
 };
 var trik_color_LiteralColor = function(r,g,b,name) {
 	trik_color_RGBColor.call(this,r,g,b);
@@ -703,7 +718,10 @@ var trik_color_LiteralColor = function(r,g,b,name) {
 trik_color_LiteralColor.__name__ = true;
 trik_color_LiteralColor.__super__ = trik_color_RGBColor;
 trik_color_LiteralColor.prototype = $extend(trik_color_RGBColor.prototype,{
-	__class__: trik_color_LiteralColor
+	toString: function() {
+		return "LiteralColor(" + this.name + ")";
+	}
+	,__class__: trik_color_LiteralColor
 });
 var trik_color_MonoColor = function(value) {
 	if(value < 0 || value > 255) {
@@ -714,7 +732,10 @@ var trik_color_MonoColor = function(value) {
 trik_color_MonoColor.__name__ = true;
 trik_color_MonoColor.__interfaces__ = [trik_color_Color];
 trik_color_MonoColor.prototype = {
-	__class__: trik_color_MonoColor
+	toString: function() {
+		return "MonoColor(" + this.value + ")";
+	}
+	,__class__: trik_color_MonoColor
 };
 var trik_color_RGB24Color = function(value) {
 	this.value = value;
@@ -725,7 +746,10 @@ var trik_color_RGB24Color = function(value) {
 trik_color_RGB24Color.__name__ = true;
 trik_color_RGB24Color.__interfaces__ = [trik_color_Color];
 trik_color_RGB24Color.prototype = {
-	__class__: trik_color_RGB24Color
+	toString: function() {
+		return "RGB24Color(" + this.value + ")";
+	}
+	,__class__: trik_color_RGB24Color
 };
 var trik_exceptions_Exception = function() { };
 trik_exceptions_Exception.__name__ = true;
@@ -739,7 +763,7 @@ trik_exceptions_SamePointException.__name__ = true;
 trik_exceptions_SamePointException.__interfaces__ = [trik_exceptions_Exception];
 trik_exceptions_SamePointException.prototype = {
 	toString: function() {
-		return "SamePointException($errorMessage)";
+		return "SamePointException(" + this.errorMessage + ")";
 	}
 	,__class__: trik_exceptions_SamePointException
 };
@@ -790,6 +814,9 @@ trik_geometry_Point.prototype = {
 		var s = this.sub(a).vector_product(this.sub(b));
 		return Math.abs(s) / d;
 	}
+	,toString: function() {
+		return "Point(" + this.x + ", " + this.y + ")";
+	}
 	,__class__: trik_geometry_Point
 };
 var trik_geometry_Point3D = function(x,y,z) {
@@ -810,6 +837,9 @@ trik_geometry_Point3D.__name__ = true;
 trik_geometry_Point3D.prototype = {
 	distTo: function(point) {
 		return Math.sqrt(Math.pow(point.x - this.x,2) + Math.pow(point.y - this.y,2) + Math.pow(point.z - this.z,2));
+	}
+	,toString: function() {
+		return "Point3d(" + this.x + ", " + this.y + ", " + this.z + ")";
 	}
 	,__class__: trik_geometry_Point3D
 };

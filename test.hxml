@@ -1,3 +1,4 @@
+-cp src
 -main Main 
 -lib polygonal-ds
 -lib json2object

@@ -1,3 +1,5 @@
+package;
+
 // import trik.Trik.*;
 // import trik.robotModel.Environment;
 // import trik.geometry.Point;

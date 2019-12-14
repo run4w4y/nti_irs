@@ -63,7 +63,7 @@ class FinalModel extends RobotModel {
                 if (abs(readVal - leftStart) > 10 && readVal > leftMax) {
                     leftMax = readVal;
                     maxIndex = count;
-                    print("new min found " + leftMax + " " + maxIndex);
+                    print('new min found $leftMax $maxIndex');
                 }
 
                 readPrev = readVal;
