@@ -22,7 +22,7 @@ typedef Cells = Array<Array<Corners>>;
 
 class Artag {
     public var image:Image<BinaryColor>;
-    var corners:Corners;
+    public var corners:Corners;
     var markerSize:Int;
     public var marker:Image<BinaryColor>;
 
@@ -53,7 +53,7 @@ class Artag {
 
     @:generic
     function filter<C:Color>(image:Image<C>):Image<BinaryColor> {
-        return image.toBinary(100).erode();
+        return image.toBinary(20).erode();
     }
 
     public function getCells():Cells {
@@ -129,7 +129,7 @@ class Artag {
         return !marker[markerSize - 2][markerSize - 2].value;
     }
 
-    function checkMarker():Bool {
+    public function checkMarker():Bool {
         for (i in 0...markerSize)
             if (
                 marker[0][i].value ||
@@ -141,13 +141,7 @@ class Artag {
         return true && checkControlBit();
     }
 
-    @:generic
-    public function new<C:Color>( image:Image<C>, ?markerSize:Int = 6 ) {
-        this.markerSize = markerSize;
-        this.image = filter(image);
-        this.corners = this.image.findCorners();
-        marker = new Image<BinaryColor>(getCells().map(function(a) return a.map(getCellColor)));
-
+    function rotateMarker():Void {
         var rotateCount = 0;
         while (!checkControlBit()) {
             marker = marker.rotate90();
@@ -155,8 +149,17 @@ class Artag {
             if (rotateCount >= 4)
                 throw new ArtagException('Could not find control bit in the given marker');
         }
-        
-        if (!checkMarker())
+    }
+
+    @:generic
+    public function new<C:Color>( image:Image<C>, ?checkFlag:Bool=true, ?markerSize:Int = 5 ) {
+        this.markerSize = markerSize;
+        this.image = filter(image);
+        this.corners = this.image.findCorners();
+        marker = new Image<BinaryColor>(getCells().map(function(a) return a.map(getCellColor)));
+        rotateMarker();
+
+        if (checkFlag && !checkMarker())
             throw new ArtagException('Could not read marker properly');
     }
 
