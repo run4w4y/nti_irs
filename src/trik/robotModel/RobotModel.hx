@@ -1,6 +1,6 @@
 package src.trik.robotModel;
 
-import src.trik.src.trik.*;
+import src.trik.Trik.*;
 import src.trik.time.Time;
 import src.trik.robot.motor.Motor;
 import src.trik.robot.sensor.Sensor;
