@@ -1,7 +1,7 @@
 import json
 from PIL import Image
 
-im = Image.open('image.png')
+im = Image.open('artag.png')
 width, height = im.size
 pixels = []
 for i in range(0, height):
