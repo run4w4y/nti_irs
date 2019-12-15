@@ -1,4 +1,4 @@
-package trik.robot.encoder;
+package src.trik.robot.encoder;
 
 extern class Encoder {
     public function read        () :Int;

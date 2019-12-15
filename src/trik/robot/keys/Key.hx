@@ -1,4 +1,4 @@
-package trik.robot.keys;
+package src.trik.robot.keys;
 
 enum Key {
     Left;

@@ -1,4 +1,4 @@
-package trik.image;
+package src.trik.image;
 
 class Pixel {
     public var x:Int;

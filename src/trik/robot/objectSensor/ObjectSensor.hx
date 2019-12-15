@@ -1,4 +1,4 @@
-package trik.robot.objectSensor;
+package src.trik.robot.objectSensor;
 
 extern class ObjectSensor {
     public function detect ()                        :Void;

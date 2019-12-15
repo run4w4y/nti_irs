@@ -1,4 +1,4 @@
-package trik.robot.gyroscope;
+package src.trik.robot.gyroscope;
 
 extern class Gyroscope {
     public function calibrate            (duration:Int)      :Void;

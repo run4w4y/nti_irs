@@ -1,21 +1,21 @@
-package trik.robot;
+package src.trik.robot;
 
-import trik.robot.display.DisplayHigher;
-import trik.robot.accelerometer.Accelerometer;
-import trik.robot.battery.Battery;
-import trik.robot.colorSensor.ColorSensor;
-import trik.robot.encoder.Encoder;
-import trik.robot.gyroscope.GyroscopeHigher;
-import trik.robot.keys.KeysHigher;
-import trik.robot.led.Led;
-import trik.robot.lineSensor.LineSensor;
-import trik.robot.motor.Motor;
-import trik.robot.objectSensor.ObjectSensor;
-import trik.robot.sensor.Sensor;
+import src.trik.robot.display.DisplayHigher;
+import src.trik.robot.accelerometer.Accelerometer;
+import src.trik.robot.battery.Battery;
+import src.trik.robot.colorSensor.ColorSensor;
+import src.trik.robot.encoder.Encoder;
+import src.trik.robot.gyroscope.GyroscopeHigher;
+import src.trik.robot.keys.KeysHigher;
+import src.trik.robot.led.Led;
+import src.trik.robot.lineSensor.LineSensor;
+import src.trik.robot.motor.Motor;
+import src.trik.robot.objectSensor.ObjectSensor;
+import src.trik.robot.sensor.Sensor;
 
-import trik.color.RGBColor;
-import trik.image.RawImage;
-import trik.image.Image;
+import src.trik.color.RGBColor;
+import src.trik.image.RawImage;
+import src.trik.image.Image;
 
 
 class Brick {

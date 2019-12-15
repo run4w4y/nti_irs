@@ -1,4 +1,4 @@
-package trik.color;
+package src.trik.color;
 
 interface Color {
     public var r:Null<Int>;

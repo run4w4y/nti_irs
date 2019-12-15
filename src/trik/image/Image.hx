@@ -1,7 +1,7 @@
-package trik.image;
+package src.trik.image;
 
-import trik.color.Color;
-import trik.tools.ColorTools.*;
+import src.trik.color.Color;
+import src.trik.tools.ColorTools.*;
 
 
 @:forward

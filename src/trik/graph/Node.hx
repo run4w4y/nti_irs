@@ -1,9 +1,9 @@
-package trik.graph;
+package src.trik.graph;
 
-import trik.hashmap.Hashable;
-import trik.graph.Direction;
+import src.trik.hashmap.Hashable;
+import src.trik.graph.Direction;
 
-using trik.tools.NullTools;
+using src.trik.tools.NullTools;
 
 
 class Node extends Hashable {

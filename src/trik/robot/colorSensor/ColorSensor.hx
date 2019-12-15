@@ -1,4 +1,4 @@
-package trik.robot.colorSensor;
+package src.trik.robot.colorSensor;
 
 extern class ColorSensor {
     public function init (displayCameraInput:Bool) :Void;

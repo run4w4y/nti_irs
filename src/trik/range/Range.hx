@@ -1,4 +1,4 @@
-package trik.range;
+package src.trik.range;
 
 @:forward
 abstract Range(Array<Int>) {

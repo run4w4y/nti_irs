@@ -1,21 +1,21 @@
-package trik.artag;
+package src.trik.artag;
 
-import trik.image.Image;
-import trik.image.Corners;
-import trik.image.Sides;
-import trik.image.Pixel;
-import trik.artag.ArtagValues;
-import trik.color.Color;
-import trik.color.BinaryColor;
-import trik.geometry.Line;
-import trik.geometry.Point;
-import trik.geometry.Vector;
-import trik.geometry.PointLike;
-import trik.exceptions.ArtagException;
+import src.trik.image.Image;
+import src.trik.image.Corners;
+import src.trik.image.Sides;
+import src.trik.image.Pixel;
+import src.trik.artag.ArtagValues;
+import src.trik.color.Color;
+import src.trik.color.BinaryColor;
+import src.trik.geometry.Line;
+import src.trik.geometry.Point;
+import src.trik.geometry.Vector;
+import src.trik.geometry.PointLike;
+import src.trik.exceptions.ArtagException;
 import Math.*;
 
-using trik.tools.ImageTools;
-using trik.tools.GeometryTools;
+using src.trik.tools.ImageTools;
+using src.trik.tools.GeometryTools;
 
 
 typedef Cells = Array<Array<Corners>>;

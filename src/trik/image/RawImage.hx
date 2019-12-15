@@ -1,9 +1,9 @@
-package trik.image;
+package src.trik.image;
 
-import trik.color.RGBColor;
-import trik.color.RGB24Color;
-import trik.tools.ColorTools.*;
-import trik.image.Image;
+import src.trik.color.RGBColor;
+import src.trik.color.RGB24Color;
+import src.trik.tools.ColorTools.*;
+import src.trik.image.Image;
 
 
 abstract RawImage(Array<RGB24Color>) {

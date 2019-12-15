@@ -1,4 +1,4 @@
-package trik.artag;
+package src.trik.artag;
 
 typedef ArtagValues = {
     n:Int,

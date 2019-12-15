@@ -1,9 +1,9 @@
-package trik.robotModel;
+package src.trik.robotModel;
 
-import trik.robot.motor.Motor;
-import trik.robot.encoder.Encoder;
-import trik.robot.sensor.Sensor;
-import trik.robotModel.Environment;
+import src.trik.robot.motor.Motor;
+import src.trik.robot.encoder.Encoder;
+import src.trik.robot.sensor.Sensor;
+import src.trik.robotModel.Environment;
 
 
 typedef ModelArguments = {

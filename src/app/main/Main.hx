@@ -1,28 +1,28 @@
-package;
+package src.app.main;
 
-// import trik.Trik.*;
-// import trik.robotModel.Environment;
-// import trik.geometry.Point;
-// import trik.geometry.Vector;
-// import trik.geometry.Line;
-// import trik.Trik.*;
-import trik.color.Color;
-import trik.color.RGBColor;
-import trik.color.HSVColor;
-import trik.color.MonoColor;
-import trik.color.BinaryColor;
-import trik.color.LiteralColors.*;
-import trik.tools.ColorTools.*;
-import trik.image.Image;
-import trik.tools.ImageTools.*;
-import trik.artag.Artag;
+// import src.trik.src.trik.*;
+// import src.trik.robotModel.Environment;
+// import src.trik.geometry.Point;
+// import src.trik.geometry.Vector;
+// import src.trik.geometry.Line;
+// import src.trik.src.trik.*;
+import src.trik.color.Color;
+import src.trik.color.RGBColor;
+import src.trik.color.HSVColor;
+import src.trik.color.MonoColor;
+import src.trik.color.BinaryColor;
+import src.trik.color.LiteralColors.*;
+import src.trik.tools.ColorTools.*;
+import src.trik.image.Image;
+import src.trik.tools.ImageTools.*;
+import src.trik.artag.Artag;
 import json2object.JsonParser;
 import json2object.JsonWriter;
 
-import trik.geometry.Line;
-import trik.geometry.Point;
+import src.trik.geometry.Line;
+import src.trik.geometry.Point;
 
-using trik.tools.GeometryTools;
+using src.trik.tools.GeometryTools;
 using Lambda;
 
 

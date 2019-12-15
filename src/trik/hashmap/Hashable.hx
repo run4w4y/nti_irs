@@ -1,4 +1,4 @@
-package trik.hashmap;
+package src.trik.hashmap;
 
 class Hashable {
     public function new () {}

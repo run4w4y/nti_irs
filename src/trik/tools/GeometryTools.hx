@@ -1,9 +1,9 @@
-package trik.tools;
+package src.trik.tools;
 
-import trik.geometry.Line;
-import trik.geometry.Point;
-import trik.geometry.Vector;
-import trik.geometry.PointLike;
+import src.trik.geometry.Line;
+import src.trik.geometry.Point;
+import src.trik.geometry.Vector;
+import src.trik.geometry.PointLike;
 import Math.*;
 
 

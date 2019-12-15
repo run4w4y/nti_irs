@@ -1,6 +1,6 @@
-package trik.robot.display;
+package src.trik.robot.display;
 
-import trik.geometry.Point;
+import src.trik.geometry.Point;
 
 
 class Pixel {

@@ -1,4 +1,4 @@
-package trik.sequence;
+package src.trik.sequence;
 
 import haxe.macro.Expr;
 

@@ -1,4 +1,4 @@
-package trik.robot.motor;
+package src.trik.robot.motor;
 
 extern class Motor {
     public function brake    (duration:Int) :Void;

@@ -1,11 +1,11 @@
-package trik.pid;
+package src.trik.pid;
 
-import trik.time.Time;
-import trik.pid.PIDCoefficients;
+import src.trik.time.Time;
+import src.trik.pid.PIDCoefficients;
 import Math.*;
 
-using trik.tools.TimeTools;
-using trik.tools.NullTools;
+using src.trik.tools.TimeTools;
+using src.trik.tools.NullTools;
 
 
 class PID {

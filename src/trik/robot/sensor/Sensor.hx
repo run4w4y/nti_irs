@@ -1,4 +1,4 @@
-package trik.robot.sensor;
+package src.trik.robot.sensor;
 
 extern class Sensor {
     public function read        () :Int;

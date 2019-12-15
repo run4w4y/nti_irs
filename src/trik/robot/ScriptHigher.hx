@@ -1,9 +1,9 @@
-package trik.robot;
+package src.trik.robot;
 
-import trik.robot.Script;
-import trik.time.Time;
+import src.trik.robot.Script;
+import src.trik.time.Time;
 
-using trik.tools.TimeTools;
+using src.trik.tools.TimeTools;
 
 
 @:forward

@@ -1,14 +1,14 @@
-package trik.tools;
+package src.trik.tools;
 
-import trik.color.Color;
-import trik.color.LiteralColor;
-import trik.color.RGBColor;
-import trik.color.HSVColor;
-import trik.color.RGB24Color;
-import trik.color.MonoColor;
-import trik.color.BinaryColor;
-import trik.geometry.Point3D;
-import trik.ordering.Ordering;
+import src.trik.color.Color;
+import src.trik.color.LiteralColor;
+import src.trik.color.RGBColor;
+import src.trik.color.HSVColor;
+import src.trik.color.RGB24Color;
+import src.trik.color.MonoColor;
+import src.trik.color.BinaryColor;
+import src.trik.geometry.Point3D;
+import src.trik.ordering.Ordering;
 import Math.*;
 
 using Lambda;

@@ -1,4 +1,4 @@
-package trik.ordering;
+package src.trik.ordering;
 
 enum Ordering {
     EQ; GT; LT;

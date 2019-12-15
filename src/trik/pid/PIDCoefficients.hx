@@ -1,4 +1,4 @@
-package trik.pid;
+package src.trik.pid;
 
 typedef PIDCoefficients = {
     kp: Float,

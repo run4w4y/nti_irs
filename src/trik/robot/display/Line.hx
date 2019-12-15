@@ -1,6 +1,6 @@
-package trik.robot.display;
+package src.trik.robot.display;
 
-import trik.robot.display.Pixel;
+import src.trik.robot.display.Pixel;
 
 
 class Line {

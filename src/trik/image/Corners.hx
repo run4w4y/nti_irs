@@ -1,6 +1,6 @@
-package trik.image;
+package src.trik.image;
 
-import trik.image.Pixel;
+import src.trik.image.Pixel;
 
 
 class Corners {

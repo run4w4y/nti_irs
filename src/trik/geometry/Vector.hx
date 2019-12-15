@@ -1,7 +1,7 @@
-package trik.geometry;
+package src.trik.geometry;
 
-import trik.geometry.Point;
-import trik.geometry.PointLike;
+import src.trik.geometry.Point;
+import src.trik.geometry.PointLike;
 
 
 class Vector extends Point {

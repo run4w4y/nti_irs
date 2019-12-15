@@ -1,4 +1,4 @@
-package trik.time; 
+package src.trik.time; 
 
 enum Time {
     Milliseconds(value:Int);

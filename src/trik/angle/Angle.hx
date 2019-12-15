@@ -1,4 +1,4 @@
-package trik.angle;
+package src.trik.angle;
 
 class Angle {
     public var value:Float;

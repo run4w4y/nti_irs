@@ -1,4 +1,4 @@
-package trik.exceptions;
+package src.trik.exceptions;
 
 interface Exception {
     public var errorMessage:String;

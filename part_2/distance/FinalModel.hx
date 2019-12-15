@@ -1,14 +1,14 @@
 package;
 
-import trik.robotModel.RobotModel;
-import trik.robotModel.ModelArguments;
-import trik.robot.sensor.Sensor;
-import trik.time.Time;
-import trik.robot.display.Pixel;
+import src.trik.robotModel.RobotModel;
+import src.trik.robotModel.ModelArguments;
+import src.trik.robot.sensor.Sensor;
+import src.trik.time.Time;
+import src.trik.robot.display.Pixel;
 import Math.*;
-import trik.Trik.*;
-import trik.sequence.Sequence;
-import trik.angle.Angle;
+import src.trik.src.trik.*;
+import src.trik.sequence.Sequence;
+import src.trik.angle.Angle;
 
 
 typedef FinalArguments = {

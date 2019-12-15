@@ -1,4 +1,4 @@
-package trik.geometry;
+package src.trik.geometry;
 
 typedef PointLike = {
     public var x:Float;

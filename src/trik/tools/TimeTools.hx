@@ -1,6 +1,6 @@
-package trik.tools;
+package src.trik.tools;
 
-import trik.time.Time;
+import src.trik.time.Time;
 import Math.*;
 
 

@@ -1,6 +1,6 @@
-package trik.color;
+package src.trik.color;
 
-import trik.color.LiteralColor;
+import src.trik.color.LiteralColor;
 
 
 class LiteralColors {
@@ -13,7 +13,7 @@ class LiteralColors {
     public static var cyan        = new LiteralColor(0, 255, 255, "cyan");
     public static var darkCyan    = new LiteralColor(0, 127, 127, "darkCyan");
     public static var magenta     = new LiteralColor(255, 0, 255, "magenta");
-    public static var magentaDark = new LiteralColor(127, 0, 127, "darkMagenta");
+    public static var darkMagenta = new LiteralColor(127, 0, 127, "darkMagenta");
     public static var yellow      = new LiteralColor(255, 255, 0, "yellow");
     public static var darkYellow  = new LiteralColor(127, 127, 0, "darkYellow");
     public static var grey        = new LiteralColor(127, 127, 127, "grey");

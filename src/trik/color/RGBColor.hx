@@ -1,6 +1,6 @@
-package trik.color;
+package src.trik.color;
 
-import trik.color.Color;
+import src.trik.color.Color;
 
 
 class RGBColor implements Color {

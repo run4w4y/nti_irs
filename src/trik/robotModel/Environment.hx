@@ -1,4 +1,4 @@
-package trik.robotModel;
+package src.trik.robotModel;
 
 enum Environment {
     Real;

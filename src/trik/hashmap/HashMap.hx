@@ -1,6 +1,6 @@
-package trik.hashmap;
+package src.trik.hashmap;
 
-import trik.hashmap.Hashable;
+import src.trik.hashmap.Hashable;
 
 
 @:forward

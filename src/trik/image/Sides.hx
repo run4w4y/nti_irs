@@ -1,4 +1,4 @@
-package trik.image;
+package src.trik.image;
 
 typedef Sides = {
     left:Int,

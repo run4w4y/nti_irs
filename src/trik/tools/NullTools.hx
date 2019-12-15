@@ -1,4 +1,4 @@
-package trik.tools;
+package src.trik.tools;
 
 class NullTools {
     @:generic

@@ -1,6 +1,6 @@
-package trik.color;
+package src.trik.color;
 
-import trik.color.RGBColor;
+import src.trik.color.RGBColor;
 
 
 class LiteralColor extends RGBColor {

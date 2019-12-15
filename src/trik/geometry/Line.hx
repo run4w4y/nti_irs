@@ -1,8 +1,8 @@
-package trik.geometry;
+package src.trik.geometry;
 
-import trik.exceptions.SamePointException;
-import trik.geometry.PointLike;
-import trik.geometry.Point;
+import src.trik.exceptions.SamePointException;
+import src.trik.geometry.PointLike;
+import src.trik.geometry.Point;
 import Math.*;
 
 

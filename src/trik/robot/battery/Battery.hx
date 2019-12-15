@@ -1,4 +1,4 @@
-package trik.robot.battery;
+package src.trik.robot.battery;
 
 extern class Battery {
     public function readVoltage () :Float;

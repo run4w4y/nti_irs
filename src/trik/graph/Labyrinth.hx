@@ -1,10 +1,10 @@
-package trik.graph;
+package src.trik.graph;
 
-import trik.graph.Node;
-import trik.hashmap.HashMap;
+import src.trik.graph.Node;
+import src.trik.hashmap.HashMap;
 import de.polygonal.ds.LinkedQueue;
-import trik.graph.Movement;
-import trik.graph.Direction;
+import src.trik.graph.Movement;
+import src.trik.graph.Direction;
 
 class Labyrinth {
 	var rows:Int;

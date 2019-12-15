@@ -1,21 +1,21 @@
-package trik.tools;
+package src.trik.tools;
 
-import trik.image.Image;
-import trik.image.Pixel;
-import trik.image.Corners;
-import trik.image.Sides;
-import trik.color.Color;
-import trik.color.RGBColor;
-import trik.color.HSVColor;
-import trik.color.MonoColor;
-import trik.color.LiteralColors.*;
-import trik.color.BinaryColor;
-import trik.tools.ColorTools.*;
-import trik.range.Range;
-import trik.ordering.Ordering;
+import src.trik.image.Image;
+import src.trik.image.Pixel;
+import src.trik.image.Corners;
+import src.trik.image.Sides;
+import src.trik.color.Color;
+import src.trik.color.RGBColor;
+import src.trik.color.HSVColor;
+import src.trik.color.MonoColor;
+import src.trik.color.LiteralColors.*;
+import src.trik.color.BinaryColor;
+import src.trik.tools.ColorTools.*;
+import src.trik.range.Range;
+import src.trik.ordering.Ordering;
 import Math.*;
 
-using trik.tools.ColorTools;
+using src.trik.tools.ColorTools;
 using Lambda;
 
 

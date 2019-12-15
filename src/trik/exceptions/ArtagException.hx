@@ -1,6 +1,6 @@
-package trik.exceptions;
+package src.trik.exceptions;
 
-import trik.exceptions.Exception;
+import src.trik.exceptions.Exception;
 
 
 class ArtagException implements Exception {

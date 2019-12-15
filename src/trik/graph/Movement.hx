@@ -1,4 +1,4 @@
-package trik.graph;
+package src.trik.graph;
 
 enum Movement {
 	Go;
