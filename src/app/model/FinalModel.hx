@@ -6,7 +6,7 @@ import src.trik.robot.sensor.Sensor;
 import src.trik.time.Time;
 import src.trik.robot.display.Pixel;
 import Math.*;
-import src.trik.src.trik.*;
+import src.trik.Trik.*;
 import src.trik.sequence.Sequence;
 import src.trik.angle.Angle;
 
