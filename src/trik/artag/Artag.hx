@@ -125,6 +125,10 @@ class Artag {
         return image[intersection.y][intersection.x];
     }
 
+    function checkControlBit():Bool {
+        return !marker[markerSize - 2][markerSize - 2].value;
+    }
+
     function checkMarker():Bool {
         for (i in 0...markerSize)
             if (
@@ -134,7 +138,7 @@ class Artag {
                 marker[i][markerSize - 1].value
             ) return false;
 
-        return true;
+        return true && checkControlBit();
     }
 
     @:generic
@@ -142,7 +146,16 @@ class Artag {
         this.markerSize = markerSize;
         this.image = filter(image);
         this.corners = this.image.findCorners();
-        this.marker = new Image<BinaryColor>(getCells().map(function(a) return a.map(getCellColor)));
+        marker = new Image<BinaryColor>(getCells().map(function(a) return a.map(getCellColor)));
+
+        var rotateCount = 0;
+        while (!checkControlBit()) {
+            marker = marker.rotate90();
+            ++rotateCount;
+            if (rotateCount >= 4)
+                throw new ArtagException('Could not find control bit in the given marker');
+        }
+        
         if (!checkMarker())
             throw new ArtagException('Could not read marker properly');
     }
