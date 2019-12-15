@@ -170,9 +170,9 @@ class ImageTools {
         var width = image[0].length, height = image.length;
         var res:Array<Array<BinaryColor>> = [];
 
-        for (i in 0...width) {
+        for (i in 0...height) {
             var newLine:Array<BinaryColor> = [];
-            for (j in 0...height) {
+            for (j in 0...width) {
                 var localMax = new BinaryColor(false);
                 for (ii in (i-1)...(i+2))
                     for (jj in (j-1)...(j+2))
