@@ -21,5 +21,8 @@ with open('image_res.json') as f:
     # plt.plot(30, 43, 'ro')
     
     marker = [[0,0,255,0,0,0],[0,0,0,0,0,255],[255,255,0,255,255,0],[255,0,0,0,255,255],[255,0,255,255,0,0],[255,255,0,0,0,255]]
-    plt.imshow(marker, cmap='gray', vmin=0, vmax=255)
+    marker1 = [[0,255,0,255,0,255],[0,0,255,255,0,0],[0,0,255,0,255,0],[255,0,0,0,255,0],[0,0,255,0,0,255],[0,0,255,255,255,255]]
+
+    # plt.imshow(marker, cmap='gray', vmin=0, vmax=255)
+    plt.imshow(marker1, cmap='gray', vmin=0, vmax=255)
     plt.show()

@@ -211,4 +211,20 @@ class ImageTools {
 
         return downscale(new Image(res), squareSize, repeat - 1);
     }
+
+    @:generic
+    public static function rotate90<C:Color>(image:Image<C>):Image<C> {
+        var res:Array<Array<C>> = [];
+
+        for (j in new Range(image.length - 1, -1)) {
+            var tmp:Array<C> = [];
+            
+            for (i in 0...image[0].length)
+                tmp.push(image[i][j]);
+            
+            res.push(tmp);
+        }
+
+        return new Image<C>(res);
+    }
 }
