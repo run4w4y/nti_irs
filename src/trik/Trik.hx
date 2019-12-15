@@ -1,4 +1,4 @@
-package trik;
+package src.trik;
 
 import src.trik.robot.Brick;
 import src.trik.robot.ScriptHigher;
