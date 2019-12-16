@@ -1,5 +1,6 @@
 import json
 import matplotlib
+import sys
 from matplotlib import pyplot as plt
 
 matplotlib.use('gtk3agg')
@@ -7,14 +8,24 @@ matplotlib.use('gtk3agg')
 def draw_pt(x, y):
     plt.plot(x, y, 'ro')
 
-with open('image_res.json') as f:
+def draw_line(x1, y1, x2, y2):
+    plt.plot([x1, x2], [y1, y2], 'r')
+
+with open('../out/{}.binimg'.format(sys.argv[-1])) as f:
     plt.imshow(json.loads(f.read()), cmap='gray', vmin=0, vmax=255)
-    draw_pt(256, 219)
-    draw_pt(249, 57)
-    draw_pt(86, 65)
-    draw_pt(94, 226)
 
-    # marker = [[255,255,255,255,255,255],[255,255,0,0,255,255],[255,0,255,255,0,255],[255,0,255,255,0,255],[255,255,0,0,0,255],[255,255,255,255,255,255]]
-    # plt.imshow(marker, cmap='gray', vmin=0, vmax=255)
+with open('../out/{}.grid'.format(sys.argv[-1])) as f:
+    t = f.readline()
+    while t:
+        if t.strip().startswith('ln'):
+            x1, y1 = map(float, f.readline().strip().split()[1:])
+            draw_pt(x1, y1)
+            x2, y2 = map(float, f.readline().strip().split()[1:])
+            draw_pt(x2, y2)
+            draw_line(x1, y1, x2, y2)
+        elif t.strip().startswith('pt'):
+            x, y = map(float, t.split()[1:])
+            draw_pt(x, y)
+        t = f.readline()
 
-    plt.show()
+plt.show()

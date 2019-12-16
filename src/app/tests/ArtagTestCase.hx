@@ -9,6 +9,7 @@ import json2object.JsonParser;
 import json2object.JsonWriter;
 import src.trik.geometry.Line;
 import src.trik.geometry.Point;
+import src.trik.geometry.PointLike;
 import src.trik.tools.ColorTools.*;
 import src.app.tests.exceptions.NoClueException;
 import sys.FileSystem in FS;
@@ -52,10 +53,33 @@ class ArtagTestCase extends TestCase {
                     )
                 )
             ),
-            result: Std.string(sys.io.File.read('$testsDir/in/$file').readAll()),
+            result: Std.string(sys.io.File.read('$testsDir/in/$file.clue').readAll()),
             testname: file
         }];
     } 
+
+    function getPixelString(pixel:src.trik.image.Pixel):String {
+        return 'pt ${pixel.x} ${pixel.y}\n';
+    }
+
+    @:generic
+    function getPointString<T:PointLike>(pointLike:T):String {
+        return 'pt ${pointLike.x} ${pointLike.y}\n';
+    }
+
+    function getLineString(line:Line):String {
+        return 'ln\n ${getPointString(line.point1)} ${getPointString(line.point2)}\n';
+    }
+
+    function markerToString(marker:Image<BinaryColor>):String {
+        var res = '';
+        for (i in marker) {
+            for (j in i)
+                res += if (j.value) 1 else 0;
+            res += '\n';
+        }
+        return res;
+    }
 
     public function testMarkers():Void {
         var writer = new JsonWriter<Array<Array<Int>>>();
@@ -63,7 +87,7 @@ class ArtagTestCase extends TestCase {
         for (test in tests) {
             var artag = new Artag(test.input, false);
 
-            sys.io.File.write('$testsDir/out/${test.testname}.out').writeString(
+            sys.io.File.write('$testsDir/out/${test.testname}.binimg').writeString(
                 writer.write(artag.image.map(
                     function(array:Array<BinaryColor>) return array.map(
                         function(color:BinaryColor) return toMono(color).value
@@ -71,7 +95,20 @@ class ArtagTestCase extends TestCase {
                 ))
             );
 
+            var plotOut = "";
+            for (i in artag.getCells())
+                for (j in i) {
+                    plotOut += getPixelString(j.leftTop);
+                    plotOut += getPixelString(j.leftBottom);
+                    plotOut += getPixelString(j.rightTop);
+                    plotOut += getPixelString(j.rightBottom);
+                }
+
+            sys.io.File.write('$testsDir/out/${test.testname}.grid').writeString(plotOut);
+            sys.io.File.write('$testsDir/out/${test.testname}.marker').writeString(markerToString(artag.marker));
+
             assertTrue(artag.checkMarker());
+            assertEquals(test.result.trim(), markerToString(artag.marker).trim());
         }
     }
 }
