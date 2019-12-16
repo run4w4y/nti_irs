@@ -4,7 +4,7 @@ import src.trik.robot.display.Display;
 import src.trik.robot.display.Pixel;
 import src.trik.robot.display.Rectangle;
 import src.trik.robot.display.Line;
-import src.trik.color.LiteralColor;
+import src.color.LiteralColor;
 
 
 @:forward

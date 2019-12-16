@@ -2,7 +2,7 @@ package src.app.main;
 
 import src.trik.Trik.*;
 import src.app.model.FinalModel;
-import src.trik.robotModel.Environment;
+import src.robotModel.Environment;
 
 
 class Main {

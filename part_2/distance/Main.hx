@@ -1,5 +1,5 @@
 import src.trik.src.trik.*;
-import src.trik.robotModel.Environment;
+import src.robotModel.Environment;
 
 using Lambda;
 

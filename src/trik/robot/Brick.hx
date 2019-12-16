@@ -13,9 +13,9 @@ import src.trik.robot.motor.Motor;
 import src.trik.robot.objectSensor.ObjectSensor;
 import src.trik.robot.sensor.Sensor;
 
-import src.trik.color.RGBColor;
-import src.trik.image.RawImage;
-import src.trik.image.Image;
+import src.color.RGBColor;
+import src.image.RawImage;
+import src.image.Image;
 
 
 class Brick {
