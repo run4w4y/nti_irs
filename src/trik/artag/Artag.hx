@@ -25,6 +25,12 @@ class Artag {
     public var corners:Corners;
     var markerSize:Int;
     public var marker:Image<BinaryColor>;
+    public var leftLine:Line;
+    public var rightLine:Line;
+    public var topLine:Line;
+    public var bottomLine:Line;
+    public var verticalLines:Array<Line>;
+    public var horizontalLines:Array<Line>;
 
     function pixelToPoint(pixel:Pixel):Point {
         return new Point(
@@ -60,19 +66,19 @@ class Artag {
         var res:Cells = [];
         var w = image[0].length, h = image.length;
         
-        var leftLine = new Line(
+        leftLine = new Line(
             pixelToPoint(corners.leftTop), 
             pixelToPoint(corners.leftBottom)
         );
-        var rightLine = new Line(
+        rightLine = new Line(
             pixelToPoint(corners.rightTop), 
             pixelToPoint(corners.rightBottom)
         );
-        var topLine = new Line(
+        topLine = new Line(
             pixelToPoint(corners.leftTop), 
             pixelToPoint(corners.rightTop)
         );
-        var bottomLine = new Line(
+        bottomLine = new Line(
             pixelToPoint(corners.leftBottom), 
             pixelToPoint(corners.rightBottom)
         );
@@ -82,8 +88,8 @@ class Artag {
         var topDist = pixelDist(corners.leftTop, corners.rightTop);
         var bottomDist = pixelDist(corners.leftBottom, corners.rightBottom);
 
-        var verticalLines:Array<Line> = [];
-        var horizontalLines:Array<Line> = [];
+        verticalLines = [];
+        horizontalLines = [];
 
         for (i in 0...markerSize + 1) {
             verticalLines.push(new Line(
@@ -132,10 +138,10 @@ class Artag {
     public function checkMarker():Bool {
         for (i in 0...markerSize)
             if (
-                marker[0][i].value ||
-                marker[markerSize - 1][i].value ||
-                marker[i][0].value ||
-                marker[i][markerSize - 1].value
+                !marker[0][i].value ||
+                !marker[markerSize - 1][i].value ||
+                !marker[i][0].value ||
+                !marker[i][markerSize - 1].value
             ) return false;
 
         return true && checkControlBit();
