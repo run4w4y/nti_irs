@@ -2,7 +2,7 @@ package src.geometry;
 
 import src.geometry.PointLike;
 import Math.*;
-import src.trik.exceptions.SamePointException;
+import src.geometry.exceptions.SamePointException;
 
 
 class Point {
