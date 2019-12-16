@@ -4,14 +4,13 @@ import src.image.Image;
 import src.image.Corners;
 import src.image.Sides;
 import src.image.Pixel;
-import src.artag.ArtagValues;
 import src.color.Color;
 import src.color.BinaryColor;
 import src.geometry.Line;
 import src.geometry.Point;
 import src.geometry.Vector;
 import src.geometry.PointLike;
-import src.trik.exceptions.ArtagException;
+import src.artag.exceptions.ArtagException;
 import Math.*;
 
 using src.tools.ImageTools;
@@ -168,8 +167,4 @@ class Artag {
         if (checkFlag && !checkMarker())
             throw new ArtagException('Could not read marker properly');
     }
-
-    // public function read():ArtagValues {
-    //     return new ArtagValues();
-    // }
 }
