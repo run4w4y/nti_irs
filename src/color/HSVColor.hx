@@ -1,6 +1,7 @@
 package src.color;
 
 import src.color.Color;
+import src.exceptions.ValueException;
 
 
 class HSVColor implements Color {
@@ -12,9 +13,12 @@ class HSVColor implements Color {
     public var b:Null<Int>;
     
     public function new(h:Float, s:Float, v:Float):Void {
-        if (h < 0 || h > 360) throw "h value must be in the range [0; 360]";
-        if (s < 0 || s > 1) throw "s value must be in the range [0; 1]";
-        if (v < 0 || v > 1) throw "v value must be in the range [0; 1]";
+        if (h < 0 || h > 360) 
+            throw new ValueException("h value must be within the range [0; 360]");
+        if (s < 0 || s > 1) 
+            throw new ValueException("s value must be within the range [0; 1]");
+        if (v < 0 || v > 1) 
+            throw new ValueException("v value must be within the range [0; 1]");
 
         this.h = h;
         this.s = s;

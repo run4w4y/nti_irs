@@ -1,6 +1,7 @@
 package src.color;
 
 import src.color.Color;
+import src.exceptions.ValueException;
 
 
 class MonoColor implements Color {
@@ -10,7 +11,8 @@ class MonoColor implements Color {
     public var b:Null<Int>;
 
     public function new(value:Int):Void {
-        if (value < 0 || value > 255) throw "value of mono color has to be in the range [0; 255]";
+        if (value < 0 || value > 255) 
+            throw new ValueException("value of mono color has to be in the range [0; 255]");
 
         this.value = value;
     }

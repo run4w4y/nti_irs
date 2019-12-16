@@ -9,6 +9,7 @@ import src.color.MonoColor;
 import src.color.BinaryColor;
 import src.geometry.Point3D;
 import src.ordering.Ordering;
+import src.exceptions.TypeException;
 import Math.*;
 
 using Lambda;
@@ -75,7 +76,7 @@ class ColorTools {
                 else
                     return new RGBColor(255, 255, 255);
             case _:
-                throw "unknown color class was passed to the generic function colorToRgb";
+                throw new TypeException("unknown color class was passed to the generic function colorToRgb");
         }
     }
 

@@ -13,6 +13,7 @@ import src.color.BinaryColor;
 import src.tools.ColorTools.*;
 import src.range.Range;
 import src.ordering.Ordering;
+import src.exceptions.ValueException;
 import Math.*;
 
 using src.tools.ColorTools;
@@ -164,7 +165,7 @@ class ImageTools {
 
     public static function erode(image:Image<BinaryColor>, ?repeat:Int=1):Image<BinaryColor> {
         if (repeat < 0)
-            throw "repeat value cant be lower than 0";
+            throw new ValueException("repeat value cant be lower than 0");
         if (repeat == 0) return image;
 
         var width = image[0].length, height = image.length;
@@ -189,9 +190,9 @@ class ImageTools {
 
     public static function downscale(image:Image<BinaryColor>, ?squareSize:Int=2, ?repeat:Int=1):Image<BinaryColor> {
         if (repeat < 0)
-            throw "repeat value cant be less than 0";
+            throw new ValueException("repeat value cant be less than 0");
         if (squareSize < 2)
-            throw "squareSize value cant be less than 2";
+            throw new ValueException("squareSize value cant be less than 2");
         if (repeat == 0) return image;
 
         var width = image[0].length, height = image.length;
