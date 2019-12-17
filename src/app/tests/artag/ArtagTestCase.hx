@@ -1,4 +1,4 @@
-package src.app.tests;
+package src.app.tests.artag;
 
 import haxe.unit.TestCase;
 import src.color.RGBColor;
@@ -11,7 +11,8 @@ import src.geometry.Line;
 import src.geometry.Point;
 import src.geometry.PointLike;
 import src.tools.ColorTools.*;
-import src.app.tests.exceptions.NoClueException;
+import src.app.tests.artag.exceptions.NoClueException;
+import src.app.tests.artag.exceptions.NoSizeException;
 import sys.FileSystem in FS;
 
 using src.tools.ImageTools;
@@ -21,6 +22,7 @@ using Lambda;
 
 
 typedef TestItem = {
+    size:Int,
     input:Image<RGBColor>,
     result:String,
     testname:String
@@ -35,17 +37,20 @@ class ArtagTestCase extends TestCase {
         var parser = new JsonParser<Array<Array<Array<Int>>>>();
         var files:Array<String> = FS.readDirectory('$testsDir/in').filter(
             function(filename:String):Bool {
-                if (filename.endsWith('.clue')) 
+                if (filename.endsWith('.clue') || filename.endsWith('.size')) 
                     return false;
 
                 if (!FS.exists('$testsDir/in/$filename.clue'))
                     throw new NoClueException('no .clue was found for the $filename test');
+                if (!FS.exists('$testsDir/in/$filename.size'))
+                    throw new NoSizeException('no .size was found for the $filename test');
 
                 return !FS.isDirectory('$testsDir/in/$filename');
             }
         );
 
         tests = [for (file in files) {
+            size: Std.parseInt(sys.io.File.read('$testsDir/in/$file.size').readLine()),
             input: new Image<RGBColor> (
                 parser.fromJson(Std.string(sys.io.File.read('$testsDir/in/$file').readAll()), "errors.txt").map(
                     function(array:Array<Array<Int>>) return array.map(
@@ -84,8 +89,9 @@ class ArtagTestCase extends TestCase {
     public function testMarkers():Void {
         var writer = new JsonWriter<Array<Array<Int>>>();
 
+        trace('Running artag tests.');
         for (test in tests) {
-            var artag = new Artag(test.input, false);
+            var artag = new Artag(test.input, false, test.size);
 
             sys.io.File.write('$testsDir/out/${test.testname}.binimg').writeString(
                 writer.write(artag.image.map(
@@ -109,6 +115,8 @@ class ArtagTestCase extends TestCase {
 
             assertTrue(artag.checkMarker());
             assertEquals(test.result.trim(), markerToString(artag.marker).trim());
+            trace('Test "${test.testname}" - success.');
         }
+        trace('Artag tests done.');
     }
 }

@@ -1,4 +1,4 @@
-package src.app.tests.exceptions;
+package src.app.tests.artag.exceptions;
 
 import src.exceptions.BaseException;
 
