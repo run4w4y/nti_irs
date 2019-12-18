@@ -91,6 +91,7 @@ class ArtagTestCase extends TestCase {
 
         trace('Running artag tests.');
         for (test in tests) {
+            trace('Running test "${test.testname}"');
             var artag = new Artag(test.input, false, test.size);
 
             sys.io.File.write('$testsDir/out/${test.testname}.binimg').writeString(
