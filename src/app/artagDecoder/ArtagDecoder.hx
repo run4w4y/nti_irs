@@ -11,7 +11,6 @@ abstract ArtagDecoder(Artag) {
     }
 
     function binaryToInt(str:String):Int {
-        trace(str);
         var res = 0;
         var cur = 1;
 
