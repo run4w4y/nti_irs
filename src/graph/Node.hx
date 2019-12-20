@@ -30,7 +30,7 @@ class Node extends Hashable {
 		super();
 		this.row = row;
 		this.col = col;
-		this.direction = direction.coalesce(Up);
+		this.direction = direction.coalesce(Undefined);
 	}
 	
 	public function changeDirection(direction:Direction) {
@@ -65,12 +65,8 @@ class Node extends Hashable {
 		return newNode.changeDirection(direction);
 	}
 
-	public function inTable(rows:Int, cols:Int, table:Array<Array<Bool>>):Bool {
-		if(row >= rows || row < 0 || col >= cols || col < 0)
-			return false;
-		if(table[row][col])
-			return false;
-		return true;
+	public function canGo(allowedDirections:Array<Array<Map<Direction,Bool>>>):Bool {
+		return allowedDirections[row][col][direction] == true;
 	}
 	
 	override public function toString():String {
