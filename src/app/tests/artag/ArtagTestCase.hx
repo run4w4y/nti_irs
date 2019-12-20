@@ -31,34 +31,47 @@ typedef TestItem = {
 class ArtagTestCase extends TestCase {
     var artag:Artag;
     var tests:Array<TestItem>;
-    var testsDir = 'tests/artagTests';
+    public var testsDir = 'tests/artagTests';
+
+    public function getTestSize(file:String):Int {
+        if (!FS.exists('$testsDir/in/$file.size'))
+            throw new NoSizeException('no .size was found for the $file test');
+
+        return Std.parseInt(sys.io.File.read('$testsDir/in/$file.size').readLine());
+    }
+
+    public function getTestImage(file:String):Image<RGBColor> {
+        var parser = new JsonParser<Array<Array<Array<Int>>>>();
+        return new Image<RGBColor> (
+            parser.fromJson(Std.string(sys.io.File.read('$testsDir/in/$file').readAll()), "errors.txt").map(
+                function(array:Array<Array<Int>>) return array.map(
+                    function (triple:Array<Int>) return new RGBColor(triple[0], triple[1], triple[2])
+                )
+            )
+        );
+    }
+
+    public function getTestClue(file:String) {
+        if (!FS.exists('$testsDir/in/$file.clue'))
+            throw new NoClueException('no .clue was found for the $file test');
+
+        return Std.string(sys.io.File.read('$testsDir/in/$file.clue').readAll());
+    }
 
     override public function setup():Void {
-        var parser = new JsonParser<Array<Array<Array<Int>>>>();
         var files:Array<String> = FS.readDirectory('$testsDir/in').filter(
             function(filename:String):Bool {
                 if (filename.endsWith('.clue') || filename.endsWith('.size')) 
                     return false;
-
-                if (!FS.exists('$testsDir/in/$filename.clue'))
-                    throw new NoClueException('no .clue was found for the $filename test');
-                if (!FS.exists('$testsDir/in/$filename.size'))
-                    throw new NoSizeException('no .size was found for the $filename test');
 
                 return !FS.isDirectory('$testsDir/in/$filename');
             }
         );
 
         tests = [for (file in files) {
-            size: Std.parseInt(sys.io.File.read('$testsDir/in/$file.size').readLine()),
-            input: new Image<RGBColor> (
-                parser.fromJson(Std.string(sys.io.File.read('$testsDir/in/$file').readAll()), "errors.txt").map(
-                    function(array:Array<Array<Int>>) return array.map(
-                        function (triple:Array<Int>) return new RGBColor(triple[0], triple[1], triple[2])
-                    )
-                )
-            ),
-            result: Std.string(sys.io.File.read('$testsDir/in/$file.clue').readAll()),
+            size: getTestSize(file),
+            input: getTestImage(file),
+            result: getTestClue(file),
             testname: file
         }];
     } 
@@ -76,14 +89,18 @@ class ArtagTestCase extends TestCase {
         return 'ln\n ${getPointString(line.point1)} ${getPointString(line.point2)}\n';
     }
 
-    function markerToString(marker:Image<BinaryColor>):String {
+    public function markerToString(marker:Image<BinaryColor>):String {
         var res = '';
         for (i in marker) {
             for (j in i)
                 res += if (j.value) 1 else 0;
             res += '\n';
         }
-        return res;
+        return res.trim();
+    }
+
+    public function artagResult(artag:Artag):String {
+        return markerToString(artag.marker);
     }
 
     public function testMarkers():Void {
@@ -115,9 +132,14 @@ class ArtagTestCase extends TestCase {
             sys.io.File.write('$testsDir/out/${test.testname}.marker').writeString(markerToString(artag.marker));
 
             assertTrue(artag.checkMarker());
-            assertEquals(test.result.trim(), markerToString(artag.marker).trim());
+            assertEquals(test.result.trim(), artagResult(artag));
             trace('Test "${test.testname}" - success.');
         }
         trace('Artag tests done.');
+    }
+
+    public function new(testsDir:String):Void {
+        this.testsDir = testsDir;
+        super();
     }
 }
