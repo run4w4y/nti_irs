@@ -22,16 +22,15 @@ class ArtagDecoderTestCase extends ArtagTestCase {
     }
 
     override public function getTestImage(file:String):Image<RGBColor> {
-        var contents = Std.string(sys.io.File.read('$testsDir/in/$file').readAll()).split(' ');
+        var contents = sys.io.File.read('$testsDir/in/$file').readLine().split(' ');
         var res:Array<Array<RGBColor>> = [];
-        var curIndex = 0;
 
         for (i in 0...h) {
             var tmp:Array<RGBColor> = [];
             for (j in 0...w) {
+                var curIndex = w * i + j;
                 if (contents[curIndex] != null)
-                    tmp.push(new HexColor(contents[curIndex]).toRgb());
-                ++curIndex;
+                    tmp.push(new HexColor(contents[curIndex]).toRgb()); 
             }
             res.push(tmp);
         }
