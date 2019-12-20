@@ -9,31 +9,54 @@ import src.graph.Direction;
 class Labyrinth {
 	var rows:Int;
 	var cols:Int;
-	var table = new Array<Array<Bool>>();
+	var allowedDirections = new Array<Array<Map<Direction,Bool>>>();
 	var previousTurn = new HashMap<Node,HashMap<Node,Movement>>();
 	var nodes = new Array<Node>();
-	public function new(str:String) {
-		var splitedStr = str.split("\n");
-		var sizeOfStr = splitedStr[0].length;
-		for (currentStr in splitedStr)
-			if(sizeOfStr != currentStr.length)
-				throw "Strings have different lengths";
-	
-		rows = splitedStr.length;
-		cols = sizeOfStr;
-
-		table = [for (i in 0...rows) [for (j in 0...cols) false]];
-		for (currentRow in 0...rows) {
-			for (currentCol in 0...cols) {
-				if(splitedStr[currentRow].charAt(currentCol) == '1')
-					table[currentRow][currentCol] = true;
-				else
-					table[currentRow][currentCol] = false;
-				for (i in [Left, Right, Down, Up])
-					nodes.push(new Node(currentRow, currentCol, i));
+	public function new(n:Int, m:Int, walls:List<Array<Int>>) {
+		rows = n;
+		cols = m;
+		allowedDirections = [for (i in 0...rows) [for (j in 0...cols) [
+			Left => true,	Right =>true,
+			Down => true,	Up => true
+		]]];
+		
+		for(row in 0...rows){
+			allowedDirections[row][0][Left] = false;
+			allowedDirections[row][cols - 1][Right] = false;
+		}
+		
+		for(col in 0...cols){
+			allowedDirections[0][col][Up] = false;
+			allowedDirections[rows - 1][col][Down] = false;
+		}
+		for(wall in walls){
+			var row1 = wall[0], col1 = wall[1], row2 = wall[2], col2 = wall[3];
+			if(row1 > row2){
+				var tmp = row2;
+				row2 = row1;
+				row1 = tmp;
+			}
+			if(col1 > col2){
+				var tmp = col2;
+				col2 = row1;
+				col1 = tmp;
+			}
+			if(col1 == col2){
+				for(row in row1...row2){
+					allowedDirections[row][col1][Left] = false;
+					allowedDirections[row][col1 - 1][Right] = false;
+				}
+			}
+			else{
+				for(col in col1...col2){
+					allowedDirections[row1][col][Up] = false;
+					allowedDirections[row1 - 1][col][Down] = false;
+				}
 			}
 		}
-
+		nodes = [for (row in 0...rows){for(col in 0...cols){for(direction in [Left,Right,Up,Down]){
+					new Node(row,col,direction);
+		}}}];
 		for (node in nodes) {
 			previousTurn[node] = new HashMap<Node,Movement>();
 			bfs(node);
@@ -46,13 +69,9 @@ class Labyrinth {
 			used[node] = false;
 		}
 
-		if (!nodeStart.inTable(rows,cols,table))
-			return;
-
 		var queue = new LinkedQueue<Node>();
 		used[nodeStart] = true;
 		queue.enqueue(nodeStart);
-
 		while (!queue.isEmpty()) {
 			var currentNode = queue.dequeue();
 			var nextNode = currentNode.turnLeft();
@@ -69,21 +88,20 @@ class Labyrinth {
 				used[nextNode] = true;
 				previousTurn[nodeStart][nextNode] = RotateRight;
 			}
-
-			nextNode = currentNode.go();
-			if(nextNode.inTable(rows,cols,table))
+			if(currentNode.canGo(allowedDirections)){
+				nextNode = currentNode.go();
 				if (!used[nextNode]) {
 					queue.enqueue(nextNode);
 					used[nextNode] = true;
 					previousTurn[nodeStart][nextNode] = Go;
-				}
+				}}
 		}
+		// trace("next Node");
 	}
 
 	public function getPath(nodeFrom:Node, nodeTo:Node){
 		if(nodeFrom.direction == Undefined)
 			throw "Undefined starting node direction";
-
 		switch (nodeTo.direction) {
 			case Undefined:
 				var minPath = path(nodeFrom, nodeTo.changeDirection(Left));
