@@ -1,14 +1,18 @@
 package color;
 
-import color.Color;
 import exceptions.ValueException;
 
+using tools.NullTools;
 
-class MonoColor implements Color {
+
+class MonoColor extends BaseColor {
     public var value:Int;
-    public var r:Null<Int>;
-    public var g:Null<Int>;
-    public var b:Null<Int>;
+
+    override function calculateRGB():Void {
+        rgbValue = rgbValue.coalesce(
+            {r: value, g: value, b: value}
+        );
+    }
 
     public function new(value:Int):Void {
         if (value < 0 || value > 255) 
@@ -17,7 +21,7 @@ class MonoColor implements Color {
         this.value = value;
     }
 
-    public function toString():String {
+    override public function toString():String {
         return 'MonoColor($value)';
     }
 }

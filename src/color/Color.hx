@@ -1,7 +1,8 @@
 package color;
 
 interface Color {
-    public var r:Null<Int>;
-    public var g:Null<Int>;
-    public var b:Null<Int>;
+    public var r(get, null):Int;
+    public var g(get, null):Int;
+    public var b(get, null):Int;
+    public function toString():String;
 }

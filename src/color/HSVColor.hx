@@ -1,16 +1,61 @@
 package color;
 
-import color.Color;
+import color.BaseColor;
+import color.RGB;
 import exceptions.ValueException;
+import Math.*;
+
+using tools.NullTools;
 
 
-class HSVColor implements Color {
+class HSVColor extends BaseColor {
     public var h:Float;
     public var s:Float;
     public var v:Float;
-    public var r:Null<Int>;
-    public var g:Null<Int>;
-    public var b:Null<Int>;
+
+    override function calculateRGB():Void {
+        var fH = max(0, min(360, h))/60;
+        var fS = max(0, min(1, s));
+        var fV = max(0, min(1, v));
+        var resRgb:RGB;
+
+        if (fS == 0) {
+            rgbValue = rgbValue.coalesce({
+                r: round(v * 255),
+                g: round(v * 255),
+                b: round(v * 255)
+            });
+            return;
+        }
+        
+        var i = floor(h);
+        var f = h - i;
+        var p = v * (1 - s);
+        var q = v * (1 - s * f);
+        var t = v * (1 - s * (1 - f));
+        var res:Array<Float>;
+        
+        switch(i) {
+            case 0:
+                res = [v, t, p];
+            case 1:
+                res = [q, v, p];
+            case 2:
+                res = [p, v, t];
+            case 3:
+                res = [p, q, v];
+            case 4:
+                res = [t, p, v];
+            case _:
+                res = [v, p, q];
+        }
+        
+        rgbValue = rgbValue.coalesce({
+            r: round(res[0] * 255), 
+            g: round(res[1] * 255), 
+            b: round(res[2] * 255)
+        });
+    }
     
     public function new(h:Float, s:Float, v:Float):Void {
         if (h < 0 || h > 360) 
@@ -25,7 +70,7 @@ class HSVColor implements Color {
         this.v = v;
     }
 
-    public function toString():String {
+    override public function toString():String {
         return 'HSVColor($h, $s, $v)';
     }
 }

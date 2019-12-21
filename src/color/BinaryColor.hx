@@ -1,12 +1,20 @@
 package color;
 
-import color.Color;
+import color.BaseColor;
+
+using tools.NullTools;
 
 
-class BinaryColor implements Color {
-    public var r:Null<Int>;
-    public var g:Null<Int>;
-    public var b:Null<Int>;
+class BinaryColor extends BaseColor {
+    override function calculateRGB():Void {
+        rgbValue = rgbValue.coalesce(
+            if (value)
+                {r: 255, g: 255, b: 255}
+            else 
+                {r: 0, g: 0, b: 0}
+        );
+    }
+
     public var value:Bool; // 0 - white, 1 - black
 
     public function new(value:Bool):Void {
@@ -17,7 +25,7 @@ class BinaryColor implements Color {
         return new BinaryColor(!this.value);
     }
 
-    public function toString():String {
+    override public function toString():String {
         return 'BinaryColor($value)';
     }
 }

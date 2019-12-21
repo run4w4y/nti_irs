@@ -15,6 +15,8 @@ import artag.Artag;
 import pair.Pair;
 import hashset.HashSet;
 
+using tools.ColorTools;
+
 
 enum Direction {
     Up;
@@ -73,7 +75,7 @@ class FinalModel extends RobotModel {
             for (j in 0...w) {
                 var curIndex = w * i + j;
                 if (contents[curIndex] != null)
-                    tmp.push(new HexColor(contents[curIndex]).toRgb()); 
+                    tmp.push(new HexColor(contents[curIndex]).toRGB()); 
             }
             res.push(tmp);
         }

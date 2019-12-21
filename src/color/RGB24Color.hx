@@ -1,22 +1,26 @@
 package color;
 
-import color.Color;
+import color.BaseColor;
+
+using tools.NullTools;
 
 
-class RGB24Color implements Color {
+class RGB24Color extends BaseColor {
     public var value:Int;
-    public var r:Null<Int>;
-    public var g:Null<Int>;
-    public var b:Null<Int>;
+
+    override function calculateRGB():Void {
+        rgbValue = rgbValue.coalesce({
+            r: (value & 16711680) >> 16, 
+            g: (value & 65280) >> 8, 
+            b: value & 255
+        });
+    }
 
     public function new(value:Int) {
         this.value = value;
-        this.r = null;
-        this.g = null;
-        this.b = null;
     }
 
-    public function toString():String {
+    override public function toString():String {
         return 'RGB24Color($value)';
     }
 }
