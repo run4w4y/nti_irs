@@ -1,19 +1,19 @@
-package src.robotModel;
+package robotModel;
 
-import src.trik.Trik.*;
-import src.time.Time;
-import src.trik.robot.motor.Motor;
-import src.trik.robot.sensor.Sensor;
-import src.trik.robot.encoder.Encoder;
-import src.robotModel.Environment;
-import src.robotModel.ModelArguments;
-import src.pid.PID;
-import src.pid.PIDCoefficients;
-import src.angle.Angle;
+import trik.Trik.*;
+import time.Time;
+import trik.robot.motor.Motor;
+import trik.robot.sensor.Sensor;
+import trik.robot.encoder.Encoder;
+import robotModel.Environment;
+import robotModel.ModelArguments;
+import pid.PID;
+import pid.PIDCoefficients;
+import angle.Angle;
 import Math.*;
 
 using Lambda;
-using src.tools.NullTools;
+using tools.NullTools;
 
 
 class RobotModel {
