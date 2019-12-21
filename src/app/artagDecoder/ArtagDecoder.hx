@@ -1,8 +1,8 @@
-package src.app.artagDecoder;
+package app.artagDecoder;
 
-import src.artag.Artag;
-import src.color.BinaryColor;
-import src.range.Range;
+import artag.Artag;
+import color.BinaryColor;
+import range.Range;
 
 
 abstract ArtagDecoder(Artag) {

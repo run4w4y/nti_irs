@@ -1,7 +1,7 @@
-package src.color;
+package color;
 
-import src.color.RGBColor;
-import src.exceptions.ValueException;
+import color.RGBColor;
+import exceptions.ValueException;
 
 
 class HexColor extends RGBColor {

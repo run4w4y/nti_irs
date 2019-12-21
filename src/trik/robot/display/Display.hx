@@ -1,4 +1,4 @@
-package src.trik.robot.display;
+package trik.robot.display;
 
 extern class Display {
     public function addLabel        (text:String, x:Int, y:Int)                    :Void;

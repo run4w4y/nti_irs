@@ -1,4 +1,4 @@
-package src.image;
+package image;
 
 typedef Sides = {
     left:Int,

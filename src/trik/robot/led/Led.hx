@@ -1,4 +1,4 @@
-package src.trik.robot.led;
+package trik.robot.led;
 
 extern class Led {
     public function red    () :Void;

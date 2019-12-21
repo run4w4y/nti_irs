@@ -1,6 +1,6 @@
-package src.color;
+package color;
 
-import src.color.Color;
+import color.Color;
 
 
 class BinaryColor implements Color {

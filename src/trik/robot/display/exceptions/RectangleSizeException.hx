@@ -1,6 +1,6 @@
-package src.trik.robot.display.exceptions;
+package trik.robot.display.exceptions;
 
-import src.exceptions.BaseException;
+import exceptions.BaseException;
 
 
 class RectangleSizeException extends BaseException {

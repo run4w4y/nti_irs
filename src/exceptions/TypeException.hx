@@ -1,6 +1,6 @@
-package src.exceptions;
+package exceptions;
 
-import src.exceptions.BaseException;
+import exceptions.BaseException;
 
 
 class TypeException extends BaseException {

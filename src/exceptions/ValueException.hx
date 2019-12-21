@@ -1,6 +1,6 @@
-package src.exceptions;
+package exceptions;
 
-import src.exceptions.BaseException;
+import exceptions.BaseException;
 
 class ValueException extends BaseException {
     override public function toString():String {

@@ -1,4 +1,4 @@
-package src.trik.robot;
+package trik.robot;
 
 class Mailbox {
     public function connect(ip:String, ?port:Int=-1):Void {

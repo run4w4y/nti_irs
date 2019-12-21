@@ -1,4 +1,4 @@
-package src.trik.robot;
+package trik.robot;
 
 class Script {
     public function quit():Void {

@@ -1,6 +1,6 @@
-package src.tools;
+package tools;
 
-import src.time.Time;
+import time.Time;
 import Math.*;
 
 

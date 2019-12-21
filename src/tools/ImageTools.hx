@@ -1,22 +1,22 @@
-package src.tools;
+package tools;
 
-import src.image.Image;
-import src.image.Pixel;
-import src.image.Corners;
-import src.image.Sides;
-import src.color.Color;
-import src.color.RGBColor;
-import src.color.HSVColor;
-import src.color.MonoColor;
-import src.color.LiteralColors.*;
-import src.color.BinaryColor;
-import src.tools.ColorTools.*;
-import src.range.Range;
-import src.ordering.Ordering;
-import src.exceptions.ValueException;
+import image.Image;
+import image.Pixel;
+import image.Corners;
+import image.Sides;
+import color.Color;
+import color.RGBColor;
+import color.HSVColor;
+import color.MonoColor;
+import color.LiteralColors.*;
+import color.BinaryColor;
+import tools.ColorTools.*;
+import range.Range;
+import ordering.Ordering;
+import exceptions.ValueException;
 import Math.*;
 
-using src.tools.ColorTools;
+using tools.ColorTools;
 using Lambda;
 
 

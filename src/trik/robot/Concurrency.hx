@@ -1,4 +1,4 @@
-package src.trik.robot;
+package trik.robot;
 
 class Concurrency {
     public function joinThread(threadId:String):Void {

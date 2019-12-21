@@ -1,8 +1,8 @@
-package src.image;
+package image;
 
-import src.color.Color;
-import src.tools.ColorTools.*;
-import src.exceptions.ValueException;
+import color.Color;
+import tools.ColorTools.*;
+import exceptions.ValueException;
 
 
 @:forward

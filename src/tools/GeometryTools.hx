@@ -1,9 +1,9 @@
-package src.tools;
+package tools;
 
-import src.geometry.Line;
-import src.geometry.Point;
-import src.geometry.Vector;
-import src.geometry.PointLike;
+import geometry.Line;
+import geometry.Point;
+import geometry.Vector;
+import geometry.PointLike;
 import Math.*;
 
 

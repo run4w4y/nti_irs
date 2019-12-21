@@ -1,4 +1,4 @@
-package src.graph;
+package graph;
 
 enum Movement {
 	Go;

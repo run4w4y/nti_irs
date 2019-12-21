@@ -1,4 +1,4 @@
-package src.geometry;
+package geometry;
 
 import Math.*;
 

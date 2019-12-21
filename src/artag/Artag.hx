@@ -1,20 +1,20 @@
-﻿package src.artag;
+﻿package artag;
 
-import src.image.Image;
-import src.image.Corners;
-import src.image.Sides;
-import src.image.Pixel;
-import src.color.Color;
-import src.color.BinaryColor;
-import src.geometry.Line;
-import src.geometry.Point;
-import src.geometry.Vector;
-import src.geometry.PointLike;
-import src.artag.exceptions.ArtagException;
+import image.Image;
+import image.Corners;
+import image.Sides;
+import image.Pixel;
+import color.Color;
+import color.BinaryColor;
+import geometry.Line;
+import geometry.Point;
+import geometry.Vector;
+import geometry.PointLike;
+import artag.exceptions.ArtagException;
 import Math.*;
 
-using src.tools.ImageTools;
-using src.tools.GeometryTools;
+using tools.ImageTools;
+using tools.GeometryTools;
 
 
 typedef Cells = Array<Array<Corners>>;

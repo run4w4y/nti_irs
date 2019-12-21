@@ -1,7 +1,7 @@
-package src.trik.robot.keys;
+package trik.robot.keys;
 
-import src.trik.robot.keys.Keys;
-import src.trik.robot.keys.Key;
+import trik.robot.keys.Keys;
+import trik.robot.keys.Key;
 
 @:forward
 abstract KeysHigher(Keys) {

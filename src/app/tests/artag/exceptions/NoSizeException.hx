@@ -1,6 +1,6 @@
-package src.app.tests.artag.exceptions;
+package app.tests.artag.exceptions;
 
-import src.exceptions.BaseException;
+import exceptions.BaseException;
 
 
 class NoSizeException extends BaseException {

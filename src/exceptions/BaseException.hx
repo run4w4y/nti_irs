@@ -1,4 +1,4 @@
-package src.exceptions;
+package exceptions;
 
 class BaseException {
     public var errorMessage:String;

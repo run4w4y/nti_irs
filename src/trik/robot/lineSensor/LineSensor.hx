@@ -1,4 +1,4 @@
-package src.trik.robot.lineSensor;
+package trik.robot.lineSensor;
 
 extern class LineSensor {
     public function detect ()                        :Void;

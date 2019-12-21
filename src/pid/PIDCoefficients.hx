@@ -1,4 +1,4 @@
-package src.pid;
+package pid;
 
 typedef PIDCoefficients = {
     kp: Float,

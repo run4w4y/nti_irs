@@ -1,7 +1,7 @@
-package src.trik.robot.display;
+package .robot.display;
 
-import src.geometry.Point;
-import src.exceptions.ValueException;
+import etry.Point;
+import ptions.ValueException;
 
 
 class Pixel {

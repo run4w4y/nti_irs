@@ -1,8 +1,8 @@
-package src.geometry;
+package geometry;
 
-import src.geometry.exceptions.SamePointException;
-import src.geometry.PointLike;
-import src.geometry.Point;
+import geometry.exceptions.SamePointException;
+import geometry.PointLike;
+import geometry.Point;
 import Math.*;
 
 

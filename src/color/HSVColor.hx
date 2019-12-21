@@ -1,7 +1,7 @@
-package src.color;
+package color;
 
-import src.color.Color;
-import src.exceptions.ValueException;
+import color.Color;
+import exceptions.ValueException;
 
 
 class HSVColor implements Color {

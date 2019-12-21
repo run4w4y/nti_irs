@@ -1,8 +1,8 @@
-package src.app.main;
+package app.main;
 
-import src.trik.Trik.*;
-import src.app.model.FinalModel;
-import src.robotModel.Environment;
+import trik.Trik.*;
+import app.model.FinalModel;
+import robotModel.Environment;
 
 
 class Main {
@@ -12,8 +12,9 @@ class Main {
             rightMotor:   brick.motor("M3"),
             leftEncoder:  brick.encoder("E4"),
             rightEncoder: brick.encoder("E3"), 
-            frontSensor:  brick.sensor("D1"),
-            leftSensor:   brick.sensor("D2"),
+            frontSensor:  brick.sensor("A1"),
+            leftSensor:   brick.sensor("A3"),
+            rightSensor:  brick.sensor("A2"),
             environment:  Simulator
         });
         model.solution();

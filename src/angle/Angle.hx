@@ -1,4 +1,4 @@
-package src.angle;
+package angle;
 
 class Angle {
     public var value:Float;

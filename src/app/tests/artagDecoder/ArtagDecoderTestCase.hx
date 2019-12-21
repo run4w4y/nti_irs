@@ -1,17 +1,17 @@
-package src.app.tests.artagDecoder;
+package app.tests.artagDecoder;
 
-import src.app.tests.artag.ArtagTestCase;
-import src.app.artagDecoder.ArtagDecoder;
-import src.artag.Artag;
-import src.color.HexColor;
-import src.color.RGBColor;
-import src.color.BinaryColor;
-import src.image.Image;
-import src.app.artagDecoder.ArtagDecoder;
-import src.geometry.Line;
-import src.geometry.Point;
-import src.geometry.PointLike;
-import src.tools.ColorTools.*;
+import app.tests.artag.ArtagTestCase;
+import app.artagDecoder.ArtagDecoder;
+import artag.Artag;
+import color.HexColor;
+import color.RGBColor;
+import color.BinaryColor;
+import image.Image;
+import app.artagDecoder.ArtagDecoder;
+import geometry.Line;
+import geometry.Point;
+import geometry.PointLike;
+import tools.ColorTools.*;
 
 class ArtagDecoderTestCase extends ArtagTestCase {
     var w = 160;

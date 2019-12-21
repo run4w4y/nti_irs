@@ -1,6 +1,6 @@
-package src.color;
+package color;
 
-import src.color.LiteralColor;
+import color.LiteralColor;
 
 
 class LiteralColors {

@@ -1,9 +1,9 @@
-package src.graph;
+package graph;
 
-import src.hashmap.Hashable;
-import src.graph.Direction;
+import hashmap.Hashable;
+import graph.Direction;
 
-using src.tools.NullTools;
+using tools.NullTools;
 
 
 class Node extends Hashable {

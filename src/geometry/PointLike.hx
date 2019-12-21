@@ -1,4 +1,4 @@
-package src.geometry;
+package etry;
 
 typedef PointLike = {
     public var x:Float;

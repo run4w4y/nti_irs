@@ -1,4 +1,4 @@
-package src.time; 
+package time; 
 
 enum Time {
     Milliseconds(value:Int);

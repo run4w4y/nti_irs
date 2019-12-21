@@ -1,6 +1,6 @@
-package src.geometry.exceptions;
+package geometry.exceptions;
 
-import src.exceptions.BaseException;
+import exceptions.BaseException;
 
 class SamePointException extends BaseException {
     override public function toString():String {

@@ -1,4 +1,4 @@
-package src.robotModel;
+package robotModel;
 
 enum Environment {
     Real;

@@ -1,4 +1,4 @@
-package src.color;
+package color;
 
 interface Color {
     public var r:Null<Int>;

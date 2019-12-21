@@ -1,4 +1,4 @@
-package src.hashmap;
+package hashmap;
 
 class Hashable {
     public function new () {}

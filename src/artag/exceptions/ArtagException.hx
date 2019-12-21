@@ -1,6 +1,6 @@
-package src.artag.exceptions;
+package artag.exceptions;
 
-import src.exceptions.BaseException;
+import exceptions.BaseException;
 
 
 class ArtagException extends BaseException {

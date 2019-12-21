@@ -1,9 +1,9 @@
-package src.image;
+package image;
 
-import src.color.RGBColor;
-import src.color.RGB24Color;
-import src.tools.ColorTools.*;
-import src.image.Image;
+import color.RGBColor;
+import color.RGB24Color;
+import tools.ColorTools.*;
+import image.Image;
 
 
 abstract RawImage(Array<RGB24Color>) {

@@ -1,22 +1,22 @@
-package src.app.tests.artag;
+package app.tests.artag;
 
 import haxe.unit.TestCase;
-import src.color.RGBColor;
-import src.color.BinaryColor;
-import src.image.Image;
-import src.artag.Artag;
+import color.RGBColor;
+import color.BinaryColor;
+import image.Image;
+import artag.Artag;
 import json2object.JsonParser;
 import json2object.JsonWriter;
-import src.geometry.Line;
-import src.geometry.Point;
-import src.geometry.PointLike;
-import src.tools.ColorTools.*;
-import src.app.tests.artag.exceptions.NoClueException;
-import src.app.tests.artag.exceptions.NoSizeException;
+import geometry.Line;
+import geometry.Point;
+import geometry.PointLike;
+import tools.ColorTools.*;
+import app.tests.artag.exceptions.NoClueException;
+import app.tests.artag.exceptions.NoSizeException;
 import sys.FileSystem in FS;
 
-using src.tools.ImageTools;
-using src.tools.GeometryTools;
+using tools.ImageTools;
+using tools.GeometryTools;
 using StringTools;
 using Lambda;
 
@@ -76,7 +76,7 @@ class ArtagTestCase extends TestCase {
         }];
     } 
 
-    function getPixelString(pixel:src.image.Pixel):String {
+    function getPixelString(pixel:image.Pixel):String {
         return 'pt ${pixel.x} ${pixel.y}\n';
     }
 

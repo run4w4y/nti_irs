@@ -1,8 +1,8 @@
-package src.app.tests;
+package app.tests;
 
 import haxe.unit.TestRunner;
-import src.app.tests.artag.ArtagTestCase;
-import src.app.tests.artagDecoder.ArtagDecoderTestCase;
+import app.tests.artag.ArtagTestCase;
+import app.tests.artagDecoder.ArtagDecoderTestCase;
 
 
 class Main {

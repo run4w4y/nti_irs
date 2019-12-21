@@ -1,6 +1,6 @@
-package src.image;
+package image;
 
-import src.image.Pixel;
+import image.Pixel;
 
 
 class Corners {

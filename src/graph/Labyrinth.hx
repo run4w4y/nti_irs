@@ -1,10 +1,10 @@
-package src.graph;
+package h;
 
-import src.graph.Node;
-import src.hashmap.HashMap;
+import h.Node;
+import map.HashMap;
 import de.polygonal.ds.LinkedQueue;
-import src.graph.Movement;
-import src.graph.Direction;
+import h.Movement;
+import h.Direction;
 
 class Labyrinth {
 	var rows:Int;

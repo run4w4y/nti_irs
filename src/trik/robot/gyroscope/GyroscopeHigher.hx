@@ -1,9 +1,9 @@
-package src.trik.robot.gyroscope;
+package trik.robot.gyroscope;
 
-import src.trik.robot.gyroscope.Gyroscope;
-import src.time.Time;
+import trik.robot.gyroscope.Gyroscope;
+import time.Time;
 
-using src.tools.TimeTools;
+using tools.TimeTools;
 
 
 @:forward

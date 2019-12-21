@@ -1,15 +1,15 @@
-package src.tools;
+package tools;
 
-import src.color.Color;
-import src.color.LiteralColor;
-import src.color.RGBColor;
-import src.color.HSVColor;
-import src.color.RGB24Color;
-import src.color.MonoColor;
-import src.color.BinaryColor;
-import src.geometry.Point3D;
-import src.ordering.Ordering;
-import src.exceptions.TypeException;
+import color.Color;
+import color.LiteralColor;
+import color.RGBColor;
+import color.HSVColor;
+import color.RGB24Color;
+import color.MonoColor;
+import color.BinaryColor;
+import geometry.Point3D;
+import ordering.Ordering;
+import exceptions.TypeException;
 import Math.*;
 
 using Lambda;

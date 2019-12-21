@@ -1,6 +1,6 @@
-package src.hashmap;
+package hashmap;
 
-import src.hashmap.Hashable;
+import hashmap.Hashable;
 
 
 @:forward

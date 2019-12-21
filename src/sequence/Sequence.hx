@@ -1,4 +1,4 @@
-package src.sequence;
+package sequence;
 
 import haxe.macro.Expr;
 

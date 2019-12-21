@@ -1,7 +1,7 @@
-package src.geometry;
+package geometry;
 
-import src.geometry.Point;
-import src.geometry.PointLike;
+import geometry.Point;
+import geometry.PointLike;
 
 
 class Vector extends Point {

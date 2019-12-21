@@ -1,9 +1,9 @@
-package src.trik;
+package trik;
 
-import src.trik.robot.Brick;
-import src.trik.robot.ScriptHigher;
-import src.trik.robot.Mailbox;
-import src.trik.robot.Concurrency;
+import trik.robot.Brick;
+import trik.robot.ScriptHigher;
+import trik.robot.Mailbox;
+import trik.robot.Concurrency;
 
 
 class Trik {

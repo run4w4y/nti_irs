@@ -1,4 +1,4 @@
-package src.image;
+package image;
 
 class Pixel {
     public var x:Int;

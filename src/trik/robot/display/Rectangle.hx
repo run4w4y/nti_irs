@@ -1,7 +1,7 @@
-package src.trik.robot.display;
+package trik.robot.display;
 
-import src.trik.robot.display.Pixel;
-import src.trik.robot.display.exceptions.RectangleSizeException;
+import trik.robot.display.Pixel;
+import trik.robot.display.exceptions.RectangleSizeException;
 
 
 class Rectangle {
@@ -17,7 +17,7 @@ class Rectangle {
                 new Pixel(pixel.x + length, pixel.y + height),
                 new Pixel(pixel.x, pixel.y + height)
             ]
-        catch (err:src.exceptions.ValueException) 
+        catch (err:exceptions.ValueException) 
             throw "rectangle doesnt fit in the screen";
         
         this.length = length;

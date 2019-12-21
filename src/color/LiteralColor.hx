@@ -1,6 +1,6 @@
-package src.color;
+package color;
 
-import src.color.RGBColor;
+import color.RGBColor;
 
 
 class LiteralColor extends RGBColor {

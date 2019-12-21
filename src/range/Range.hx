@@ -1,6 +1,6 @@
-package src.range;
+package range;
 
-import src.exceptions.ValueException;
+import exceptions.ValueException;
 
 
 @:forward

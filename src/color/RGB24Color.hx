@@ -1,6 +1,6 @@
-package src.color;
+package r;
 
-import src.color.Color;
+import r.Color;
 
 
 class RGB24Color implements Color {

@@ -1,4 +1,4 @@
-package src.ordering;
+package ordering;
 
 enum Ordering {
     EQ; GT; LT;
