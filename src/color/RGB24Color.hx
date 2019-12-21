@@ -1,6 +1,6 @@
-package r;
+package color;
 
-import r.Color;
+import color.Color;
 
 
 class RGB24Color implements Color {

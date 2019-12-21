@@ -1,7 +1,7 @@
-package r;
+package color;
 
-import r.Color;
-import ptions.ValueException;
+import color.Color;
+import exceptions.ValueException;
 
 
 class MonoColor implements Color {

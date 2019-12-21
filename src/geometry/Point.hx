@@ -1,8 +1,8 @@
-package etry;
+package geometry;
 
-import etry.PointLike;
+import geometry.PointLike;
 import Math.*;
-import etry.exceptions.SamePointException;
+import geometry.exceptions.SamePointException;
 
 
 class Point {

@@ -1,10 +1,10 @@
-package .robot.display;
+package trik.robot.display;
 
-import .robot.display.Display;
-import .robot.display.Pixel;
-import .robot.display.Rectangle;
-import .robot.display.Line;
-import r.LiteralColor;
+import trik.robot.display.Display;
+import trik.robot.display.Pixel;
+import trik.robot.display.Rectangle;
+import trik.robot.display.Line;
+import color.LiteralColor;
 
 
 @:forward

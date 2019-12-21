@@ -1,4 +1,4 @@
-package h;
+package graph;
 
 enum Direction {
 	Left;
