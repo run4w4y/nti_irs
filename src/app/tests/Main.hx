@@ -1,15 +1,16 @@
 package app.tests;
 
-import haxe.unit.TestRunner;
+import utest.Runner;
+import utest.ui.Report;
 import app.tests.artag.ArtagTestCase;
 import app.tests.artagDecoder.ArtagDecoderTestCase;
 
 
 class Main {
     public static function main() {
-        var runner = new TestRunner();
-        // runner.add(new ArtagTestCase());
-        runner.add(new ArtagDecoderTestCase('tests/artagDecoderTests'));
+        var runner = new Runner();
+        runner.addCase(new ArtagDecoderTestCase('tests/artagDecoderTests'));
+        Report.create(runner);
         runner.run();
     }
 }

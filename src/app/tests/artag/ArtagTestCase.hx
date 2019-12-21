@@ -1,6 +1,7 @@
 package app.tests.artag;
 
-import haxe.unit.TestCase;
+import utest.Test;
+import utest.Assert;
 import color.RGBColor;
 import color.BinaryColor;
 import image.Image;
@@ -28,7 +29,7 @@ typedef TestItem = {
     testname:String
 }
 
-class ArtagTestCase extends TestCase {
+class ArtagTestCase extends Test {
     var artag:Artag;
     var tests:Array<TestItem>;
     public var testsDir = 'tests/artagTests';
@@ -58,7 +59,7 @@ class ArtagTestCase extends TestCase {
         return Std.string(sys.io.File.read('$testsDir/in/$file.clue').readAll());
     }
 
-    override public function setup():Void {
+    public function setup():Void {
         var files:Array<String> = FS.readDirectory('$testsDir/in').filter(
             function(filename:String):Bool {
                 if (filename.endsWith('.clue') || filename.endsWith('.size')) 
@@ -130,8 +131,8 @@ class ArtagTestCase extends TestCase {
             sys.io.File.write('$testsDir/out/${test.testname}.grid').writeString(plotOut);
             sys.io.File.write('$testsDir/out/${test.testname}.marker').writeString(markerToString(artag.marker));
 
-            assertTrue(artag.checkMarker());
-            assertEquals(test.result.trim(), artagResult(artag));
+            Assert.isTrue(artag.checkMarker());
+            Assert.equals(test.result.trim(), artagResult(artag));
             trace('Test "${test.testname}" - success.');
         }
         trace('Artag tests done.');

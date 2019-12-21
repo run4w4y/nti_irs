@@ -2,4 +2,5 @@
 -main app.tests.Main 
 -lib polygonal-ds
 -lib json2object
+-lib utest
 --interp
