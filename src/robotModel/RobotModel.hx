@@ -52,7 +52,6 @@ class RobotModel {
         return new Angle(360 - brick.gyroscope.read()[6]/1000);
     }
 
-    @:generic
     public function move<T>(speed:Int=100, setpoint:T, readF:(Void -> T), getError:(T -> T -> Float),
     koefficients:PIDCoefficients, ?condition:(Void -> Bool), ?interval:Time):Void {
         interval = interval.coalesce(Seconds(0.1));

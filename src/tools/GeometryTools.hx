@@ -10,7 +10,6 @@ import Math.*;
 class GeometryTools {
     public static var epsilon = 1e-6;
 
-    @:generic
     public static function distToLine<T:PointLike>(pointLike:T, line:Line) {
         var d:Float = distTo(line.point1, line.point2);
         var vector = Vector.fromPointLike(pointLike);
@@ -42,12 +41,10 @@ class GeometryTools {
         );
     }
 
-    @:generic
     public static function toPoint<T:PointLike>(pointLike:T):Point {
         return new Point(pointLike.x, pointLike.y);
     }
 
-    @:generic
     public static function distTo<T:PointLike>(pointLike1:T, pointLike2:T):Float {
         return sqrt(pow(pointLike1.x - pointLike2.x, 2) + pow(pointLike1.y - pointLike2.y, 2));
     }

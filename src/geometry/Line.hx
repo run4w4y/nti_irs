@@ -13,7 +13,6 @@ class Line {
     public var point1:Point;
     public var point2:Point;
 
-    @:generic
     public function new<T:PointLike>(pointLike1:T, pointLike2:T) {
         if (abs(pointLike1.x - pointLike2.x) <= 1e-6 && abs(pointLike1.y - pointLike2.y) <= 1e-6) 
             throw new SamePointException('cant define a line with two same points');

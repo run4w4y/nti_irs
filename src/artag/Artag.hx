@@ -1,4 +1,4 @@
-package src.artag;
+﻿package src.artag;
 
 import src.image.Image;
 import src.image.Corners;
@@ -38,7 +38,6 @@ class Artag {
         );
     }
 
-    @:generic
     function pointToPixel<T:PointLike>(pointLike:T):Pixel {
         return new Pixel(
             round(pointLike.x), 
@@ -46,7 +45,6 @@ class Artag {
         );
     }
 
-    @:generic
     function invY<T:PointLike>(pointLike:T):T {
         pointLike.y *= -1;
         return pointLike;
@@ -56,7 +54,6 @@ class Artag {
         return pixelToPoint(pixel1).distTo(pixelToPoint(pixel2));
     }
 
-    @:generic
     function filter<C:Color>(image:Image<C>):Image<BinaryColor> {
         return image.toBinary(20).erode();
     }
@@ -156,7 +153,6 @@ class Artag {
         }
     }
 
-    @:generic
     public function new<C:Color>( image:Image<C>, ?checkFlag:Bool=true, ?markerSize:Int = 5 ) {
         this.markerSize = markerSize;
         this.image = filter(image);

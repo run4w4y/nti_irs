@@ -21,7 +21,6 @@ using Lambda;
 
 
 class ImageTools {
-    @:generic
     public static function toGreyscale<C:Color>(image:Image<C>):Image<MonoColor> {
         return new Image<MonoColor>([
             for (i in image) [
@@ -31,7 +30,6 @@ class ImageTools {
         ]);
     }
 
-    @:generic
     public static function findDarkestColor<C:Color>(image:Image<C>):C {
         var darkestColor = image[0][0];
         for (i in image)
@@ -41,7 +39,6 @@ class ImageTools {
         return darkestColor;
     }
 
-    @:generic
     public static function toBinary<C:Color>(image:Image<C>, ?threshold:Int=20):Image<BinaryColor> {
         var darkestColor = findDarkestColor(image);
         return new Image([
@@ -55,14 +52,12 @@ class ImageTools {
         ]);
     }
 
-    @:generic
     public static function cropSides<C:Color>(image:Image<C>, sides:Sides):Image<C> {
         return new Image<C>(image.slice(sides.top, image.length - sides.bottom).map(
             function(i) return i.slice(sides.left, i.length - sides.right)
         ));
     }
 
-    @:generic
     public static function cornersToSides<C:Color>(image:Image<C>, corners:Corners):Sides {
         return {
             top:    round(min(corners.leftTop.y, corners.rightTop.y)),
@@ -72,13 +67,11 @@ class ImageTools {
         };
     }
 
-    @:generic
     public static function cropCorners<C:Color>(image:Image<C>, corners:Corners):Image<C> {
         return cropSides(image, cornersToSides(image, corners));
     }
 
-    @:generic
-    public static function findCorners<C:Color>(image:Image<C>, ?color:C):Corners {
+    public static function findCorners(image:Image<BinaryColor>, ?color:BinaryColor):Corners {
         var targetColor = if (color != null) color else new BinaryColor(true); 
 
         var res:Corners = new Corners();
@@ -213,7 +206,6 @@ class ImageTools {
         return downscale(new Image(res), squareSize, repeat - 1);
     }
 
-    @:generic
     public static function rotate90<C:Color>(image:Image<C>):Image<C> {
         var res:Array<Array<C>> = [];
 

@@ -80,7 +80,6 @@ class ArtagTestCase extends TestCase {
         return 'pt ${pixel.x} ${pixel.y}\n';
     }
 
-    @:generic
     function getPointString<T:PointLike>(pointLike:T):String {
         return 'pt ${pointLike.x} ${pointLike.y}\n';
     }
