@@ -1,6 +1,7 @@
 package color;
 
 import exceptions.ValueException;
+import constraints.Constraints.*;
 
 using tools.NullTools;
 
@@ -15,9 +16,7 @@ class MonoColor extends BaseColor {
     }
 
     public function new(value:Int):Void {
-        if (value < 0 || value > 255) 
-            throw new ValueException("value of mono color has to be in the range [0; 255]");
-
+        checkRange(value, 0, 255);
         this.value = value;
     }
 

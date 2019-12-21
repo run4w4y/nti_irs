@@ -4,6 +4,7 @@ import color.BaseColor;
 import color.RGB;
 import exceptions.ValueException;
 import Math.*;
+import constraints.Constraints.*;
 
 using tools.NullTools;
 
@@ -58,12 +59,9 @@ class HSVColor extends BaseColor {
     }
     
     public function new(h:Float, s:Float, v:Float):Void {
-        if (h < 0 || h > 360) 
-            throw new ValueException("h value must be within the range [0; 360]");
-        if (s < 0 || s > 1) 
-            throw new ValueException("s value must be within the range [0; 1]");
-        if (v < 0 || v > 1) 
-            throw new ValueException("v value must be within the range [0; 1]");
+        checkRange(h, 0, 360);
+        checkRange(s, 0, 1);
+        checkRange(v, 0, 1);
 
         this.h = h;
         this.s = s;
