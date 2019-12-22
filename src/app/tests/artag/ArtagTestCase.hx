@@ -6,8 +6,6 @@ import color.RGBColor;
 import color.BinaryColor;
 import image.Image;
 import artag.Artag;
-import json2object.JsonParser;
-import json2object.JsonWriter;
 import geometry.Line;
 import geometry.Point;
 import geometry.PointLike;
@@ -42,9 +40,8 @@ class ArtagTestCase extends Test {
     }
 
     public function getTestImage(file:String):Image<RGBColor> {
-        var parser = new JsonParser<Array<Array<Array<Int>>>>();
         return new Image<RGBColor> (
-            parser.fromJson(Std.string(sys.io.File.read('$testsDir/in/$file').readAll()), "errors.txt").map(
+            haxe.Json.parse(Std.string(sys.io.File.read('$testsDir/in/$file').readAll())).map(
                 function(array:Array<Array<Int>>) return array.map(
                     function (triple:Array<Int>) return new RGBColor(triple[0], triple[1], triple[2])
                 )
@@ -104,15 +101,13 @@ class ArtagTestCase extends Test {
     }
 
     public function testMarkers():Void {
-        var writer = new JsonWriter<Array<Array<Int>>>();
-
         trace('Running artag tests.');
         for (test in tests) {
             trace('Running test "${test.testname}"');
             var artag = new Artag(test.input, false, test.size);
 
             sys.io.File.write('$testsDir/out/${test.testname}.binimg').writeString(
-                writer.write(artag.image.map(
+                haxe.Json.stringify(artag.image.map(
                     function(array:Array<BinaryColor>) return array.map(
                         function(color:BinaryColor) return toMono(color).value
                     )

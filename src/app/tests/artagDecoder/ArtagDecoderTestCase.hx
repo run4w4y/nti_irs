@@ -11,7 +11,9 @@ import app.artagDecoder.ArtagDecoder;
 import geometry.Line;
 import geometry.Point;
 import geometry.PointLike;
-import tools.ColorTools.*;
+
+using tools.ColorTools;
+
 
 class ArtagDecoderTestCase extends ArtagTestCase {
     var w = 160;
@@ -30,7 +32,7 @@ class ArtagDecoderTestCase extends ArtagTestCase {
             for (j in 0...w) {
                 var curIndex = w * i + j;
                 if (contents[curIndex] != null)
-                    tmp.push(new HexColor(contents[curIndex]).toRgb()); 
+                    tmp.push(new HexColor(contents[curIndex]).toRGB()); 
             }
             res.push(tmp);
         }
