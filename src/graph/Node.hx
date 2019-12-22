@@ -1,12 +1,11 @@
 package graph;
 
-import hashmap.Hashable;
 import graph.Direction;
 
 using tools.NullTools;
 
 
-class Node extends Hashable {
+class Node {
 	var row:Int;
 	var col:Int;
 	public var direction: Direction;
@@ -69,7 +68,7 @@ class Node extends Hashable {
 		return allowedDirections[row][col][direction] == true;
 	}
 	
-	override public function toString():String {
+	public function toString():String {
 		return 'Node($row, $col, $direction)';
 	}
 }

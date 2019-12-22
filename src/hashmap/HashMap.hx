@@ -1,22 +1,20 @@
 package hashmap;
 
-import hashmap.Hashable;
-
 
 @:forward
-abstract HashMap<K:Hashable, V>(Map<String, V>) {
-    public function new () {
+abstract HashMap<K, V>(Map<String, V>) {
+    public function new():Void {
         this = new Map<String, V>();
     }
 
     @:arrayAccess
-    public inline function get (key:K):V {
-        return this.get(key.toString());
+    public inline function get(key:K):V {
+        return this.get(Std.string(key));
     }
 
     @:arrayAccess
-    public inline function set (key:K, val:V):V {
-        this.set(key.toString(), val);
+    public inline function set(key:K, val:V):V {
+        this.set(Std.string(key), val);
         return val;
     }
 }
