@@ -16,6 +16,7 @@ import pair.Pair;
 import hashset.HashSet;
 
 using tools.ColorTools;
+using StringTools;
 
 
 enum Direction {
@@ -31,8 +32,7 @@ enum Action {
     GoForth;
 }
 
-typedef FinalArguments = {
-    > ModelArguments,
+typedef FinalArguments = ModelArguments & {
     frontSensor:Sensor,
     leftSensor:Sensor,
     rightSensor:Sensor
@@ -67,7 +67,7 @@ class FinalModel extends RobotModel {
     function stringToImage(str:String):Image<RGBColor> {
         var w = 160;
         var h = 120;
-        var contents = str.split(' ');
+        var contents = str.trim().split(' ');
         var res:Array<Array<RGBColor>> = [];
 
         for (i in 0...h) {
@@ -92,10 +92,10 @@ class FinalModel extends RobotModel {
             new Artag(stringToImage(lines[1]))
         ).read();
 
-        return if (first > 8) 
-                {x: second, y: first - 8} 
+        return if (first < 8) 
+                {x: first, y: second - 8} 
             else 
-                {x: first, y: second - 8};
+                {x: second, y: first - 8};
     }
 
     function checkLeft():Bool { // is there anything to the left
@@ -110,247 +110,204 @@ class FinalModel extends RobotModel {
         return frontSensor.read() <= 50;
     }
 
-    function goForth():Void {
+    function goEnc(encValue:Int):Void {
         moveGyro(90, function () {
-            return (leftEncoder.read() + rightEncoder.read()) / 2 <= 70;
+            return (leftEncoder.read() + rightEncoder.read()) / 2 <= encValue;
         });
         stop(Seconds(0.1));
     }
 
+    function goForth():Void {
+        goEnc(1385);
+    }
+
     public function solution():Void {
+        goEnc(150);
         var dest = getDestination();
         var a = 0;
         var resX = -1;
         var resY = -1;
+        print('${dest.y} ${dest.x}');
 
-        for (i in 0...8) {
-            var flag = false;
-            for (j in 0...8) {
-                var xCur = i;
-                var yCur = j;
-                var ok = true;
-                var set = new HashSet<Pair<Direction, String>>();
-                var dir = Right;
-                var history:Array<Action> = [];
+        dfs(10, 10, Right);
+        if (abs(10 -  minX) + maxX - 10 != 7 || abs(10 -  minY) + maxY - 10 != 7) 
+            throw 'gavna';
 
-                for (step in 0...350) {
-                    if (xCur < 0 || xCur >= 8 || yCur < 0 || xCur >= 8) {
-                        ok = false;
-                        break;
-                    }
-                    
-                    var curPair = new Pair<Direction, String> (
-                        dir,
-                        Std.string(xCur) + Std.string(yCur) + '1'
-                    );
-
-                    if (!checkLeft() && !set.has(curPair)) {
-                        set.add(curPair);
-                        turn(-90);
-                        goForth();
-                        history.push(TurnLeft);
-                        history.push(GoForth);
-
-                        switch (dir) {
-                            case Right: 
-                                dir = Up;
-                                --yCur;
-                            case Up:
-                                dir = Left;
-                                --xCur;
-                            case Left: 
-                                dir = Down;
-                                ++yCur;
-                            case Down:
-                                dir = Right;
-                                ++xCur;
-                        }
-
-                        continue;
-                    }
-
-                    //
-
-                    if (!checkFront() && !set.has(curPair)) {
-                        set.add(curPair);
-                        goForth();
-                        history.push(GoForth);
-
-                        switch (dir) {
-                            case Right:
-                                ++xCur;
-                            case Up:
-                                --yCur;
-                            case Left:
-                                --xCur;
-                            case Down:
-                                ++yCur;
-                        }
-
-                        continue;
-                    }
-
-                    //
-
-                    if (!checkRight() && !set.has(curPair)) {
-                        set.add(curPair);
-                        turn(90);
-                        goForth();
-                        history.push(TurnRight);
-                        history.push(GoForth);
-
-                        switch (dir) {
-                            case Right: 
-                                dir = Down;
-                                ++yCur;
-                            case Up:
-                                dir = Right;
-                                ++xCur;
-                            case Left: 
-                                dir = Up;
-                                --yCur;
-                            case Down:
-                                dir = Left;
-                                --xCur;
-                        }
-
-                        continue;
-                    }
-
-                    turn(180);
-                    history.push(TurnRight);
-                    history.push(TurnRight);
-                    switch (dir) {
-                        case Right:
-                            dir = Left;
-                        case Left:
-                            dir = Right;
-                        case Up:
-                            dir = Down;
-                        case Down:
-                            dir = Up;
-                    }
-                }
-
-                turn(180);
-                history.reverse();
-                for (action in history) {
-                    switch (action) {
-                        case GoForth:
-                            goForth();
-                        case TurnRight:
-                            turn(-90);
-                        case TurnLeft:
-                            turn(90);
-                    }
-                }
-
-
-                if (ok) {
-                    resX = i;
-                    resY = j;
-                    flag = true;
-                    break;
-                }
-            }
-            if (flag) break;
-        }
-
-        var xCur = resX;
-        var yCur = resY;
-        var set = new HashSet<Pair<Direction, String>>();
-        var dir = Right;
-
-        for (step in 0...350) {
-            if (xCur == dest.x && yCur == dest.y) {
-                brick.display.addLabel("finish", new Pixel(0, 0));
-                return;
-            }
-
-            var curPair = new Pair<Direction, String> (
-                dir,
-                Std.string(xCur) + Std.string(yCur) + '1'
-            );
-
-            if (!checkLeft() && !set.has(curPair)) {
-                set.add(curPair);
-                turn(-90);
-                goForth();
-
-                switch (dir) {
-                    case Right: 
-                        dir = Up;
-                        --yCur;
-                    case Up:
-                        dir = Left;
-                        --xCur;
-                    case Left: 
-                        dir = Down;
-                        ++yCur;
-                    case Down:
-                        dir = Right;
-                        ++xCur;
-                }
-
-                continue;
-            }
-
-            //
-
-            if (!checkFront() && !set.has(curPair)) {
-                set.add(curPair);
-                goForth();
-
-                switch (dir) {
-                    case Right:
-                        ++xCur;
-                    case Up:
-                        --yCur;
-                    case Left:
-                        --xCur;
-                    case Down:
-                        ++yCur;
-                }
-
-                continue;
-            }
-
-            //
-
-            if (!checkRight() && !set.has(curPair)) {
-                set.add(curPair);
-                turn(90);
-                goForth();
-
-                switch (dir) {
-                    case Right: 
-                        dir = Down;
-                        ++yCur;
-                    case Up:
-                        dir = Right;
-                        ++xCur;
-                    case Left: 
-                        dir = Up;
-                        --yCur;
-                    case Down:
-                        dir = Left;
-                        --xCur;
-                }
-
-                continue;
-            }
-
-            turn(180);
-            switch (dir) {
-                case Right:
-                    dir = Left;
-                case Left:
-                    dir = Right;
-                case Up:
-                    dir = Down;
-                case Down:
-                    dir = Up;
-            }
-        }
+        used = [for (i in 0...25) [for (j in 0...25) false]];
+        resX = cast (abs(10 - minX), Int);
+        resY = cast (abs(10 - minY), Int);
+        dfs(resX, resY, Right, true, dest.x, dest.y);
     }
+
+    var minX = 10;
+    var maxX = 10;
+    var minY = 10;
+    var maxY = 10;
+    var used:Array<Array<Bool>> = [for (i in 0...25) [for (j in 0...25) false]];
+
+    function dfs(x:Int, y:Int, dir:Direction, ?flag:Bool=false, ?dx:Int, ?dy:Int):Void {
+        if (flag && x == dx && y == dy) {
+            brick.display.addLabel("finish", new Pixel(0, 0));
+            throw 'gotovo epta';
+            return;
+        }
+        
+        minX = cast (min(minX, x), Int);
+        maxX = cast (max(maxX, x), Int);
+        minY = cast (min(minY, y), Int);
+        maxY = cast (max(maxY, y), Int);
+        var leftFree = false;
+        var rightFree = false;
+        var downFree = false;
+        var upFree = false;
+        used[x][y] = true;
+        
+        switch (dir) {
+            case Up:
+                upFree = !checkFront();
+                leftFree = !checkLeft();
+                rightFree = !checkRight();
+            case Down:
+                downFree = !checkFront();
+                rightFree = !checkLeft();
+                leftFree = !checkRight();
+            case Right:
+                rightFree = !checkFront();
+                upFree = !checkLeft();
+                downFree = !checkRight();
+                if (x == 10 && y == 10) {
+                    turn(-90);
+                    leftFree = !checkRight();
+                    turn(90);
+                }
+            case Left:
+                leftFree = !checkFront();
+                downFree = !checkLeft();
+                upFree = !checkRight();
+        }
+
+
+        if (upFree && !used[x][y - 1]) {
+            switch (dir) {
+                case Up:
+                    goForth();
+                    dfs(x, y - 1, Up);
+                    goForth();
+                    turn(180);
+                case Down:
+                    turn(180);
+                    goForth();
+                    dfs(x, y - 1, Up);
+                    goForth();
+                    // turn(180);
+                case Left:
+                    turn(-90);
+                    goForth();
+                    dfs(x, y - 1, Up);
+                    // turn(180);
+                    goForth();
+                    turn(-90);
+                case Right:
+                    turn(90);
+                    goForth();
+                    dfs(x, y - 1, Up);
+                    // turn(180);
+                    goForth();
+                    turn(90);
+            }
+        }
+
+        if (leftFree && !used[x - 1][y]) {
+            switch (dir) {
+                case Up:
+                    turn(90);
+                    goForth();
+                    dfs(x - 1, y, Left);
+                    // turn(180);
+                    goForth();
+                    turn(90);
+                case Down:
+                    turn(-90);
+                    goForth();
+                    dfs(x - 1, y, Left);
+                    // turn(180);
+                    goForth();
+                    turn(-90);
+                case Left:
+                    goForth();
+                    dfs(x - 1, y, Left);
+                    goForth();
+                    turn(180);
+                case Right:
+                    turn(180);
+                    goForth();
+                    dfs(x - 1, y, Left);
+                    goForth();
+                    // turn(180);
+            }
+        }  
+
+        if (rightFree && !used[x + 1][y]) {
+            switch (dir) {
+                case Up:
+                    turn(-90);
+                    goForth();
+                    dfs(x + 1, y, Right);
+                    // turn(180);
+                    goForth();
+                    turn(-90);
+                case Down:
+                    turn(90);
+                    goForth();
+                    dfs(x + 1, y, Right);
+                    // turn(180);
+                    goForth();
+                    turn(90);
+                case Right:
+                    goForth();
+                    dfs(x + 1, y, Right);
+                    goForth();
+                    turn(180);
+                case Left:
+                    turn(180);
+                    goForth();
+                    dfs(x + 1, y, Right);
+                    goForth();
+                    // turn(180);
+            }
+        } 
+
+        if (downFree && !used[x][y + 1]) {
+            switch (dir) {
+                case Up:
+                    turn(180);
+                    goForth();
+                    dfs(x, y + 1, Down);
+                    goForth();
+                    // turn(180);
+                case Down:
+                    goForth();
+                    dfs(x, y + 1, Down);
+                    goForth();
+                    turn(180);
+                case Left:
+                    turn(90);
+                    goForth();
+                    dfs(x, y + 1, Down);
+                    // turn(180);
+                    goForth();
+                    turn(90);
+                case Right:
+                    turn(-90);
+                    goForth();
+                    dfs(x, y + 1, Down);
+                    // turn(180);
+                    goForth();
+                    turn(-90);
+            }
+        }
+
+        // if (!leftFree && !rightFree && !upFree && !downFree)
+        turn(180);
+    } 
 }
