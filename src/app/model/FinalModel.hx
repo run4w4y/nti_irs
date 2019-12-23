@@ -19,19 +19,6 @@ using tools.ColorTools;
 using StringTools;
 
 
-enum Direction {
-    Up;
-    Down;
-    Left;
-    Right;
-}
-
-enum Action {
-    TurnLeft;
-    TurnRight;
-    GoForth;
-}
-
 typedef FinalArguments = ModelArguments & {
     frontSensor:Sensor,
     leftSensor:Sensor,
