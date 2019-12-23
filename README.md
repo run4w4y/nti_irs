@@ -4,9 +4,13 @@ nix-shell --pure
 ```
 
 ### Installing dependencies
+Build dependencies:
 ```bash
-haxelib install polygonal-ds 2.0.1
-haxelib install json2object
+haxelib install build.hxml
+```
+Tests dependencies:
+```bash
+haxelib install test.hxml
 ```
 
 Make sure you have haxelib configured
@@ -37,4 +41,4 @@ xclip -sel cli < builds/main.js
 This command copies the contents of `builds/main.js` to your clipboard.
 
 ### Documentation
-Documentation is currently being written and moved from the `documentation` folder to the Wiki. You can check out what's got documented so far in [Wiki](https://github.com/run4w4y/nti_irs/wiki)
+Documentation is currently being written. You can check out what's got documented so far in [Wiki](https://github.com/run4w4y/nti_irs/wiki)
