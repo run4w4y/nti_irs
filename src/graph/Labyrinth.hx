@@ -1,10 +1,16 @@
 package graph;
 
 import graph.Node;
-import map.HashMap;
+import hashmap.HashMap;
 import polygonal.ds.LinkedQueue;
 import graph.Movement;
 import graph.Direction;
+
+using tools.NullTools;
+
+
+typedef ReadFunction = (Void -> Float);
+typedef MoveFunction = (Void -> Void);
 
 class Labyrinth {
 	var rows:Int;
@@ -12,7 +18,9 @@ class Labyrinth {
 	var allowedDirections = new Array<Array<Map<Direction,Bool>>>();
 	var previousTurn = new HashMap<Node,HashMap<Node,Movement>>();
 	var nodes = new Array<Node>();
-	public function new(n:Int, m:Int, walls:List<Array<Int>>) {
+
+	public function new(n:Int, m:Int, ?walls:Array<Array<Int>>) {
+		walls = walls.coalesce([]);
 		rows = n;
 		cols = m;
 		allowedDirections = [for (i in 0...rows) [for (j in 0...cols) [
@@ -133,5 +141,18 @@ class Labyrinth {
 		}
 		currentPath.reverse();
 		return currentPath;
+	}
+
+	public function localizeUndefined(
+		startDirection:Direction, 
+		turnLeft:MoveFunction,
+		turnRight:MoveFunction,
+		goForth:MoveFunction,
+		?readLeft:ReadFunction, 
+		?readRight:ReadFunction,
+		?readFront:ReadFunction,
+		?readBack:ReadFunction
+	):Node {
+		return new Node(0, 0, Undefined);
 	}
 }
