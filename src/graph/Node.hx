@@ -26,7 +26,6 @@ class Node {
 	];
 
 	public function new(row:Int, col:Int, ?direction:Direction) {
-		super();
 		this.row = row;
 		this.col = col;
 		this.direction = direction.coalesce(Undefined);
