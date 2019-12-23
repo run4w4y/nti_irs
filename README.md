@@ -33,6 +33,9 @@ haxe test.hxml
 haxe --wait 6000 &
 ```
 
+### Second stage solutions
+You can find our team solutions for the second stage online tasks in the `archive` folder. 
+
 ### Tips
 You might want to use `xclip` CLI tool, to copy and paste code in the TRIK Studio faster. Example usage:
 ```bash
