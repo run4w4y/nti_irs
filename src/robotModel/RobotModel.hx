@@ -1,7 +1,8 @@
 package robotModel;
 
-import trik.Trik.*;
 import time.Time;
+import trik.Script;
+import trik.Brick;
 import trik.robot.motor.Motor;
 import trik.robot.sensor.Sensor;
 import trik.robot.encoder.Encoder;
@@ -35,7 +36,7 @@ class RobotModel {
         delayTime = delayTime.coalesce(Milliseconds(0));
         this.leftMotor.setPower(0);
         this.rightMotor.setPower(0);
-        script.wait(delayTime);
+        Script.wait(delayTime);
     }
 
     public function resetEncoders():Void {
@@ -45,11 +46,11 @@ class RobotModel {
 
     public function calibrateGyro(?duration:Time) {
         duration = duration.coalesce(Seconds(10));
-        brick.gyroscope.calibrate(duration);
+        Brick.gyroscope.calibrate(duration);
     }
 
     public function readGyro():Angle {
-        return new Angle(360 - brick.gyroscope.read()[6]/1000);
+        return new Angle(360 - Brick.gyroscope.read()[6]/1000);
     }
 
     public function move<T>(speed:Int=100, setpoint:T, readF:(Void -> T), getError:(T -> T -> Float),
@@ -66,7 +67,7 @@ class RobotModel {
             rightMotor.setPower(round(speed - u));
 
             if (condition == null) return;
-            script.wait(interval);
+            Script.wait(interval);
         } while (condition());
 
         stop(Seconds(0.1));

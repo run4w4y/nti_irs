@@ -1,4 +1,4 @@
-package trik.robot;
+package trik;
 
 import trik.robot.display.DisplayHigher;
 import trik.robot.accelerometer.Accelerometer;
@@ -19,62 +19,53 @@ import image.Image;
 
 
 class Brick {
-    public var accelerometer :Accelerometer;
-    public var battery       :Battery;
-    public var display       :DisplayHigher;
-    public var keys          :KeysHigher;
-    public var led           :Led;
-    public var gyroscope     :GyroscopeHigher;
+    public static var accelerometer:Accelerometer = untyped __js__("brick.accelerometer()");
+    public static var battery:Battery = untyped __js__("brick.battery()");
+    public static var display = new DisplayHigher();
+    public static var keys = new KeysHigher();
+    public static var led:Led = untyped __js__("brick.led()");
+    public static var gyroscope = new GyroscopeHigher();
     
-    public function encoder(port:String):Encoder {
+    public static function encoder(port:String):Encoder {
         return untyped __js__("brick.encoder({0})", port);
     }
 
-    public function motor(port:String):Motor {
+    public static function motor(port:String):Motor {
         return untyped __js__("brick.motor({0})", port);
     }
 
-    public function colorSensor(port:String):ColorSensor {
+    public static function colorSensor(port:String):ColorSensor {
         return untyped __js__("brick.colorSensor({0})", port);
     }
 
-    public function playSound(filename:String):Void {
+    public static function playSound(filename:String):Void {
         untyped __js__("brick.playSound({0})", filename);
     }
 
-    public function say(phrase:String):Void {
+    public static function say(phrase:String):Void {
         untyped __js__("brick.say({0})", phrase);
     }
 
-    public function sensor(port:String):Sensor {
+    public static function sensor(port:String):Sensor {
         return untyped __js__("brick.sensor({0})", port);
     }
 
-    public function stop():Void {
+    public static function stop():Void {
         untyped __js__("brick.stop()");
     }
 
-    public function objectSensor(port:String):ObjectSensor {
+    public static function objectSensor(port:String):ObjectSensor {
         return untyped __js__("brick.objectSensor({0})", port);
     }
 
-    function getRawPhoto():RawImage {
+    static function getRawPhoto():RawImage {
         return new RawImage(untyped __js__("getPhoto()"));
     }
 
-    public function getPhoto():Image<RGBColor> {
+    public static function getPhoto():Image<RGBColor> {
         return getRawPhoto().toImage();
     }
 
     // TODO: complete
     // public function getStillImage():
-
-    public function new():Void {
-        this.accelerometer = untyped __js__("brick.accelerometer()");
-        this.battery = untyped __js__("brick.battery()");
-        this.display = new DisplayHigher();
-        this.keys = new KeysHigher();
-        this.led = untyped __js__("brick.led()");
-        this.gyroscope = new GyroscopeHigher();
-    }
 }

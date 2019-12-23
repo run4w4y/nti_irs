@@ -2,11 +2,11 @@ package app.model;
 
 import robotModel.RobotModel;
 import robotModel.ModelArguments;
+import trik.Script;
 import trik.robot.sensor.Sensor;
 import time.Time;
 import trik.robot.display.Pixel;
 import Math.*;
-import trik.Trik.*;
 import app.artagDecoder.ArtagDecoder;
 import color.HexColor;
 import color.RGBColor;
@@ -84,13 +84,16 @@ class FinalModel extends RobotModel {
     }
 
     function getDestination():{x:Int, y:Int} {
-        var lines = script.readAll('input.txt');
+        var lines = Script.readAll('input.txt');
         var first = new ArtagDecoder(
             new Artag(stringToImage(lines[0]))
         ).read();
         var second = new ArtagDecoder(
             new Artag(stringToImage(lines[1]))
         ).read();
+
+        Script.print(first);
+        Script.print(second);
 
         return if (first < 8) 
                 {x: first, y: second - 8} 
@@ -124,190 +127,7 @@ class FinalModel extends RobotModel {
     public function solution():Void {
         goEnc(150);
         var dest = getDestination();
-        var a = 0;
-        var resX = -1;
-        var resY = -1;
-        print('${dest.y} ${dest.x}');
-
-        dfs(10, 10, Right);
-        if (abs(10 -  minX) + maxX - 10 != 7 || abs(10 -  minY) + maxY - 10 != 7) 
-            throw 'gavna';
-
-        used = [for (i in 0...25) [for (j in 0...25) false]];
-        resX = cast (abs(10 - minX), Int);
-        resY = cast (abs(10 - minY), Int);
-        dfs(resX, resY, Right, true, dest.x, dest.y);
+        Script.print('${dest.x} ${dest.y}');
+        stop(Seconds(1));
     }
-
-    var minX = 10;
-    var maxX = 10;
-    var minY = 10;
-    var maxY = 10;
-    var used:Array<Array<Bool>> = [for (i in 0...25) [for (j in 0...25) false]];
-
-    function dfs(x:Int, y:Int, dir:Direction, ?flag:Bool=false, ?dx:Int, ?dy:Int):Void {
-        if (flag && x == dx && y == dy) {
-            brick.display.addLabel("finish", new Pixel(0, 0));
-            throw 'gotovo epta';
-            return;
-        }
-        
-        minX = cast (min(minX, x), Int);
-        maxX = cast (max(maxX, x), Int);
-        minY = cast (min(minY, y), Int);
-        maxY = cast (max(maxY, y), Int);
-        var leftFree = false;
-        var rightFree = false;
-        var downFree = false;
-        var upFree = false;
-        used[x][y] = true;
-        
-        switch (dir) {
-            case Up:
-                upFree = !checkFront();
-                leftFree = !checkLeft();
-                rightFree = !checkRight();
-            case Down:
-                downFree = !checkFront();
-                rightFree = !checkLeft();
-                leftFree = !checkRight();
-            case Right:
-                rightFree = !checkFront();
-                upFree = !checkLeft();
-                downFree = !checkRight();
-                if (x == 10 && y == 10) {
-                    turn(-90);
-                    leftFree = !checkRight();
-                    turn(90);
-                }
-            case Left:
-                leftFree = !checkFront();
-                downFree = !checkLeft();
-                upFree = !checkRight();
-        }
-
-
-        if (upFree && !used[x][y - 1]) {
-            switch (dir) {
-                case Up:
-                    goForth();
-                    dfs(x, y - 1, Up);
-                    goForth();
-                    turn(180);
-                case Down:
-                    turn(180);
-                    goForth();
-                    dfs(x, y - 1, Up);
-                    goForth();
-                    // turn(180);
-                case Left:
-                    turn(-90);
-                    goForth();
-                    dfs(x, y - 1, Up);
-                    // turn(180);
-                    goForth();
-                    turn(-90);
-                case Right:
-                    turn(90);
-                    goForth();
-                    dfs(x, y - 1, Up);
-                    // turn(180);
-                    goForth();
-                    turn(90);
-            }
-        }
-
-        if (leftFree && !used[x - 1][y]) {
-            switch (dir) {
-                case Up:
-                    turn(90);
-                    goForth();
-                    dfs(x - 1, y, Left);
-                    // turn(180);
-                    goForth();
-                    turn(90);
-                case Down:
-                    turn(-90);
-                    goForth();
-                    dfs(x - 1, y, Left);
-                    // turn(180);
-                    goForth();
-                    turn(-90);
-                case Left:
-                    goForth();
-                    dfs(x - 1, y, Left);
-                    goForth();
-                    turn(180);
-                case Right:
-                    turn(180);
-                    goForth();
-                    dfs(x - 1, y, Left);
-                    goForth();
-                    // turn(180);
-            }
-        }  
-
-        if (rightFree && !used[x + 1][y]) {
-            switch (dir) {
-                case Up:
-                    turn(-90);
-                    goForth();
-                    dfs(x + 1, y, Right);
-                    // turn(180);
-                    goForth();
-                    turn(-90);
-                case Down:
-                    turn(90);
-                    goForth();
-                    dfs(x + 1, y, Right);
-                    // turn(180);
-                    goForth();
-                    turn(90);
-                case Right:
-                    goForth();
-                    dfs(x + 1, y, Right);
-                    goForth();
-                    turn(180);
-                case Left:
-                    turn(180);
-                    goForth();
-                    dfs(x + 1, y, Right);
-                    goForth();
-                    // turn(180);
-            }
-        } 
-
-        if (downFree && !used[x][y + 1]) {
-            switch (dir) {
-                case Up:
-                    turn(180);
-                    goForth();
-                    dfs(x, y + 1, Down);
-                    goForth();
-                    // turn(180);
-                case Down:
-                    goForth();
-                    dfs(x, y + 1, Down);
-                    goForth();
-                    turn(180);
-                case Left:
-                    turn(90);
-                    goForth();
-                    dfs(x, y + 1, Down);
-                    // turn(180);
-                    goForth();
-                    turn(90);
-                case Right:
-                    turn(-90);
-                    goForth();
-                    dfs(x, y + 1, Down);
-                    // turn(180);
-                    goForth();
-                    turn(-90);
-            }
-        }
-
-        // if (!leftFree && !rightFree && !upFree && !downFree)
-        turn(180);
-    } 
 }
