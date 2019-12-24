@@ -4,4 +4,5 @@ enum Movement {
 	Go;
 	RotateLeft;
 	RotateRight;
+	Undefined;
 }
