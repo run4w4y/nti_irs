@@ -219,14 +219,6 @@ class Labyrinth {
 	):Node {
 
 		var startPoint = new Node(0, 0, startDirection);
-		if (readLeft() && readRight() && readFront()) {
-			allowedDirections[startPoint] = false;
-			allowedDirections[startPoint.turnLeft()] = false;
-			allowedDirections[startPoint.turnRight()] = false;
-			turnBack();
-			startDirection = Left;
-			startPoint = new Node(0, 0, startDirection);
-		}
 
 		dfs(startPoint, 
 			Undefined, {
@@ -239,7 +231,19 @@ class Labyrinth {
 			readFront: readFront,
 			readBack: readBack
 		});
-
+		turnBack();
+		dfs(startPoint.reverseDirection(), 
+			Undefined, {
+			turnLeft: turnLeft,
+			turnRight: turnRight,
+			turnBack: turnBack,
+			goForth: goForth,
+			readLeft: readLeft,
+			readRight: readRight,
+			readFront: readFront,
+			readBack: readBack
+		});	
+		startDirection = startPoint.reverseDirection().direction;
 		var minRow = 0;
 		var minCol = 0;
 
