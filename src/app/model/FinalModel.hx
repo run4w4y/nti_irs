@@ -15,6 +15,7 @@ import artag.Artag;
 import graph.Labyrinth;
 import graph.Node;
 import graph.Direction;
+import graph.Movement;
 
 using tools.ColorTools;
 using StringTools;
@@ -106,7 +107,7 @@ class FinalModel extends RobotModel {
     }
 
     function goForth():Void {
-        goEnc(1375);
+        goEnc(1360);
     }
 
     public function solution():Void {
@@ -114,7 +115,7 @@ class FinalModel extends RobotModel {
         var dest = getDestination();
         Script.print('${dest.x} ${dest.y}');
         var lab = new Labyrinth(8, 8);
-        lab.localizeUndefined(
+        var startNode = lab.localizeUndefined(
             Right, 
             function() turn(90), 
             function() turn(-90),
@@ -124,5 +125,18 @@ class FinalModel extends RobotModel {
             checkRight,
             checkFront
         );
+        var moves = lab.getPath(startNode,new Node(dest.y,dest.x));
+        for (move in moves){
+            switch(move){
+                case Go:
+                    goForth();
+                case RotateLeft:
+                    turn(90);
+                case RotateRight:
+                    turn(-90);
+                case Undefined:
+                    throw "can't reach destination point";
+            }
+        }
     }
 }
