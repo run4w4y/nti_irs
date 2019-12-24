@@ -216,6 +216,11 @@ class Labyrinth {
 		?readFront:ReadFunction,
 		?readBack:ReadFunction
 	):Node {
+		if (readLeft() && readRight() && readFront()) {
+			turnBack();
+			startDirection = Left;
+		}
+
 		var startPoint = new Node(0, 0, startDirection);
 		dfs(startPoint, 
 			Undefined, {

@@ -3,6 +3,7 @@ package app.model;
 import robotModel.RobotModel;
 import robotModel.ModelArguments;
 import trik.Script;
+import trik.Brick;
 import trik.robot.sensor.Sensor;
 import time.Time;
 import trik.robot.display.Pixel;
@@ -138,5 +139,6 @@ class FinalModel extends RobotModel {
                     throw "can't reach destination point";
             }
         }
+        Brick.display.addLabel('finish', new Pixel(0, 0));
     }
 }
