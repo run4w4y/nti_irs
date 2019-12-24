@@ -12,8 +12,9 @@ import color.HexColor;
 import color.RGBColor;
 import image.Image;
 import artag.Artag;
-import pair.Pair;
-import hashset.HashSet;
+import graph.Labyrinth;
+import graph.Node;
+import graph.Direction;
 
 using tools.ColorTools;
 using StringTools;
@@ -79,9 +80,6 @@ class FinalModel extends RobotModel {
             new Artag(stringToImage(lines[1]))
         ).read();
 
-        Script.print(first);
-        Script.print(second);
-
         return if (first < 8) 
                 {x: first, y: second - 8} 
             else 
@@ -108,13 +106,23 @@ class FinalModel extends RobotModel {
     }
 
     function goForth():Void {
-        goEnc(1385);
+        goEnc(1375);
     }
 
     public function solution():Void {
         goEnc(150);
         var dest = getDestination();
         Script.print('${dest.x} ${dest.y}');
-        stop(Seconds(1));
+        var lab = new Labyrinth(8, 8);
+        lab.localizeUndefined(
+            Right, 
+            function() turn(90), 
+            function() turn(-90),
+            function() turn(180),
+            goForth,
+            checkLeft,
+            checkRight,
+            checkFront
+        );
     }
 }

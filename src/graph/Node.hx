@@ -1,14 +1,15 @@
 package graph;
 
 import graph.Direction;
+import hashmap.HashMap;
 
 using tools.NullTools;
 
 
 class Node {
-	var row:Int;
-	var col:Int;
-	public var direction: Direction;
+	public var row:Int;
+	public var col:Int;
+	public var direction:Direction;
 	
 	var leftDirection:Map<Direction,Direction> = [
 		Left  => Down, 	Down => Right,
@@ -25,17 +26,17 @@ class Node {
 		Right => Left,	Left => Right
 	];
 
-	public function new(row:Int, col:Int, ?direction:Direction) {
+	public function new(row:Int, col:Int, ?direction:Direction):Void {
 		this.row = row;
 		this.col = col;
 		this.direction = direction.coalesce(Undefined);
 	}
 	
-	public function changeDirection(direction:Direction) {
+	public function changeDirection(direction:Direction):Node {
 		return new Node(row, col, direction);
 	}
 
-	public function go(?direction:Direction){
+	public function go(?direction:Direction):Node {
 		direction = if(direction != null) direction else this.direction;
 		switch (direction) {
 			case Left:
@@ -51,20 +52,26 @@ class Node {
 		}
 	}
 	
-	public function turnLeft() {
+	public function turnLeft():Node {
 		return new Node(row, col, leftDirection[direction]);
 	}
-	public function turnRight() {
+
+	public function turnRight():Node {
 		return new Node(row, col, rightDirection[direction]);
 	}
-	public function goBack() {
+
+	public function goBack():Node {
 		var newNode = new Node(row , col, backwardDirection[direction]);
 		newNode = newNode.go();
 		return newNode.changeDirection(direction);
 	}
 
-	public function canGo(allowedDirections:Array<Array<Map<Direction,Bool>>>):Bool {
-		return allowedDirections[row][col][direction] == true;
+	public function reverseDirection():Node {
+		return new Node(row, col, backwardDirection[direction]);
+	}
+
+	public function canGo(allowedDirections:HashMap<Node, Bool>):Bool {
+		return allowedDirections[this];
 	}
 	
 	public function toString():String {

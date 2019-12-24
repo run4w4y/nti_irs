@@ -5,17 +5,28 @@ import hashmap.HashMap;
 import polygonal.ds.LinkedQueue;
 import graph.Movement;
 import graph.Direction;
+import Math.*;
 
 using tools.NullTools;
 
 
-typedef ReadFunction = (Void -> Float);
+typedef ReadFunction = (Void -> Bool);
 typedef MoveFunction = (Void -> Void);
+typedef DfsArgs = {
+	turnLeft:MoveFunction,
+	turnRight:MoveFunction,
+	turnBack:MoveFunction,
+	goForth:MoveFunction,
+	?readLeft:ReadFunction, 
+	?readRight:ReadFunction,
+	?readFront:ReadFunction,
+	?readBack:ReadFunction
+};
 
 class Labyrinth {
 	var rows:Int;
 	var cols:Int;
-	var allowedDirections = new Array<Array<Map<Direction,Bool>>>();
+	var allowedDirections = new HashMap<Node, Bool>();
 	var previousTurn = new HashMap<Node,HashMap<Node,Movement>>();
 	var nodes = new Array<Node>();
 
@@ -23,51 +34,46 @@ class Labyrinth {
 		walls = walls.coalesce([]);
 		rows = n;
 		cols = m;
-		allowedDirections = [for (i in 0...rows) [for (j in 0...cols) [
-			Left => true,	Right =>true,
-			Down => true,	Up => true
-		]]];
+		nodes = [for (row in 0...rows){for(col in 0...cols){for(direction in [Left,Right,Up,Down]){
+					new Node(row,col,direction);
+		}}}];
+
+		for (node in nodes)
+			allowedDirections[node] = true;
 		
-		for(row in 0...rows){
-			allowedDirections[row][0][Left] = false;
-			allowedDirections[row][cols - 1][Right] = false;
+		for(row in 0...rows) {
+			allowedDirections[new Node(row, 0, Left)] = false;
+			allowedDirections[new Node(row, cols - 1, Right)] = false;
 		}
 		
-		for(col in 0...cols){
-			allowedDirections[0][col][Up] = false;
-			allowedDirections[rows - 1][col][Down] = false;
+		for(col in 0...cols) {
+			allowedDirections[new Node(0, col, Up)] = false;
+			allowedDirections[new Node(rows - 1, col, Down)] = false;
 		}
-		for(wall in walls){
+		for(wall in walls) {
 			var row1 = wall[0], col1 = wall[1], row2 = wall[2], col2 = wall[3];
-			if(row1 > row2){
+			if (row1 > row2) {
 				var tmp = row2;
 				row2 = row1;
 				row1 = tmp;
 			}
-			if(col1 > col2){
+			if (col1 > col2) {
 				var tmp = col2;
 				col2 = row1;
 				col1 = tmp;
 			}
-			if(col1 == col2){
-				for(row in row1...row2){
-					allowedDirections[row][col1][Left] = false;
-					allowedDirections[row][col1 - 1][Right] = false;
+			if (col1 == col2) {
+				for (row in row1...row2) {
+					allowedDirections[new Node(row, col1, Left)] = false;
+					allowedDirections[new Node(row, col1 - 1, Right)] = false;
 				}
 			}
-			else{
-				for(col in col1...col2){
-					allowedDirections[row1][col][Up] = false;
-					allowedDirections[row1 - 1][col][Down] = false;
+			else {
+				for (col in col1...col2) {
+					allowedDirections[new Node(row1, col, Up)] = false;
+					allowedDirections[new Node(row1 - 1, col, Down)] = false;
 				}
 			}
-		}
-		nodes = [for (row in 0...rows){for(col in 0...cols){for(direction in [Left,Right,Up,Down]){
-					new Node(row,col,direction);
-		}}}];
-		for (node in nodes) {
-			previousTurn[node] = new HashMap<Node,Movement>();
-			bfs(node);
 		}
 	}
 
@@ -126,6 +132,8 @@ class Labyrinth {
 
 	function path(nodeFrom:Node, nodeTo:Node): Array<Movement> {
 		var currentPath = new Array<Movement>();
+		previousTurn[nodeFrom] = new HashMap<Node, Movement>();
+		bfs(nodeFrom);
 		while(previousTurn[nodeFrom][nodeTo] != null) {
 			var currentTurn = previousTurn[nodeFrom][nodeTo];
 			currentPath.push(currentTurn);
@@ -143,16 +151,90 @@ class Labyrinth {
 		return currentPath;
 	}
 
+	var used = new HashMap<Node, Bool>();
+
+	function dfs(
+		currentNode:Node, 
+		args:DfsArgs
+	):Void {
+		used[currentNode] = true;
+		nodes.push(currentNode);
+
+		allowedDirections[currentNode.turnLeft()] = !args.readLeft();
+		if (!allowedDirections[currentNode.turnLeft()])
+			used[currentNode.turnLeft()] = true;
+		allowedDirections[currentNode.turnRight()] = !args.readRight();
+		if (!allowedDirections[currentNode.turnRight()])
+			used[currentNode.turnRight()] = true;
+		allowedDirections[currentNode] = !args.readFront();
+
+		if (!used[currentNode.turnLeft()] && !args.readLeft()) {
+			args.turnLeft();
+			dfs(currentNode.turnLeft(), args);
+			args.turnRight();
+		}
+
+		if (!used[currentNode.turnRight()] && !args.readRight()) {
+			args.turnRight();
+			dfs(currentNode.turnRight(), args);
+			args.turnLeft();
+		}
+
+		if (!used[currentNode.go()] && !args.readFront()) {
+			used[currentNode.go().reverseDirection()] = true;
+			args.goForth();
+			dfs(currentNode.go(), args);
+			args.turnBack();
+			args.goForth();
+			args.turnBack();
+		}
+	}
+
 	public function localizeUndefined(
 		startDirection:Direction, 
 		turnLeft:MoveFunction,
 		turnRight:MoveFunction,
+		turnBack:MoveFunction,
 		goForth:MoveFunction,
-		?readLeft:ReadFunction, 
+		?readLeft:ReadFunction,
 		?readRight:ReadFunction,
 		?readFront:ReadFunction,
 		?readBack:ReadFunction
 	):Node {
-		return new Node(0, 0, Undefined);
+		var startPoint = new Node(0, 0, startDirection);
+		dfs(startPoint, {
+			turnLeft: turnLeft,
+			turnRight: turnRight,
+			turnBack: turnBack,
+			goForth: goForth,
+			readLeft: readLeft,
+			readRight: readRight,
+			readFront: readFront,
+			readBack: readBack
+		});
+
+		var minRow = 0;
+		var minCol = 0;
+
+		for (node in nodes) {
+			minRow = cast (min(node.row, minRow), Int);
+			minCol = cast (min(node.col, minCol), Int);
+		}
+
+		var addToRow = cast (abs(minRow), Int);
+		var addToCol = cast (abs(minCol), Int);
+		var tmpAllowed = new HashMap<Node, Bool>();
+		var tmpNodes:Array<Node> = [];
+		
+		for (node in nodes) {
+			var curNode = new Node(node.row + addToRow, node.col + addToCol, node.direction);
+			tmpNodes.push(curNode);
+			tmpAllowed[curNode] = allowedDirections[node];
+		}
+
+		allowedDirections = tmpAllowed;
+		nodes = tmpNodes;
+
+		return new Node(addToRow, addToCol, startDirection);
 	}
 }
