@@ -145,6 +145,8 @@ class Labyrinth {
 					nodeTo = nodeTo.turnRight();
 				case RotateRight:
 					nodeTo = nodeTo.turnLeft();
+				case Undefined:
+					throw "Undifined Movement";
 			}
 		}
 		currentPath.reverse();
@@ -155,8 +157,9 @@ class Labyrinth {
 
 	function dfs(
 		currentNode:Node, 
+		previousMove:Movement,
 		args:DfsArgs
-	):Void {
+	):Bool {
 		used[currentNode] = true;
 		nodes.push(currentNode);
 
@@ -170,24 +173,36 @@ class Labyrinth {
 
 		if (!used[currentNode.turnLeft()] && !args.readLeft()) {
 			args.turnLeft();
-			dfs(currentNode.turnLeft(), args);
-			args.turnRight();
+			if(!dfs(currentNode.turnLeft(), RotateLeft, args))
+				args.turnRight();
 		}
 
 		if (!used[currentNode.turnRight()] && !args.readRight()) {
 			args.turnRight();
-			dfs(currentNode.turnRight(), args);
-			args.turnLeft();
+			if(!dfs(currentNode.turnRight(), RotateRight, args))
+				args.turnLeft();
 		}
 
 		if (!used[currentNode.go()] && !args.readFront()) {
 			used[currentNode.go().reverseDirection()] = true;
 			args.goForth();
-			dfs(currentNode.go(), args);
-			args.turnBack();
+			if(!dfs(currentNode.go(), Go, args))
+				args.turnBack();
 			args.goForth();
-			args.turnBack();
+			switch (previousMove){
+				case RotateLeft:
+					args.turnLeft();
+					return true;
+				case RotateRight:
+					args.turnRight();
+					return true;
+				case Go:
+					return true;
+				case Undefined:
+					return false;
+			}
 		}
+		return false;
 	}
 
 	public function localizeUndefined(
@@ -202,7 +217,8 @@ class Labyrinth {
 		?readBack:ReadFunction
 	):Node {
 		var startPoint = new Node(0, 0, startDirection);
-		dfs(startPoint, {
+		dfs(startPoint, 
+			Undefined, {
 			turnLeft: turnLeft,
 			turnRight: turnRight,
 			turnBack: turnBack,
@@ -234,7 +250,7 @@ class Labyrinth {
 
 		allowedDirections = tmpAllowed;
 		nodes = tmpNodes;
-
+		
 		return new Node(addToRow, addToCol, startDirection);
 	}
 }
