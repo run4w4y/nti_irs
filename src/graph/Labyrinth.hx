@@ -199,6 +199,7 @@ class Labyrinth {
 				case Go:
 					return true;
 				case Undefined:
+					args.turnBack();
 					return false;
 			}
 		}
@@ -216,12 +217,17 @@ class Labyrinth {
 		?readFront:ReadFunction,
 		?readBack:ReadFunction
 	):Node {
-		if (readLeft() && readRight() && readFront()) {
-			turnBack();
-			startDirection = Left;
-		}
 
 		var startPoint = new Node(0, 0, startDirection);
+		if (readLeft() && readRight() && readFront()) {
+			allowedDirections[startPoint] = false;
+			allowedDirections[startPoint.turnLeft()] = false;
+			allowedDirections[startPoint.turnRight()] = false;
+			turnBack();
+			startDirection = Left;
+			startPoint = new Node(0, 0, startDirection);
+		}
+
 		dfs(startPoint, 
 			Undefined, {
 			turnLeft: turnLeft,
