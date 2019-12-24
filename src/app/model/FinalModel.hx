@@ -127,6 +127,8 @@ class FinalModel extends RobotModel {
             checkFront
         );
         var moves = lab.getPath(startNode,new Node(dest.y,dest.x));
+        Script.print('${moves}');
+        Script.print('${startNode}');
         for (move in moves){
             switch(move){
                 case Go:
