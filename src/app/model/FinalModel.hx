@@ -122,6 +122,7 @@ class FinalModel extends RobotModel {
                 return abs(frontSensor.read() - frontDist) <= 5; 
             });
         }
+        stop(Seconds(0.1));
     }
 
     function goEnc(encValue:Int):Void {
