@@ -16,7 +16,8 @@ import artag.Artag;
 import graph.Labyrinth;
 import graph.Node;
 import graph.Direction;
-import graph.Movement;
+import movementExecutor.Movement;
+import movementExecutor.MovementExecutor;
 
 using tools.ColorTools;
 using StringTools;
@@ -130,9 +131,22 @@ class FinalModel extends RobotModel {
 
     public function solution():Void {
         goEnc(150);
+
         var cellEnc = round(cellSize / (wheelRadius * 2 * PI) * 360 / 10.45);
         var dest = getDestination();
         Script.print('${dest.x} ${dest.y}');
+        var executor = new MovementExecutor(
+            function (val:Int) { turn(val); checkFront(); },
+            function () { goEnc(cellEnc); checkFront(); } 
+        );
+
+        for (movement in [TurnLeft, TurnRight, TurnRight, Go]) 
+            executor.add(movement);
+
+        executor.execute();
+
+        return;
+
         var lab = new Labyrinth(8, 8);
         var startNode = lab.localizeUndefined(
             Right, 
@@ -144,24 +158,11 @@ class FinalModel extends RobotModel {
             checkRight,
             checkFront
         );
-        var moves = lab.getPath(startNode, new Node(dest.y, dest.x));
-        Script.print('${moves}');
-        Script.print('${startNode}');
-        for (move in moves) {
-            switch(move){
-                case Go:
-                    goEnc(cellEnc);
-                    checkFront();
-                case RotateLeft:
-                    turn(90);
-                    checkFront();
-                case RotateRight:
-                    turn(-90);
-                    checkFront();
-                case Undefined:
-                    throw "can't reach destination point";
-            }
+
+        for (move in lab.getPath(startNode, new Node(dest.y, dest.x))) {
+            executor.add(move);
         }
+
         Brick.display.addLabel('finish', new Pixel(0, 0));
     }
 }

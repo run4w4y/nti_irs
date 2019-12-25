@@ -3,7 +3,7 @@ package graph;
 import graph.Node;
 import hashmap.HashMap;
 import polygonal.ds.LinkedQueue;
-import graph.Movement;
+import movementExecutor.Movement;
 import graph.Direction;
 import Math.*;
 
@@ -93,14 +93,14 @@ class Labyrinth {
 			if (!used[nextNode]) {
 				queue.enqueue(nextNode);
 				used[nextNode] = true;
-				previousTurn[nodeStart][nextNode] = RotateLeft;
+				previousTurn[nodeStart][nextNode] = TurnLeft;
 			}
 
 			nextNode = currentNode.turnRight();
 			if (!used[nextNode]) {
 				queue.enqueue(nextNode);
 				used[nextNode] = true;
-				previousTurn[nodeStart][nextNode] = RotateRight;
+				previousTurn[nodeStart][nextNode] = TurnRight;
 			}
 			if(currentNode.canGo(allowedDirections)){
 				nextNode = currentNode.go();
@@ -141,10 +141,12 @@ class Labyrinth {
 			switch (currentTurn) {
 				case Go: 
 					nodeTo = nodeTo.goBack();
-				case RotateLeft:
+				case TurnLeft:
 					nodeTo = nodeTo.turnRight();
-				case RotateRight:
+				case TurnRight:
 					nodeTo = nodeTo.turnLeft();
+				case TurnAround:
+					nodeTo = nodeTo.turnLeft().turnLeft();
 				case Undefined:
 					throw "Undifined Movement";
 			}
@@ -173,13 +175,13 @@ class Labyrinth {
 
 		if (!used[currentNode.turnLeft()] && !args.readLeft()) {
 			args.turnLeft();
-			if(!dfs(currentNode.turnLeft(), RotateLeft, args))
+			if(!dfs(currentNode.turnLeft(), TurnLeft, args))
 				args.turnRight();
 		}
 
 		if (!used[currentNode.turnRight()] && !args.readRight()) {
 			args.turnRight();
-			if(!dfs(currentNode.turnRight(), RotateRight, args))
+			if(!dfs(currentNode.turnRight(), TurnRight, args))
 				args.turnLeft();
 		}
 
@@ -190,10 +192,10 @@ class Labyrinth {
 				args.turnBack();
 			args.goForth();
 			switch (previousMove){
-				case RotateLeft:
+				case TurnLeft:
 					args.turnLeft();
 					return true;
-				case RotateRight:
+				case TurnRight:
 					args.turnRight();
 					return true;
 				case Go:
@@ -201,6 +203,9 @@ class Labyrinth {
 				case Undefined:
 					args.turnBack();
 					return false;
+				case TurnAround:
+					args.turnBack();
+					return true;
 			}
 		}
 		return false;
