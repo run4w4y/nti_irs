@@ -27,12 +27,6 @@ class RobotModel {
     public var wheelRadius  :Float;
     public var currentDirection = new Angle(0);
 
-    function sign(n:Float):Int {
-        return if (n < 0) -1
-            else if (n > 0) 1
-            else 1;
-    }
-
     public function stop(?delayTime:Time):Void {
         delayTime = delayTime.coalesce(Milliseconds(0));
         this.leftMotor.setPower(0);
