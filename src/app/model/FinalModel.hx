@@ -46,20 +46,6 @@ class FinalModel extends RobotModel {
         this.cellSize    = args.cellSize;
     }
 
-    function moveWall(speed:Int=100, setpoint:Float, ?condition:(Void -> Bool), ?interval:Time):Void {
-        move(speed, setpoint, function() {
-                var readVal = leftSensor.read();
-                return 
-                    if (abs(readVal - setpoint) > 3) 
-                        setpoint
-                    else 
-                        readVal;
-            }, function(value, setpoint) {
-                return setpoint - value;
-            }, {kp: 0.5}, condition, interval
-        );
-    }
-
     function stringToImage(str:String):Image<RGBColor> {
         var w = 160;
         var h = 120;
