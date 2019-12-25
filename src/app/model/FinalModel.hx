@@ -102,6 +102,10 @@ class FinalModel extends RobotModel {
     }
 
     function checkFront():Bool { // is there anything to the front
+        return frontSensor.read() <= 50;
+    }
+
+    function align():Void {
         var readVal = frontSensor.read();
         var threshold = 25;
         var delta = readVal - frontDist;
@@ -117,9 +121,7 @@ class FinalModel extends RobotModel {
             moveGyro(speed, function () {
                 return abs(frontSensor.read() - frontDist) <= 5; 
             });
-            return true;
-        } else
-            return abs(delta) <= threshold;
+        }
     }
 
     function goEnc(encValue:Int):Void {
@@ -136,32 +138,22 @@ class FinalModel extends RobotModel {
         var dest = getDestination();
         Script.print('${dest.x} ${dest.y}');
         var executor = new MovementExecutor(
-            function (val:Int) { turn(val); checkFront(); },
-            function () { goEnc(cellEnc); checkFront(); } 
+            function (val:Int) { turn(val); align(); },
+            function () { goEnc(cellEnc); align(); } 
         );
-
-        for (movement in [TurnLeft, TurnRight, TurnRight, Go]) 
-            executor.add(movement);
-
-        executor.execute();
-
-        return;
-
+        
         var lab = new Labyrinth(8, 8);
         var startNode = lab.localizeUndefined(
             Right, 
-            function() { turn(90); checkFront(); }, 
-            function() { turn(-90); checkFront(); },
-            function() { turn(180); checkFront(); },
-            function() { goEnc(cellEnc); checkFront(); },
+            executor,
             checkLeft,
             checkRight,
             checkFront
         );
 
-        for (move in lab.getPath(startNode, new Node(dest.y, dest.x))) {
+        for (move in lab.getPath(startNode, new Node(dest.y, dest.x)))
             executor.add(move);
-        }
+        executor.execute();
 
         Brick.display.addLabel('finish', new Pixel(0, 0));
     }

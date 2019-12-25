@@ -44,5 +44,8 @@ class MovementExecutor {
                     go();
             }
         }
+        if (turnValue != 0)
+            turn(turnValue);
+        execQueue = [];
     }
 }

@@ -4,6 +4,7 @@ import graph.Node;
 import hashmap.HashMap;
 import polygonal.ds.LinkedQueue;
 import movementExecutor.Movement;
+import movementExecutor.MovementExecutor;
 import graph.Direction;
 import Math.*;
 
@@ -13,10 +14,7 @@ using tools.NullTools;
 typedef ReadFunction = (Void -> Bool);
 typedef MoveFunction = (Void -> Void);
 typedef DfsArgs = {
-	turnLeft:MoveFunction,
-	turnRight:MoveFunction,
-	turnBack:MoveFunction,
-	goForth:MoveFunction,
+	executor:MovementExecutor,
 	?readLeft:ReadFunction, 
 	?readRight:ReadFunction,
 	?readFront:ReadFunction,
@@ -159,9 +157,8 @@ class Labyrinth {
 
 	function dfs(
 		currentNode:Node, 
-		previousMove:Movement,
 		args:DfsArgs
-	):Bool {
+	):Void {
 		used[currentNode] = true;
 		nodes.push(currentNode);
 
@@ -173,50 +170,35 @@ class Labyrinth {
 			used[currentNode.turnRight()] = true;
 		allowedDirections[currentNode] = !args.readFront();
 
-		if (!used[currentNode.turnLeft()] && !args.readLeft()) {
-			args.turnLeft();
-			if(!dfs(currentNode.turnLeft(), TurnLeft, args))
-				args.turnRight();
+		if (!used[currentNode.turnLeft()] && allowedDirections[currentNode.turnLeft()]) {
+			args.executor.add(TurnLeft);
+			args.executor.execute();
+			dfs(currentNode.turnLeft(), args);
+			args.executor.add(TurnRight);
 		}
 
-		if (!used[currentNode.turnRight()] && !args.readRight()) {
-			args.turnRight();
-			if(!dfs(currentNode.turnRight(), TurnRight, args))
-				args.turnLeft();
+		if (!used[currentNode.turnRight()] && allowedDirections[currentNode.turnRight()]) {
+			args.executor.add(TurnRight);
+			args.executor.execute();
+			dfs(currentNode.turnRight(), args);
+			args.executor.add(TurnLeft);
 		}
 
-		if (!used[currentNode.go()] && !args.readFront()) {
+		if (!used[currentNode.go()] && allowedDirections[currentNode]) {
 			used[currentNode.go().reverseDirection()] = true;
-			args.goForth();
-			if(!dfs(currentNode.go(), Go, args))
-				args.turnBack();
-			args.goForth();
-			switch (previousMove){
-				case TurnLeft:
-					args.turnLeft();
-					return true;
-				case TurnRight:
-					args.turnRight();
-					return true;
-				case Go:
-					return true;
-				case Undefined:
-					args.turnBack();
-					return false;
-				case TurnAround:
-					args.turnBack();
-					return true;
-			}
-		}
-		return false;
+			args.executor.add(Go);
+			args.executor.execute();
+			dfs(currentNode.go(), args);
+			args.executor.add(TurnAround);
+			args.executor.add(Go);
+			args.executor.execute();
+			args.executor.add(TurnAround);
+		};
 	}
 
 	public function localizeUndefined(
 		startDirection:Direction, 
-		turnLeft:MoveFunction,
-		turnRight:MoveFunction,
-		turnBack:MoveFunction,
-		goForth:MoveFunction,
+		executor:MovementExecutor,
 		?readLeft:ReadFunction,
 		?readRight:ReadFunction,
 		?readFront:ReadFunction,
@@ -225,24 +207,19 @@ class Labyrinth {
 
 		var startPoint = new Node(0, 0, startDirection);
 
-		dfs(startPoint, 
-			Undefined, {
-			turnLeft: turnLeft,
-			turnRight: turnRight,
-			turnBack: turnBack,
-			goForth: goForth,
+		dfs(startPoint, {
+			executor: executor,
 			readLeft: readLeft,
 			readRight: readRight,
 			readFront: readFront,
 			readBack: readBack
 		});
-		turnBack();
-		dfs(startPoint.reverseDirection(), 
-			Undefined, {
-			turnLeft: turnLeft,
-			turnRight: turnRight,
-			turnBack: turnBack,
-			goForth: goForth,
+
+		executor.add(TurnAround);
+		executor.execute();
+		
+		dfs(startPoint.reverseDirection(), {
+			executor: executor,
 			readLeft: readLeft,
 			readRight: readRight,
 			readFront: readFront,
