@@ -15,7 +15,9 @@ class Main {
             frontSensor:  Brick.sensor("A1"),
             leftSensor:   Brick.sensor("A3"),
             rightSensor:  Brick.sensor("A2"),
-            environment:  Simulator
+            environment:  Simulator,
+            wheelRadius:  5.6 / 2,
+            cellSize:     700
         });
         model.solution();
     }

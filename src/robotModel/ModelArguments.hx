@@ -12,6 +12,6 @@ typedef ModelArguments = {
     leftEncoder:Encoder,
     rightEncoder:Encoder,
     environment:Environment,
-    ?cameraPort:String,
-    
+    wheelRadius:Float,
+    ?cameraPort:String
 }

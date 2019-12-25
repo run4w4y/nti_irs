@@ -24,6 +24,7 @@ class RobotModel {
     public var rightEncoder :Encoder;
     public var cameraPort   :String;
     public var environment  :Environment;
+    public var wheelRadius  :Float;
     public var currentDirection = new Angle(0);
 
     function sign(n:Float):Int {
@@ -114,5 +115,6 @@ class RobotModel {
         this.rightEncoder = args.rightEncoder;
         this.cameraPort   = args.cameraPort.coalesce("video1");
         this.environment  = args.environment;
+        this.wheelRadius  = args.wheelRadius;
     }
 }
