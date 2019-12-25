@@ -18,6 +18,7 @@ import graph.Node;
 import graph.Direction;
 import movementExecutor.Movement;
 import movementExecutor.MovementExecutor;
+import pid.PID;
 
 using tools.ColorTools;
 using StringTools;
@@ -109,18 +110,14 @@ class FinalModel extends RobotModel {
         var readVal = frontSensor.read();
         var threshold = 25;
         var delta = readVal - frontDist;
-        Script.print(delta);
-
-        if (abs(delta) <= threshold && abs(delta) >= 5) {
-            var speed = 
-                if (delta < 0) 
-                    -25
-                else 
-                    25;
-            
-            moveGyro(speed, function () {
-                return abs(frontSensor.read() - frontDist) <= 5; 
-            });
+        
+        while (abs(delta) <= threshold && abs(delta) != 0) {
+            readVal = frontSensor.read();
+            delta = readVal - frontDist;
+            var pid = new PID(Seconds(0.1), -100, 100, {kp: 10, kd: 0, ki: 0});
+            var u = pid.calculate(delta);
+            moveGyro(round(u));
+            Script.wait(Seconds(0.1));
         }
         stop(Seconds(0.1));
     }
