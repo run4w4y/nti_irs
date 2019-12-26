@@ -1,5 +1,9 @@
 from scipy.interpolate import interp1d
 from scipy.signal import medfilt, wiener
+from scipy.misc import derivative
+
+def filt(values, s=7):
+    return wiener(medfilt(wiener(values), s))
 
 def read_values(read_function):
     values = []
@@ -10,18 +14,35 @@ def read_values(read_function):
         values.append(s)
     return values, encoders
 
+def sign(f):
+    if abs(f) <= 0.3:
+        return 0
+    elif f < 0:
+        return -1
+    else:
+        return 1
 
 def get_points(xs, ys):
     res = []
-    prev_y = ys[0]
+    grow = False
+    drop = False
 
     for x, y in zip(xs, ys):
-        if abs(prev_y - y) > 500:
+        if sign(y) > 0 and not grow:
             res.append(x)
-        prev_y = y
-    
-    return res
+            grow = True
+        elif sign(y) < 0 and grow:
+            drop = True
+        elif sign(y) >= 0 and grow and drop:
+            res.append(x)
+            drop = False
+            grow = False
 
+            if sign(y) > 0 and not grow:
+                res.append(x)
+                grow = True
+
+    return res
 
 def divide_2(l):
     for i in range(0, len(l), 2):  
@@ -30,8 +51,8 @@ def divide_2(l):
 
 PROD = 0
 TEST = 1
-env = TEST
-test_num = 3
+env = PROD
+test_num = 4
 
 if env == TEST:
     import matplotlib
@@ -47,10 +68,12 @@ if env == TEST:
 else:
     values, encoders = read_values(input)
 
-filtered = medfilt(wiener(values), 9)
-points = get_points(encoders, filtered)
+filtered = list(map(lambda x: 3700 if x > 3650 else x, filt(values[2:])))
+f = interp1d(encoders[2:], filtered, fill_value="extrapolate")
+ds = filt(list(map(lambda x: -derivative(f, x), encoders)), 9)
+points = get_points(encoders, ds)
 
-sizes = list(map(lambda x: x[1] - x[0], divide_2(points)))
+sizes = list(map(lambda x: x[1] - x[0], list(divide_2(points))))
 max_index = 0
 
 for i in range(len(sizes)):
@@ -70,10 +93,12 @@ else:
     print(ans)
 
 if env == TEST:
-    plt.plot(encoders, values, '-b')
-    plt.plot(encoders, filtered, 'r')
+    # plt.plot(encoders, values, '-b')
+    # plt.plot(encoders, list(map(f, encoders)), 'r')
+    plt.plot(encoders, ds)
+    plt.axhline(y=0, c='black')
 
     for i in points:
-        plt.axvline(x=i)
+        plt.axvline(x=i, c='red')
 
     plt.show()
