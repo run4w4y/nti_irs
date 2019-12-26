@@ -3,6 +3,8 @@ package tools;
 import time.Time;
 import Math.*;
 
+using haxe.EnumTools;
+
 
 class TimeTools {
     public static function toMilliseconds(time:Time):Time {
@@ -36,5 +38,9 @@ class TimeTools {
             case Minutes(_):
                 return time;
         }
+    }
+
+    public static function getDifference(time1:Time, time2:Time):Int {
+        return cast (toMilliseconds(time1).getParameters()[0] - toMilliseconds(time2).getParameters()[0], Int);
     }
 }
