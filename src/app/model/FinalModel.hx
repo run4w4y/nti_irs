@@ -21,6 +21,7 @@ import movementExecutor.MovementExecutor;
 import pid.PID;
 
 using tools.ColorTools;
+using tools.TimeTools;
 using StringTools;
 
 
@@ -81,15 +82,15 @@ class FinalModel extends RobotModel {
     }
 
     function checkLeft():Bool { // is there anything to the left
-        return leftSensor.read() <= 50;
+        return leftSensor.read() <= 70;
     }
 
     function checkRight():Bool { // is there anything to the right
-        return rightSensor.read() <= 50;
+        return rightSensor.read() <= 70;
     }
 
     function checkFront():Bool { // is there anything to the front
-        return frontSensor.read() <= 50;
+        return frontSensor.read() <= 70;
     }
 
     function align():Void {
@@ -109,8 +110,9 @@ class FinalModel extends RobotModel {
     }
 
     function goEnc(encValue:Int):Void {
+        var startTime = Script.time();
         moveGyro(90, function () {
-            return (leftEncoder.read() + rightEncoder.read()) / 2 <= encValue;
+            return (leftEncoder.read() + rightEncoder.read()) / 2 <= encValue && Script.time().getDifference(startTime) < 3000;
         });
         stop(Seconds(0.1));
     }
@@ -122,8 +124,14 @@ class FinalModel extends RobotModel {
         var dest = getDestination();
         Script.print('${dest.x} ${dest.y}');
         var executor = new MovementExecutor(
-            function (val:Int) { turn(val); align(); },
-            function () { goEnc(cellEnc); align(); } 
+            function (val:Int) { 
+                turn(val); 
+                align(); 
+            },
+            function () { 
+                goEnc(cellEnc); 
+                align(); 
+            } 
         );
         
         var lab = new Labyrinth(8, 8);
