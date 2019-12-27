@@ -4,15 +4,8 @@ from scipy.misc import derivative
 import warnings
 warnings.filterwarnings("ignore")
 
-def smooth(x, window_len=11, window='hanning'):
-    # if x.ndim != 1:
-    #     raise ValueError("smooth only accepts 1 dimension arrays.")
-    # if x.size < window_len:
-    #     raise ValueError, "Input vector needs to be bigger than window size."
-    # if window_len<3:
-    #     return x
-    # if not window in ['flat', 'hanning', 'hamming', 'bartlett', 'blackman']:
-    #     raise ValueError, "Window is on of 'flat', 'hanning', 'hamming', 'bartlett', 'blackman'"
+def smooth(x, window_len=11, window='blackman'):
+    # 'flat', 'hanning', 'hamming', 'bartlett', 'blackman'
 
     s = np.r_[x[window_len-1:0:-1], x, x[-2:-window_len-1:-1]]
 
@@ -39,7 +32,7 @@ def medfilt(x, k):
     return np.median(y, axis=1)
 
 def filt(values, s=7):
-    return smooth(medfilt(values, s))
+    return smooth(medfilt(smooth(values, 3), s))
 
 def read_values(read_function):
     values = []
@@ -51,7 +44,7 @@ def read_values(read_function):
     return values, encoders
 
 def sign(f):
-    if abs(f) <= 0.04:
+    if abs(f) <= 0.0001:
         return 0
     elif f < 0:
         return -1
