@@ -15,7 +15,7 @@ def smooth(x, window_len=11, window='blackman'):
         w = eval('np.'+window+'(window_len)')
 
     y = np.convolve(w/w.sum(), s, mode='valid')
-    return y[window_len-1:]
+    return y[:-window_len+1]
 
 def medfilt(x, k):
     x = np.array(x)
@@ -32,7 +32,7 @@ def medfilt(x, k):
     return np.median(y, axis=1)
 
 def filt(values, s=7):
-    return smooth(medfilt(smooth(values, 3), s))
+    return smooth(medfilt(smooth(values, 7), s))
 
 def read_values(read_function):
     values = []
@@ -44,7 +44,7 @@ def read_values(read_function):
     return values, encoders
 
 def sign(f):
-    if abs(f) <= 0.0001:
+    if abs(f) <= 0.1:
         return 0
     elif f < 0:
         return -1
@@ -56,7 +56,7 @@ def get_points(xs, ys):
     grow = False
     drop = False
 
-    for x, y in zip(xs, ys):
+    for x, y in zip(xs[10:], ys[10:]):
         if sign(y) > 0 and not grow:
             res.append(x)
             grow = True
@@ -81,7 +81,7 @@ def divide_2(l):
 PROD = 0
 TEST = 1
 env = PROD
-test_num = 0
+test_num = 4
 
 if env == TEST:
     import matplotlib
@@ -97,9 +97,11 @@ if env == TEST:
 else:
     values, encoders = read_values(input)
 
-filtered = list(map(lambda x: 3700 if x > 3650 else x, filt(values[2:])))
-f = interp1d(encoders[2:], filtered, fill_value="extrapolate")
-ds = filt(list(map(lambda x: -derivative(f, x), encoders)), 9)
+encoders = encoders[2:]
+values = values[2:]
+filtered = list(map(lambda x: 3700 if x > 3650 else x, filt(values)))
+f = interp1d(encoders, filtered, fill_value="extrapolate")
+ds = medfilt(list(map(lambda x: -derivative(f, x, 50), encoders)), 7)
 points = get_points(encoders, ds)
 if len(points) % 2 != 0:
     points = points[:-1]
@@ -124,12 +126,18 @@ else:
     print(ans)
 
 if env == TEST:
-    # plt.plot(encoders, values, '-b')
-    # plt.plot(encoders, smooth(values)[10:], 'r')
+    plt.tight_layout()
 
-    plt.plot(encoders, ds)
+    # first figure
+    plt.subplot(1, 2, 1)
     plt.axhline(y=0, c='black')
+    plt.plot(encoders, ds, 'b')
+    for i in points:
+        plt.axvline(x=i, c='red')
 
+    # second figure
+    plt.subplot(1, 2, 2)
+    plt.plot(encoders, filtered, 'b')
     for i in points:
         plt.axvline(x=i, c='red')
 
