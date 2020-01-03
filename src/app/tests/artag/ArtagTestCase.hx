@@ -7,17 +7,13 @@ import color.BinaryColor;
 import image.Image;
 import artag.Artag;
 import geometry.Line;
-import geometry.Point;
 import geometry.PointLike;
 import tools.ColorTools.*;
-import app.tests.artag.exceptions.NoClueException;
+import app.tests.exceptions.NoClueException;
 import app.tests.artag.exceptions.NoSizeException;
 import sys.FileSystem in FS;
 
-using tools.ImageTools;
-using tools.GeometryTools;
 using StringTools;
-using Lambda;
 
 
 typedef TestItem = {
@@ -30,7 +26,7 @@ typedef TestItem = {
 class ArtagTestCase extends Test {
     var artag:Artag;
     var tests:Array<TestItem>;
-    public var testsDir = 'tests/artagTests';
+    public var testsDir:String;
 
     public function getTestSize(file:String):Int {
         if (!FS.exists('$testsDir/in/$file.size'))
