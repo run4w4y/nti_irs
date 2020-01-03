@@ -6,7 +6,7 @@ import app.tests.exceptions.NoClueException;
 import sys.FileSystem in FS;
 
 using StringTools;
-using tools.ScientificTools;
+using science.ScientificTools;
 
 
 typedef TestItemInterpolation = {
