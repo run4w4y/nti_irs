@@ -50,4 +50,12 @@ class ScientificTools {
             return interpolateF(x, xs[x1], ys[x1], xs[x2], ys[x2]);
         };
     }
+
+    public static function derivative<T1:Float, T2:Float>(func:T1 -> T2, x:T1, dx:T1):Float {
+        var x1:T1 = x - dx;
+        var x2:T1 = x + dx;
+        var y1 = func(x1);
+        var y2 = func(x2);
+        return (y2 - y1) / (x2 - x1);
+    }
 }
