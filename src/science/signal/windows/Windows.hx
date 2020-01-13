@@ -1,6 +1,7 @@
-package science;
+package science.signal.windows;
 
 import Math.*;
+import science.signal.windows.WindowType;
 
 
 class Windows {
@@ -46,5 +47,18 @@ class Windows {
         return [for (n in 0...windowSize)
             .5 - .5*cos(2*PI*n / (windowSize - 1))
         ];
+    }
+
+    public static function getWindow(windowSize:Int, type:WindowType):Array<Float> {
+        switch (type) {
+            case Hamming:
+                return hamming(windowSize);
+            case Hanning:
+                return hanning(windowSize);
+            case Blackman:
+                return blackman(windowSize);
+            case Bartlett:
+                return bartlett(windowSize);
+        }
     }
 }
