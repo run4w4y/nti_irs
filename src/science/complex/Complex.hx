@@ -94,6 +94,6 @@ abstract Complex(Array<Float>) to Array<Float> {
         return if (imagValue >= 0) 
             '${realValue}+${imagValue}j'
         else
-            '${realValue}${imagValue}';
+            '${realValue}${imagValue}j';
     }
 }
