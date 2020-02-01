@@ -85,4 +85,8 @@ class ScientificTools {
 
         return res;
 	}
+
+    public static function round<T:Float>(value:T, ?precision:Int = 0):Float {
+        return Math.round(value * Math.pow(10, precision)) / Math.pow(10, precision);
+    }
 }
