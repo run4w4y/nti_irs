@@ -27,9 +27,16 @@ class FFT {
         return res;
     }
 
-
     public static function ifft(amplitudes:Array<Complex>):Array<Complex> {
         var n = amplitudes.length;
         return [for (j in fft([for (i in 0...n) amplitudes[i].conjugate()])) j.conjugate() / n];
+    }
+
+    public static function rfft<T:Float>(amplitudes:Array<T>):Array<Complex> {
+        return fft([for (i in amplitudes) Complex.fromNumber(i)]);
+    }
+
+    public static function irfft<T:Float>(amplitudes:Array<T>):Array<Complex> {
+        return ifft([for (i in amplitudes) Complex.fromNumber(i)]);
     }
 }
