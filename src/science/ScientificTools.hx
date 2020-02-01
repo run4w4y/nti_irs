@@ -1,6 +1,7 @@
 package science;
 
 import exceptions.ValueException;
+import range.Range;
 
 
 class ScientificTools {
@@ -58,4 +59,30 @@ class ScientificTools {
         var y2 = func(x2);
         return (y2 - y1) / (x2 - x1);
     }
+
+    public static function rotateRight<T>(m:Array<Array<T>>):Array<Array<T>> {
+		var res:Array<Array<T>> = [];
+
+		for (i in new Range(m[0].length - 1, -1)) {
+			var tmp:Array<T> = [];
+			for (j in 0...m.length)
+				tmp.push(m[j][i]);
+			res.push(tmp);
+		}
+
+		return res;
+	}
+
+	public static function rotateLeft<T>(m:Array<Array<T>>):Array<Array<T>> {
+		var res:Array<Array<T>> = [];
+
+		for (i in 0...m[0].length) {
+            var tmp:Array<T> = [];
+            for (j in new Range(m.length - 1, -1))
+                tmp.push(m[j][i]);
+            res.push(tmp);
+        }
+
+        return res;
+	}
 }
