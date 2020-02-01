@@ -1,5 +1,7 @@
 package science.complex;
 
+using science.ScientificTools;
+
 
 abstract Complex(Array<Float>) to Array<Float> {
     public var realValue(get, set):Float;
@@ -102,6 +104,10 @@ abstract Complex(Array<Float>) to Array<Float> {
 
     public function conjugate():Complex {
         return new Complex(realValue, -imagValue);
+    }
+
+    public function round(?precision:Int = 0):Complex {
+        return new Complex(realValue.round(precision), imagValue.round(precision));
     }
 
     public function toString():String {
