@@ -34,6 +34,20 @@ abstract Complex(Array<Float>) to Array<Float> {
         return new Complex(a[0], a[1]);
     }
 
+    public static function fromNumber<T:Float>(value:T):Complex {
+        return new Complex(value);
+    }
+
+    @:from
+    public static function fromInt(value:Int):Complex {
+        return fromNumber(value);
+    }
+
+    @:from
+    public static function fromFloat(value:Float):Complex {
+        return fromNumber(value);
+    }
+
     public function mod():Float {
         return if (realValue != 0 || imagValue != 0)
             Math.sqrt(realValue*realValue + imagValue*imagValue);
