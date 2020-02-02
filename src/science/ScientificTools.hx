@@ -23,7 +23,7 @@ class ScientificTools {
             return values[0];
         }
         
-        var pivot = Math.round(maximum(values)/2);
+        var pivot = Std.random(Math.ceil(maximum(values)));
         var lows = [for (i in values) if (i < pivot) i];
         var highs = [for (i in values) if (i > pivot) i];
         var pivots = [for (i in values) if (cast(i, Int) == pivot) i];
@@ -37,7 +37,7 @@ class ScientificTools {
 
     public static function median1d<T:Float>(values:Array<T>) {
         if (values.length % 2 == 1)
-            return quickSelect(values, Math.ceil(values.length / 2));
+            return quickSelect(values, Math.ceil(values.length / 2) - 1);
         return 0.5 * (quickSelect(values, cast(values.length / 2, Int) - 1) + 
             quickSelect(values, cast(values.length / 2, Int)));
     }
