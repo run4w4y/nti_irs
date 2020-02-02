@@ -1,13 +1,45 @@
 package science;
 
 import exceptions.ValueException;
+import exceptions.IndexException;
 import range.Range;
 
 
 class ScientificTools {
+    public static function maximum<T:Float>(values:Array<T>):T {
+        var res = values[0];
+
+        for (i in 1...values.length)
+            if (values[i] > res) 
+                res = values[i];
+
+        return res;
+    }
+
+    public static function quickSelect<T:Float>(values:Array<T>, index:Int):Float {
+        if (values.length == 1) {
+            if (index != 0)
+                throw new IndexException('index of selection is out of range');
+            return values[0];
+        }
+        
+        var pivot = Math.round(maximum(values)/2);
+        var lows = [for (i in values) if (i < pivot) i];
+        var highs = [for (i in values) if (i > pivot) i];
+        var pivots = [for (i in values) if (cast(i, Int) == pivot) i];
+
+        if (index < lows.length)
+            return quickSelect(lows, index);
+        if (index < lows.length + pivots.length)
+            return pivots[0];
+        return quickSelect(highs, index - lows.length - pivots.length);
+    }
+
     public static function median1d<T:Float>(values:Array<T>) {
-        values.sort(Reflect.compare);
-        return values[Math.floor(values.length / 2)];
+        if (values.length % 2 == 1)
+            return quickSelect(values, Math.ceil(values.length / 2));
+        return 0.5 * (quickSelect(values, cast(values.length / 2, Int) - 1) + 
+            quickSelect(values, cast(values.length / 2, Int)));
     }
 
     static function interpolateF<T:Float>(x:T, x1:T, y1:T, x2:T, y2:T):Float {
