@@ -121,4 +121,16 @@ class ScientificTools {
     public static function round<T:Float>(value:T, ?precision:Int = 0):Float {
         return Math.round(value * Math.pow(10, precision)) / Math.pow(10, precision);
     }
+
+    public static function getWindow<T>(values:Array<T>, startIndex:Int, windowSize:Int):Array<T> {
+        if (startIndex < 0 || startIndex >= values.length)
+            throw new IndexException('invalid index was passed to the getWindow function');
+        
+        return values.slice(startIndex, startIndex + windowSize).concat(
+            if (startIndex + windowSize >= values.length) 
+                values.slice(0, windowSize - values.length + startIndex)
+            else 
+                []
+        );
+    }
 }
