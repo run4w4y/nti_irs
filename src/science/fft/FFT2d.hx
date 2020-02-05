@@ -2,11 +2,11 @@ package science.fft;
 
 import science.complex.Complex;
 import science.fft.FFT;
+import science.Matrix;
 
 using science.ScientificTools;
 
 
-typedef Matrix<T> = Array<Array<T>>;
 typedef ComplexMatrix = Matrix<Complex>;
 
 
