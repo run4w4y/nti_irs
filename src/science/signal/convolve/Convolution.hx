@@ -7,9 +7,9 @@ using tools.NullTools;
 
 
 class Convolution {
-    static function convolveFull<T:Float>(
-        values:Array<T>,
-        weights:Array<T>
+    static function convolveFull<T1:Float, T2:Float>(
+        values:Array<T1>,
+        weights:Array<T2>
     ):Array<Float> {
         var nconv = values.length + weights.length - 1;
         var res:Array<Float> = [];
@@ -28,9 +28,9 @@ class Convolution {
         return res;
     }
 
-    public static function convolve1d<T:Float>(
-        values:Array<T>, 
-        weights:Array<T>, 
+    public static function convolve1d<T1:Float, T2:Float>(
+        values:Array<T1>, 
+        weights:Array<T2>, 
         ?mode:ConvolutionType
     ):Array<Float> {
         if (values.length == 0)
