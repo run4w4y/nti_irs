@@ -144,4 +144,11 @@ class ScientificTools {
             function (i) return a[i]
         );
     }
+
+    public static function sum<T:Float>(a:Array<T>):T {
+        var res = a[0];
+        for (i in slice_(a, 1))
+            res += i;
+        return res;
+    }
 }
