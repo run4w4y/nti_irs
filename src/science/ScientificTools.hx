@@ -4,6 +4,8 @@ import exceptions.ValueException;
 import exceptions.IndexException;
 import range.Range;
 
+using tools.NullTools;
+
 
 class ScientificTools {
     public static function maximum<T:Float>(values:Array<T>):T {
@@ -131,6 +133,15 @@ class ScientificTools {
                 values.slice(0, windowSize - values.length + startIndex)
             else 
                 []
+        );
+    }
+
+    public static function slice_<T>(a:Array<T>, ?start:Int=0, ?end:Int, ?step:Int=1):Array<T> {
+        return new Range(
+            if (start < 0) a.length + start else start, 
+            if (end < 0) a.length + end else end.coalesce(a.length), 
+        step).map(
+            function (i) return a[i]
         );
     }
 }
