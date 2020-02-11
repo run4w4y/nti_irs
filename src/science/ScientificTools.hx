@@ -127,6 +127,11 @@ class ScientificTools {
     public static function getWindow<T>(values:Array<T>, startIndex:Int, windowSize:Int):Array<T> {
         if (startIndex < 0 || startIndex >= values.length)
             throw new IndexException('invalid index was passed to the getWindow function');
+        if (values.length < windowSize)
+            throw new ValueException('length of the given array is less than windowSize');
+        
+        if (startIndex < 0)
+            startIndex += values.length;
         
         return values.slice(startIndex, startIndex + windowSize).concat(
             if (startIndex + windowSize >= values.length) 
