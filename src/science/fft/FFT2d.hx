@@ -2,16 +2,13 @@ package science.fft;
 
 import science.complex.Complex;
 import science.fft.FFT;
-import science.Matrix;
+import science.matrix.Matrix;
 
-using science.ScientificTools;
-
-
-typedef ComplexMatrix = Matrix<Complex>;
+using science.matrix.MatrixTools;
 
 
 class FFT2d {
-    public static function fft(amplitudes:ComplexMatrix):ComplexMatrix {
+    public static function fft(amplitudes:Matrix<Complex>):Matrix<Complex> {
         if (amplitudes.length < 1 || amplitudes[0].length < 1)
 			return [[]];
 
@@ -25,7 +22,7 @@ class FFT2d {
 		return res;
     }
 
-	public static function ifft(amplitudes:ComplexMatrix):ComplexMatrix {
+	public static function ifft(amplitudes:Matrix<Complex>):Matrix<Complex> {
 		if (amplitudes.length < 1 || amplitudes[0].length < 1)
 			return [[]];
 		
@@ -40,11 +37,11 @@ class FFT2d {
 		return res;
 	}
 
-	public static function rfft<T:Float>(amplitudes:Matrix<T>):ComplexMatrix {
+	public static function rfft<T:Float>(amplitudes:Matrix<T>):Matrix<Complex> {
 		return fft([for (i in amplitudes) i.map(function (a) return Complex.fromNumber(a))]);
 	}
 
-	public static function irfft<T:Float>(amplitudes:Matrix<T>):ComplexMatrix {
+	public static function irfft<T:Float>(amplitudes:Matrix<T>):Matrix<Complex> {
 		return ifft([for (i in amplitudes) i.map(function (a) return Complex.fromNumber(a))]);
 	}
 }
