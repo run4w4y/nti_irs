@@ -92,6 +92,13 @@ Std.parseInt = function(x) {
 	}
 	return null;
 };
+Std.random = function(x) {
+	if(x <= 0) {
+		return 0;
+	} else {
+		return Math.floor(Math.random() * x);
+	}
+};
 var StringBuf = function() {
 	this.b = "";
 };
@@ -390,7 +397,7 @@ app_model_FinalModel.prototype = $extend(robotModel_RobotModel.prototype,{
 			executor.add(move);
 		}
 		executor.execute();
-		trik_robot_display__$DisplayHigher_DisplayHigher_$Impl_$.addLabel(trik_Brick.display,"finish",new trik_robot_display_Pixel(0,0));
+		trik_robot_display__$DisplayHigher_DisplayHigher_$Impl_$.addLabel(trik_Brick.display,"finish",image__$Pixel_Pixel_$Impl_$._new(0,0));
 	}
 	,__class__: app_model_FinalModel
 });
@@ -430,42 +437,30 @@ var artag_Artag = function(image1,checkFlag,markerSize) {
 };
 artag_Artag.__name__ = true;
 artag_Artag.prototype = {
-	pixelToPoint: function(pixel) {
-		return new geometry_Point(pixel.x,-pixel.y);
-	}
-	,pointToPixel: function(pointLike) {
-		return new image_Pixel(Math.round(pointLike.x),-Math.round(pointLike.y));
-	}
-	,invY: function(pointLike) {
-		pointLike.y *= -1;
-		return pointLike;
-	}
-	,pixelDist: function(pixel1,pixel2) {
-		return tools_GeometryTools.distTo(this.pixelToPoint(pixel1),this.pixelToPoint(pixel2));
+	invY: function(p) {
+		return science_geometry__$Point_Point_$Impl_$._new(science_geometry__$Point_Point_$Impl_$.get_x(p),-science_geometry__$Point_Point_$Impl_$.get_y(p));
 	}
 	,filter: function(image) {
 		return tools_ImageTools.erode(tools_ImageTools.toBinary(image,20));
 	}
 	,getCells: function() {
 		var res = [];
-		var w = this.image[0].length;
-		var h = this.image.length;
-		this.leftLine = new geometry_Line(this.pixelToPoint(this.corners.leftTop),this.pixelToPoint(this.corners.leftBottom));
-		this.rightLine = new geometry_Line(this.pixelToPoint(this.corners.rightTop),this.pixelToPoint(this.corners.rightBottom));
-		this.topLine = new geometry_Line(this.pixelToPoint(this.corners.leftTop),this.pixelToPoint(this.corners.rightTop));
-		this.bottomLine = new geometry_Line(this.pixelToPoint(this.corners.leftBottom),this.pixelToPoint(this.corners.rightBottom));
-		var leftDist = this.pixelDist(this.corners.leftBottom,this.corners.leftTop);
-		var rightDist = this.pixelDist(this.corners.rightBottom,this.corners.rightTop);
-		var topDist = this.pixelDist(this.corners.leftTop,this.corners.rightTop);
-		var bottomDist = this.pixelDist(this.corners.leftBottom,this.corners.rightBottom);
+		this.leftLine = new science_geometry_Line(this.invY(this.corners.leftTop),this.invY(this.corners.leftBottom));
+		this.rightLine = new science_geometry_Line(this.invY(this.corners.rightTop),this.invY(this.corners.rightBottom));
+		this.topLine = new science_geometry_Line(this.invY(this.corners.leftTop),this.invY(this.corners.rightTop));
+		this.bottomLine = new science_geometry_Line(this.invY(this.corners.leftBottom),this.invY(this.corners.rightBottom));
+		var leftDist = tools_GeometryTools.distTo(this.corners.leftBottom,this.corners.leftTop);
+		var rightDist = tools_GeometryTools.distTo(this.corners.rightBottom,this.corners.rightTop);
+		var topDist = tools_GeometryTools.distTo(this.corners.leftTop,this.corners.rightTop);
+		var bottomDist = tools_GeometryTools.distTo(this.corners.leftBottom,this.corners.rightBottom);
 		this.verticalLines = [];
 		this.horizontalLines = [];
 		var _g = 0;
 		var _g1 = this.markerSize + 1;
 		while(_g < _g1) {
 			var i = _g++;
-			this.verticalLines.push(new geometry_Line(this.topLine.getPointX(this.corners.leftTop.x + topDist * i / this.markerSize),this.bottomLine.getPointX(this.corners.leftBottom.x + bottomDist * i / this.markerSize)));
-			this.horizontalLines.push(new geometry_Line(this.invY(this.leftLine.getPointY(this.corners.leftTop.y + leftDist * i / this.markerSize)),this.invY(this.rightLine.getPointY(this.corners.rightTop.y + rightDist * i / this.markerSize))));
+			this.verticalLines.push(new science_geometry_Line(this.topLine.getPointX(science_geometry__$Point_Point_$Impl_$.get_x(this.corners.leftTop) + topDist * i / this.markerSize),this.bottomLine.getPointX(science_geometry__$Point_Point_$Impl_$.get_x(this.corners.leftBottom) + bottomDist * i / this.markerSize)));
+			this.horizontalLines.push(new science_geometry_Line(this.invY(this.leftLine.getPointY(science_geometry__$Point_Point_$Impl_$.get_y(this.corners.leftTop) + leftDist * i / this.markerSize)),this.invY(this.rightLine.getPointY(science_geometry__$Point_Point_$Impl_$.get_y(this.corners.rightTop) + rightDist * i / this.markerSize))));
 		}
 		var _g2 = 0;
 		var _g3 = this.markerSize;
@@ -476,17 +471,17 @@ artag_Artag.prototype = {
 			var _g31 = this.markerSize;
 			while(_g21 < _g31) {
 				var j = _g21++;
-				tmp.push(new image_Corners(this.pointToPixel(tools_GeometryTools.getIntersectionPoint(this.verticalLines[j],this.horizontalLines[i1])),this.pointToPixel(tools_GeometryTools.getIntersectionPoint(this.verticalLines[j + 1],this.horizontalLines[i1])),this.pointToPixel(tools_GeometryTools.getIntersectionPoint(this.verticalLines[j + 1],this.horizontalLines[i1 + 1])),this.pointToPixel(tools_GeometryTools.getIntersectionPoint(this.verticalLines[j],this.horizontalLines[i1 + 1]))));
+				tmp.push(new image_Corners(science_geometry__$Point_Point_$Impl_$.round(this.invY(tools_GeometryTools.getIntersectionPoint(this.verticalLines[j],this.horizontalLines[i1]))),science_geometry__$Point_Point_$Impl_$.round(this.invY(tools_GeometryTools.getIntersectionPoint(this.verticalLines[j + 1],this.horizontalLines[i1]))),science_geometry__$Point_Point_$Impl_$.round(this.invY(tools_GeometryTools.getIntersectionPoint(this.verticalLines[j + 1],this.horizontalLines[i1 + 1]))),science_geometry__$Point_Point_$Impl_$.round(this.invY(tools_GeometryTools.getIntersectionPoint(this.verticalLines[j],this.horizontalLines[i1 + 1])))));
 			}
 			res.push(tmp);
 		}
 		return res;
 	}
 	,getCellColor: function(cell) {
-		var line1 = new geometry_Line(this.pixelToPoint(cell.leftTop),this.pixelToPoint(cell.rightBottom));
-		var line2 = new geometry_Line(this.pixelToPoint(cell.rightTop),this.pixelToPoint(cell.leftBottom));
-		var intersection = this.pointToPixel(tools_GeometryTools.getIntersectionPoint(line1,line2));
-		return this.image[intersection.y][intersection.x];
+		var line1 = new science_geometry_Line(this.invY(cell.leftTop),this.invY(cell.rightBottom));
+		var line2 = new science_geometry_Line(this.invY(cell.rightTop),this.invY(cell.leftBottom));
+		var intersection = science_geometry__$Point_Point_$Impl_$.round(this.invY(tools_GeometryTools.getIntersectionPoint(line1,line2)));
+		return this.image[science_geometry__$Point_Point_$Impl_$.get_y(intersection)][science_geometry__$Point_Point_$Impl_$.get_x(intersection)];
 	}
 	,checkControlBit: function() {
 		return !this.marker[this.markerSize - 2][this.markerSize - 2].value;
@@ -505,7 +500,7 @@ artag_Artag.prototype = {
 	,rotateMarker: function() {
 		var rotateCount = 0;
 		while(!this.checkControlBit()) {
-			this.marker = tools_ImageTools.rotate90(this.marker);
+			this.marker = science_matrix_MatrixTools.rotateRight(this.marker);
 			++rotateCount;
 			if(rotateCount >= 4) {
 				throw new js__$Boot_HaxeError(new artag_exceptions_ArtagException("Could not find control bit in the given marker"));
@@ -768,6 +763,17 @@ color_RGB24Color.prototype = $extend(color_BaseColor.prototype,{
 	}
 	,__class__: color_RGB24Color
 });
+var exceptions_IndexException = function(errorMessage) {
+	exceptions_BaseException.call(this,errorMessage);
+};
+exceptions_IndexException.__name__ = true;
+exceptions_IndexException.__super__ = exceptions_BaseException;
+exceptions_IndexException.prototype = $extend(exceptions_BaseException.prototype,{
+	toString: function() {
+		return "IndexException(" + this.errorMessage + ")";
+	}
+	,__class__: exceptions_IndexException
+});
 var exceptions_TypeException = function(errorMessage) {
 	exceptions_BaseException.call(this,errorMessage);
 };
@@ -778,155 +784,6 @@ exceptions_TypeException.prototype = $extend(exceptions_BaseException.prototype,
 		return "TypeException(" + this.errorMessage + ")";
 	}
 	,__class__: exceptions_TypeException
-});
-var geometry_Line = function(pointLike1,pointLike2) {
-	if(Math.abs(pointLike1.x - pointLike2.x) <= 1e-6 && Math.abs(pointLike1.y - pointLike2.y) <= 1e-6) {
-		throw new js__$Boot_HaxeError(new geometry_exceptions_SamePointException("cant define a line with two same points"));
-	}
-	this.point1 = new geometry_Point(pointLike1.x,pointLike1.y);
-	this.point2 = new geometry_Point(pointLike2.x,pointLike2.y);
-	this.a = pointLike1.y - pointLike2.y;
-	this.b = pointLike2.x - pointLike1.x;
-	this.c = -this.a * pointLike1.x - this.b * pointLike1.y;
-};
-geometry_Line.__name__ = true;
-geometry_Line.prototype = {
-	moveX: function(value) {
-		var delta = new geometry_Point(value,0);
-		return new geometry_Line(this.point1.add(delta),this.point2.add(delta));
-	}
-	,moveY: function(value) {
-		var delta = new geometry_Point(0,value);
-		return new geometry_Line(this.point1.add(delta),this.point2.add(delta));
-	}
-	,moveXY: function(valueX,valueY) {
-		var delta = new geometry_Point(valueX,valueY);
-		return new geometry_Line(this.point1.add(delta),this.point2.add(delta));
-	}
-	,getX: function(y) {
-		return -(this.c + this.b * y) / this.a;
-	}
-	,getY: function(x) {
-		return -(this.a * x + this.c) / this.b;
-	}
-	,getPointX: function(x) {
-		return new geometry_Point(x,this.getY(x));
-	}
-	,getPointY: function(y) {
-		return new geometry_Point(this.getX(y),y);
-	}
-	,toString: function() {
-		return "Line(" + this.a + ", " + this.b + ", " + this.c + ")";
-	}
-	,__class__: geometry_Line
-};
-var geometry_Point = function(x,y) {
-	if(y == null) {
-		y = 0;
-	}
-	if(x == null) {
-		x = 0;
-	}
-	this.x = x;
-	this.y = y;
-};
-geometry_Point.__name__ = true;
-geometry_Point.prototype = {
-	add: function(pointLike) {
-		return new geometry_Point(this.x + pointLike.x,this.y + pointLike.y);
-	}
-	,neg: function() {
-		return new geometry_Point(-this.x,-this.y);
-	}
-	,sub: function(pointLike) {
-		return new geometry_Point(this.x - pointLike.x,this.y - pointLike.y);
-	}
-	,mul: function(k) {
-		return new geometry_Point(this.x * k,this.y * k);
-	}
-	,div: function(k) {
-		return new geometry_Point(this.x / k,this.y / k);
-	}
-	,toString: function() {
-		return "Point(" + this.x + ", " + this.y + ")";
-	}
-	,__class__: geometry_Point
-};
-var geometry_Point3D = function(x,y,z) {
-	if(z == null) {
-		z = 0;
-	}
-	if(y == null) {
-		y = 0;
-	}
-	if(x == null) {
-		x = 0;
-	}
-	this.x = x;
-	this.y = y;
-	this.z = z;
-};
-geometry_Point3D.__name__ = true;
-geometry_Point3D.prototype = {
-	distTo: function(point) {
-		return Math.sqrt(Math.pow(point.x - this.x,2) + Math.pow(point.y - this.y,2) + Math.pow(point.z - this.z,2));
-	}
-	,toString: function() {
-		return "Point3d(" + this.x + ", " + this.y + ", " + this.z + ")";
-	}
-	,__class__: geometry_Point3D
-};
-var geometry_Vector = function(x,y) {
-	if(y == null) {
-		y = 0;
-	}
-	if(x == null) {
-		x = 0;
-	}
-	geometry_Point.call(this,x,y);
-};
-geometry_Vector.__name__ = true;
-geometry_Vector.fromPointLike = function(pointLike) {
-	return new geometry_Vector(pointLike.x,pointLike.y);
-};
-geometry_Vector.__super__ = geometry_Point;
-geometry_Vector.prototype = $extend(geometry_Point.prototype,{
-	add: function(pointLike) {
-		return new geometry_Vector(this.x + pointLike.x,this.y + pointLike.y);
-	}
-	,neg: function() {
-		return new geometry_Vector(-this.x,-this.y);
-	}
-	,sub: function(pointLike) {
-		return new geometry_Vector(this.x - pointLike.x,this.y - pointLike.y);
-	}
-	,mul: function(k) {
-		return new geometry_Vector(this.x * k,this.y * k);
-	}
-	,div: function(k) {
-		return new geometry_Vector(this.x / k,this.y / k);
-	}
-	,scalar_product: function(pointLike) {
-		return this.x * pointLike.x + this.y * pointLike.y;
-	}
-	,vector_product: function(pointLike) {
-		return this.x * pointLike.y - this.y * pointLike.x;
-	}
-	,length: function() {
-		return this.scalar_product(this);
-	}
-	,__class__: geometry_Vector
-});
-var geometry_exceptions_SamePointException = function(errorMessage) {
-	exceptions_BaseException.call(this,errorMessage);
-};
-geometry_exceptions_SamePointException.__name__ = true;
-geometry_exceptions_SamePointException.__super__ = exceptions_BaseException;
-geometry_exceptions_SamePointException.prototype = $extend(exceptions_BaseException.prototype,{
-	toString: function() {
-		return "SamePointException(" + this.errorMessage + ")";
-	}
-	,__class__: geometry_exceptions_SamePointException
 });
 var graph_Direction = $hxEnums["graph.Direction"] = { __ename__ : true, __constructs__ : ["Left","Right","Up","Down","Undefined"]
 	,Left: {_hx_index:0,__enum__:"graph.Direction",toString:$estr}
@@ -1920,8 +1777,9 @@ var image__$Image_Image_$Impl_$ = {};
 image__$Image_Image_$Impl_$.__name__ = true;
 image__$Image_Image_$Impl_$._new = function(pixels) {
 	var _g = 0;
-	while(_g < pixels.length) {
-		var i = pixels[_g];
+	var _g1 = pixels;
+	while(_g < _g1.length) {
+		var i = _g1[_g];
 		++_g;
 		if(i.length != pixels[0].length) {
 			throw new js__$Boot_HaxeError(new exceptions_ValueException("all row arrays must have the same length"));
@@ -1930,6 +1788,15 @@ image__$Image_Image_$Impl_$._new = function(pixels) {
 	var this1 = pixels;
 	return this1;
 };
+image__$Image_Image_$Impl_$.at = function(this1,x,y) {
+	if(y == null) {
+		y = 0;
+	}
+	if(x == null) {
+		x = 0;
+	}
+	return this1[y][x];
+};
 image__$Image_Image_$Impl_$.get = function(this1,index) {
 	return this1[index];
 };
@@ -1937,34 +1804,29 @@ image__$Image_Image_$Impl_$.set = function(this1,index,val) {
 	this1[index] = val;
 	return val;
 };
-var image_Pixel = function(x,y,constraintsX,constraintsY) {
-	this.x = x;
-	this.y = y;
-	this.constraintsX = constraintsX;
-	this.constraintsY = constraintsY;
-	this.constrain();
+var image__$Pixel_Pixel_$Impl_$ = {};
+image__$Pixel_Pixel_$Impl_$.__name__ = true;
+image__$Pixel_Pixel_$Impl_$.get_x = function(this1) {
+	return science_geometry__$Point_Point_$Impl_$.get_x(this1);
 };
-image_Pixel.__name__ = true;
-image_Pixel.prototype = {
-	constrain: function() {
-		this.x = this.x < 0 ? 0 : this.x;
-		this.y = this.y < 0 ? 0 : this.y;
-		if(this.constraintsX != null && this.x > this.constraintsX) {
-			this.x = this.constraintsX;
-		}
-		if(this.constraintsY != null && this.y > this.constraintsY) {
-			this.y = this.constraintsY;
-		}
+image__$Pixel_Pixel_$Impl_$.set_x = function(this1,value) {
+	return science_geometry__$Point_Point_$Impl_$.set_x(this1,value);
+};
+image__$Pixel_Pixel_$Impl_$.get_y = function(this1) {
+	return science_geometry__$Point_Point_$Impl_$.get_y(this1);
+};
+image__$Pixel_Pixel_$Impl_$.set_y = function(this1,value) {
+	return science_geometry__$Point_Point_$Impl_$.set_y(this1,value);
+};
+image__$Pixel_Pixel_$Impl_$._new = function(x,y,constraintsX,constraintsY) {
+	var this1 = science_geometry__$Point_Point_$Impl_$._new(x < 0 ? 0 : x,y < 0 ? 0 : y);
+	if(constraintsX != null && science_geometry__$Point_Point_$Impl_$.get_x(this1) > constraintsX) {
+		science_geometry__$Point_Point_$Impl_$.set_x(this1,constraintsX);
 	}
-	,add: function(pixel) {
-		this.x += pixel.x;
-		this.y += pixel.y;
-		this.constrain();
+	if(constraintsY != null && science_geometry__$Point_Point_$Impl_$.get_y(this1) > constraintsY) {
+		science_geometry__$Point_Point_$Impl_$.set_y(this1,constraintsY);
 	}
-	,toString: function() {
-		return "Pixel(" + this.x + ", " + this.y + ")";
-	}
-	,__class__: image_Pixel
+	return this1;
 };
 var image__$RawImage_RawImage_$Impl_$ = {};
 image__$RawImage_RawImage_$Impl_$.__name__ = true;
@@ -2286,6 +2148,17 @@ var ordering_Ordering = $hxEnums["ordering.Ordering"] = { __ename__ : true, __co
 	,EQ: {_hx_index:0,__enum__:"ordering.Ordering",toString:$estr}
 	,GT: {_hx_index:1,__enum__:"ordering.Ordering",toString:$estr}
 	,LT: {_hx_index:2,__enum__:"ordering.Ordering",toString:$estr}
+};
+var pair_Pair = function(first,second) {
+	this.first = first;
+	this.second = second;
+};
+pair_Pair.__name__ = true;
+pair_Pair.prototype = {
+	toString: function() {
+		return "{" + Std.string(this.first) + ", " + Std.string(this.second) + "}";
+	}
+	,__class__: pair_Pair
 };
 var pid_PID = function(interval,min,max,ks) {
 	this.integral = 0;
@@ -4357,6 +4230,411 @@ var robotModel_Environment = $hxEnums["robotModel.Environment"] = { __ename__ : 
 	,Real: {_hx_index:0,__enum__:"robotModel.Environment",toString:$estr}
 	,Simulator: {_hx_index:1,__enum__:"robotModel.Environment",toString:$estr}
 };
+var science_ScientificTools = function() { };
+science_ScientificTools.__name__ = true;
+science_ScientificTools.maximum = function(values) {
+	var res = values[0];
+	var _g = 1;
+	var _g1 = values.length;
+	while(_g < _g1) {
+		var i = _g++;
+		if(values[i] > res) {
+			res = values[i];
+		}
+	}
+	return res;
+};
+science_ScientificTools.quickSelect = function(values,index) {
+	if(values.length == 1) {
+		if(index != 0) {
+			throw new js__$Boot_HaxeError(new exceptions_IndexException("index of selection is out of range"));
+		}
+		return values[0];
+	}
+	var pivot = Std.random(Math.ceil(science_ScientificTools.maximum(values)));
+	var _g = [];
+	var _g1 = 0;
+	while(_g1 < values.length) {
+		var i = values[_g1];
+		++_g1;
+		if(i < pivot) {
+			_g.push(i);
+		}
+	}
+	var lows = _g;
+	var _g2 = [];
+	var _g3 = 0;
+	while(_g3 < values.length) {
+		var i1 = values[_g3];
+		++_g3;
+		if(i1 > pivot) {
+			_g2.push(i1);
+		}
+	}
+	var highs = _g2;
+	var _g4 = [];
+	var _g5 = 0;
+	while(_g5 < values.length) {
+		var i2 = values[_g5];
+		++_g5;
+		if(js_Boot.__cast(i2 , Int) == pivot) {
+			_g4.push(i2);
+		}
+	}
+	var pivots = _g4;
+	if(index < lows.length) {
+		return science_ScientificTools.quickSelect(lows,index);
+	}
+	if(index < lows.length + pivots.length) {
+		return pivots[0];
+	}
+	return science_ScientificTools.quickSelect(highs,index - lows.length - pivots.length);
+};
+science_ScientificTools.median1d = function(values) {
+	if(values.length % 2 == 1) {
+		return science_ScientificTools.quickSelect(values,Math.ceil(values.length / 2) - 1);
+	}
+	return 0.5 * (science_ScientificTools.quickSelect(values,js_Boot.__cast(values.length / 2 , Int) - 1) + science_ScientificTools.quickSelect(values,js_Boot.__cast(values.length / 2 , Int)));
+};
+science_ScientificTools.median2d = function(values) {
+	return science_ScientificTools.median1d(science_matrix_MatrixTools.flatten(values));
+};
+science_ScientificTools.interpolateF = function(x,x1,y1,x2,y2) {
+	return y1 + (y2 - y1) / (x2 - x1) * (x - x1);
+};
+science_ScientificTools.interpolate1d = function(xs,ys,fillValues) {
+	if(fillValues == null) {
+		fillValues = false;
+	}
+	if(xs.length != ys.length) {
+		throw new js__$Boot_HaxeError(new exceptions_ValueException("arrays xs and ys must be of the same length, but length of array xs is " + xs.length + " and length of array ys is " + ys.length));
+	}
+	if(xs.length < 2) {
+		throw new js__$Boot_HaxeError(new exceptions_ValueException("cant interpolate over array of length 1"));
+	}
+	xs.sort(Reflect.compare);
+	ys.sort(Reflect.compare);
+	return function(x) {
+		if(x < xs[0] || x > xs[xs.length - 1]) {
+			if(!fillValues) {
+				throw new js__$Boot_HaxeError(new exceptions_ValueException("x value (" + Std.string(x) + ") is out of the interpolation range"));
+			} else if(x < xs[0]) {
+				return science_ScientificTools.interpolateF(x,xs[1],ys[1],xs[0],ys[0]);
+			} else {
+				return science_ScientificTools.interpolateF(x,xs[xs.length - 2],ys[ys.length - 2],xs[xs.length - 1],ys[ys.length - 1]);
+			}
+		}
+		var x1 = -1;
+		var x2 = -1;
+		var _g = 0;
+		var _g1 = xs.length;
+		while(_g < _g1) {
+			var i = _g++;
+			if(xs[i] == x) {
+				return ys[i];
+			} else if(xs[i] > x && i != 0) {
+				x1 = i - 1;
+				x2 = i;
+				break;
+			}
+		}
+		if(x1 == -1) {
+			throw new js__$Boot_HaxeError(new exceptions_ValueException("couldnt interpolate for the given x: " + Std.string(x)));
+		}
+		return science_ScientificTools.interpolateF(x,xs[x1],ys[x1],xs[x2],ys[x2]);
+	};
+};
+science_ScientificTools.derivative = function(func,x,dx) {
+	var x1 = x - dx;
+	var x2 = x + dx;
+	var y1 = func(x1);
+	var y2 = func(x2);
+	return (y2 - y1) / (x2 - x1);
+};
+science_ScientificTools.round = function(value,precision) {
+	if(precision == null) {
+		precision = 0;
+	}
+	return Math.round(value * Math.pow(10,precision)) / Math.pow(10,precision);
+};
+science_ScientificTools.getWindow = function(values,startIndex,windowSize) {
+	if(startIndex < 0 || startIndex >= values.length) {
+		throw new js__$Boot_HaxeError(new exceptions_IndexException("invalid index was passed to the getWindow function"));
+	}
+	if(values.length < windowSize) {
+		throw new js__$Boot_HaxeError(new exceptions_ValueException("length of the given array is less than windowSize"));
+	}
+	if(startIndex < 0) {
+		startIndex += values.length;
+	}
+	return values.slice(startIndex,startIndex + windowSize).concat(startIndex + windowSize >= values.length ? values.slice(0,windowSize - values.length + startIndex) : []);
+};
+science_ScientificTools.slice_ = function(a,start,end,step) {
+	if(step == null) {
+		step = 1;
+	}
+	if(start == null) {
+		start = 0;
+	}
+	var _this = range__$Range_Range_$Impl_$._new(start < 0 ? a.length + start : start,end < 0 ? a.length + end : tools_NullTools.coalesce(end,a.length),step);
+	var result = new Array(_this.length);
+	var _g = 0;
+	var _g1 = _this.length;
+	while(_g < _g1) {
+		var i = _g++;
+		result[i] = a[_this[i]];
+	}
+	return result;
+};
+science_ScientificTools.sum = function(a) {
+	var res = a[0];
+	var _g = 0;
+	var _g1 = science_ScientificTools.slice_(a,1);
+	while(_g < _g1.length) {
+		var i = _g1[_g];
+		++_g;
+		res += i;
+	}
+	return res;
+};
+var science_geometry_Line = function(point1,point2) {
+	if(Math.abs(science_geometry__$Point_Point_$Impl_$.get_x(point1) - science_geometry__$Point_Point_$Impl_$.get_x(point2)) <= 1e-6 && Math.abs(science_geometry__$Point_Point_$Impl_$.get_y(point1) - science_geometry__$Point_Point_$Impl_$.get_y(point2)) <= 1e-6) {
+		throw new js__$Boot_HaxeError(new science_geometry_exceptions_SamePointException("cant define a line with two same points"));
+	}
+	this.point1 = science_geometry__$Point_Point_$Impl_$._new(science_geometry__$Point_Point_$Impl_$.get_x(point1),science_geometry__$Point_Point_$Impl_$.get_y(point1));
+	this.point2 = science_geometry__$Point_Point_$Impl_$._new(science_geometry__$Point_Point_$Impl_$.get_x(point2),science_geometry__$Point_Point_$Impl_$.get_y(point2));
+	this.a = science_geometry__$Point_Point_$Impl_$.get_y(point1) - science_geometry__$Point_Point_$Impl_$.get_y(point2);
+	this.b = science_geometry__$Point_Point_$Impl_$.get_x(point2) - science_geometry__$Point_Point_$Impl_$.get_x(point1);
+	this.c = -this.a * science_geometry__$Point_Point_$Impl_$.get_x(point1) - this.b * science_geometry__$Point_Point_$Impl_$.get_y(point1);
+};
+science_geometry_Line.__name__ = true;
+science_geometry_Line.prototype = {
+	moveX: function(value) {
+		var delta = science_geometry__$Point_Point_$Impl_$._new(value,0);
+		return new science_geometry_Line(science_geometry__$Point_Point_$Impl_$.add(this.point1,delta),science_geometry__$Point_Point_$Impl_$.add(this.point2,delta));
+	}
+	,moveY: function(value) {
+		var delta = science_geometry__$Point_Point_$Impl_$._new(0,value);
+		return new science_geometry_Line(science_geometry__$Point_Point_$Impl_$.add(this.point1,delta),science_geometry__$Point_Point_$Impl_$.add(this.point2,delta));
+	}
+	,moveXY: function(valueX,valueY) {
+		var delta = science_geometry__$Point_Point_$Impl_$._new(valueX,valueY);
+		return new science_geometry_Line(science_geometry__$Point_Point_$Impl_$.add(this.point1,delta),science_geometry__$Point_Point_$Impl_$.add(this.point2,delta));
+	}
+	,getX: function(y) {
+		return -(this.c + this.b * y) / this.a;
+	}
+	,getY: function(x) {
+		return -(this.a * x + this.c) / this.b;
+	}
+	,getPointX: function(x) {
+		return science_geometry__$Point_Point_$Impl_$._new(x,this.getY(x));
+	}
+	,getPointY: function(y) {
+		return science_geometry__$Point_Point_$Impl_$._new(this.getX(y),y);
+	}
+	,toString: function() {
+		return "Line(" + this.a + ", " + this.b + ", " + this.c + ")";
+	}
+	,__class__: science_geometry_Line
+};
+var science_geometry__$Point_Point_$Impl_$ = {};
+science_geometry__$Point_Point_$Impl_$.__name__ = true;
+science_geometry__$Point_Point_$Impl_$.get_x = function(this1) {
+	return this1.first;
+};
+science_geometry__$Point_Point_$Impl_$.set_x = function(this1,value) {
+	return this1.first = value;
+};
+science_geometry__$Point_Point_$Impl_$.get_y = function(this1) {
+	return this1.second;
+};
+science_geometry__$Point_Point_$Impl_$.set_y = function(this1,value) {
+	return this1.second = value;
+};
+science_geometry__$Point_Point_$Impl_$._new = function(x,y) {
+	var this1 = new pair_Pair(x,y);
+	return this1;
+};
+science_geometry__$Point_Point_$Impl_$.round = function(this1) {
+	return science_geometry__$Point_Point_$Impl_$._new(Math.round(science_geometry__$Point_Point_$Impl_$.get_x(this1)),Math.round(science_geometry__$Point_Point_$Impl_$.get_y(this1)));
+};
+science_geometry__$Point_Point_$Impl_$.add = function(this1,p) {
+	return science_geometry__$Point_Point_$Impl_$._new(science_geometry__$Point_Point_$Impl_$.get_x(this1) + science_geometry__$Point_Point_$Impl_$.get_x(p),science_geometry__$Point_Point_$Impl_$.get_y(this1) + science_geometry__$Point_Point_$Impl_$.get_y(p));
+};
+science_geometry__$Point_Point_$Impl_$.neg = function(this1) {
+	return science_geometry__$Point_Point_$Impl_$._new(-science_geometry__$Point_Point_$Impl_$.get_x(this1),-science_geometry__$Point_Point_$Impl_$.get_y(this1));
+};
+science_geometry__$Point_Point_$Impl_$.sub = function(this1,p) {
+	return science_geometry__$Point_Point_$Impl_$._new(science_geometry__$Point_Point_$Impl_$.get_x(this1) - science_geometry__$Point_Point_$Impl_$.get_x(p),science_geometry__$Point_Point_$Impl_$.get_y(this1) - science_geometry__$Point_Point_$Impl_$.get_y(p));
+};
+science_geometry__$Point_Point_$Impl_$.mul = function(this1,k) {
+	return science_geometry__$Point_Point_$Impl_$._new(science_geometry__$Point_Point_$Impl_$.get_x(this1) * k,science_geometry__$Point_Point_$Impl_$.get_y(this1) * k);
+};
+science_geometry__$Point_Point_$Impl_$.div = function(this1,k) {
+	return science_geometry__$Point_Point_$Impl_$._new(science_geometry__$Point_Point_$Impl_$.get_x(this1) / k,science_geometry__$Point_Point_$Impl_$.get_y(this1) / k);
+};
+science_geometry__$Point_Point_$Impl_$.toString = function(this1) {
+	return "Point(" + Std.string(this1.first) + ", " + Std.string(this1.second) + ")";
+};
+var science_geometry__$Point3D_Point3D_$Impl_$ = {};
+science_geometry__$Point3D_Point3D_$Impl_$.__name__ = true;
+science_geometry__$Point3D_Point3D_$Impl_$.get_x = function(this1) {
+	return this1[0];
+};
+science_geometry__$Point3D_Point3D_$Impl_$.set_x = function(this1,value) {
+	return this1[0] = value;
+};
+science_geometry__$Point3D_Point3D_$Impl_$.get_y = function(this1) {
+	return this1[1];
+};
+science_geometry__$Point3D_Point3D_$Impl_$.set_y = function(this1,value) {
+	return this1[1] = value;
+};
+science_geometry__$Point3D_Point3D_$Impl_$.get_z = function(this1) {
+	return this1[2];
+};
+science_geometry__$Point3D_Point3D_$Impl_$.set_z = function(this1,value) {
+	return this1[2] = value;
+};
+science_geometry__$Point3D_Point3D_$Impl_$._new = function(x,y,z) {
+	var this1 = [x,y,z];
+	return this1;
+};
+science_geometry__$Point3D_Point3D_$Impl_$.distTo = function(this1,point) {
+	return Math.sqrt(Math.pow(science_geometry__$Point3D_Point3D_$Impl_$.get_x(point) - science_geometry__$Point3D_Point3D_$Impl_$.get_x(this1),2) + Math.pow(science_geometry__$Point3D_Point3D_$Impl_$.get_y(point) - science_geometry__$Point3D_Point3D_$Impl_$.get_y(this1),2) + Math.pow(science_geometry__$Point3D_Point3D_$Impl_$.get_z(point) - science_geometry__$Point3D_Point3D_$Impl_$.get_z(this1),2));
+};
+science_geometry__$Point3D_Point3D_$Impl_$.fromPoint = function(p) {
+	return science_geometry__$Point3D_Point3D_$Impl_$._new(science_geometry__$Point_Point_$Impl_$.get_x(p),science_geometry__$Point_Point_$Impl_$.get_y(p),science_geometry__$Point_Point_$Impl_$.get_x(p) * 0);
+};
+science_geometry__$Point3D_Point3D_$Impl_$.toPoint = function(this1) {
+	return science_geometry__$Point_Point_$Impl_$._new(science_geometry__$Point3D_Point3D_$Impl_$.get_x(this1),science_geometry__$Point3D_Point3D_$Impl_$.get_y(this1));
+};
+science_geometry__$Point3D_Point3D_$Impl_$.toString = function(this1) {
+	return "Point3d(" + Std.string(science_geometry__$Point3D_Point3D_$Impl_$.get_x(this1)) + ", " + Std.string(science_geometry__$Point3D_Point3D_$Impl_$.get_y(this1)) + ", " + Std.string(science_geometry__$Point3D_Point3D_$Impl_$.get_z(this1)) + ")";
+};
+var science_geometry__$Vector_Vector_$Impl_$ = {};
+science_geometry__$Vector_Vector_$Impl_$.__name__ = true;
+science_geometry__$Vector_Vector_$Impl_$._new = function(x,y) {
+	var this1 = science_geometry__$Point_Point_$Impl_$._new(x,y);
+	return this1;
+};
+science_geometry__$Vector_Vector_$Impl_$.add = function(this1,p) {
+	return science_geometry__$Vector_Vector_$Impl_$._new(science_geometry__$Point_Point_$Impl_$.get_x(this1) + science_geometry__$Point_Point_$Impl_$.get_x(p),science_geometry__$Point_Point_$Impl_$.get_y(this1) + science_geometry__$Point_Point_$Impl_$.get_y(p));
+};
+science_geometry__$Vector_Vector_$Impl_$.neg = function(this1) {
+	return science_geometry__$Vector_Vector_$Impl_$._new(-science_geometry__$Point_Point_$Impl_$.get_x(this1),-science_geometry__$Point_Point_$Impl_$.get_y(this1));
+};
+science_geometry__$Vector_Vector_$Impl_$.sub = function(this1,p) {
+	return science_geometry__$Vector_Vector_$Impl_$._new(science_geometry__$Point_Point_$Impl_$.get_x(this1) - science_geometry__$Point_Point_$Impl_$.get_x(p),science_geometry__$Point_Point_$Impl_$.get_y(this1) - science_geometry__$Point_Point_$Impl_$.get_y(p));
+};
+science_geometry__$Vector_Vector_$Impl_$.mul = function(this1,k) {
+	return science_geometry__$Vector_Vector_$Impl_$._new(science_geometry__$Point_Point_$Impl_$.get_x(this1) * k,science_geometry__$Point_Point_$Impl_$.get_y(this1) * k);
+};
+science_geometry__$Vector_Vector_$Impl_$.div = function(this1,k) {
+	return science_geometry__$Vector_Vector_$Impl_$._new(science_geometry__$Point_Point_$Impl_$.get_x(this1) / k,science_geometry__$Point_Point_$Impl_$.get_y(this1) / k);
+};
+science_geometry__$Vector_Vector_$Impl_$.scalar_product = function(this1,point) {
+	return science_geometry__$Point_Point_$Impl_$.get_x(this1) * science_geometry__$Point_Point_$Impl_$.get_x(point) + science_geometry__$Point_Point_$Impl_$.get_y(this1) * science_geometry__$Point_Point_$Impl_$.get_y(point);
+};
+science_geometry__$Vector_Vector_$Impl_$.vector_product = function(this1,point) {
+	return science_geometry__$Point_Point_$Impl_$.get_x(this1) * science_geometry__$Point_Point_$Impl_$.get_y(point) - science_geometry__$Point_Point_$Impl_$.get_y(this1) * science_geometry__$Point_Point_$Impl_$.get_x(point);
+};
+science_geometry__$Vector_Vector_$Impl_$.$length = function(this1) {
+	return science_geometry__$Vector_Vector_$Impl_$.scalar_product(this1,this1);
+};
+var science_geometry_exceptions_SamePointException = function(errorMessage) {
+	exceptions_BaseException.call(this,errorMessage);
+};
+science_geometry_exceptions_SamePointException.__name__ = true;
+science_geometry_exceptions_SamePointException.__super__ = exceptions_BaseException;
+science_geometry_exceptions_SamePointException.prototype = $extend(exceptions_BaseException.prototype,{
+	toString: function() {
+		return "SamePointException(" + this.errorMessage + ")";
+	}
+	,__class__: science_geometry_exceptions_SamePointException
+});
+var science_matrix__$Matrix_Matrix_$Impl_$ = {};
+science_matrix__$Matrix_Matrix_$Impl_$.__name__ = true;
+science_matrix__$Matrix_Matrix_$Impl_$.get_width = function(this1) {
+	if(science_matrix__$Matrix_Matrix_$Impl_$.get_height(this1) == 0) {
+		return 0;
+	}
+	return this1[0].length;
+};
+science_matrix__$Matrix_Matrix_$Impl_$.get_height = function(this1) {
+	return this1.length;
+};
+science_matrix__$Matrix_Matrix_$Impl_$._new = function(a) {
+	var this1 = tools_NullTools.coalesce(a,[]);
+	return this1;
+};
+science_matrix__$Matrix_Matrix_$Impl_$.getIndex = function(this1,i) {
+	return this1[i];
+};
+science_matrix__$Matrix_Matrix_$Impl_$.setIndex = function(this1,i,value) {
+	return this1[i] = value;
+};
+var science_matrix_MatrixTools = function() { };
+science_matrix_MatrixTools.__name__ = true;
+science_matrix_MatrixTools.rotateRight = function(m) {
+	var res = science_matrix__$Matrix_Matrix_$Impl_$._new();
+	var _g = 0;
+	var _g1 = range__$Range_Range_$Impl_$._new(m[0].length - 1,-1);
+	while(_g < _g1.length) {
+		var i = _g1[_g];
+		++_g;
+		var tmp = [];
+		var _g11 = 0;
+		var _g2 = m.length;
+		while(_g11 < _g2) {
+			var j = _g11++;
+			tmp.push(m[j][i]);
+		}
+		res.push(tmp);
+	}
+	return res;
+};
+science_matrix_MatrixTools.rotateLeft = function(m) {
+	var res = science_matrix__$Matrix_Matrix_$Impl_$._new();
+	var _g = 0;
+	var _g1 = m[0].length;
+	while(_g < _g1) {
+		var i = _g++;
+		var tmp = [];
+		var _g2 = 0;
+		var _g11 = range__$Range_Range_$Impl_$._new(m.length - 1,-1);
+		while(_g2 < _g11.length) {
+			var j = _g11[_g2];
+			++_g2;
+			tmp.push(m[j][i]);
+		}
+		res.push(tmp);
+	}
+	return res;
+};
+science_matrix_MatrixTools.submatrix = function(m,x0,y0,x1,y1) {
+	var _this = science_ScientificTools.slice_(m,y0,y1);
+	var result = new Array(_this.length);
+	var _g = 0;
+	var _g1 = _this.length;
+	while(_g < _g1) {
+		var i = _g++;
+		result[i] = science_ScientificTools.slice_(_this[i],x0,x1);
+	}
+	return result;
+};
+science_matrix_MatrixTools.flatten = function(m) {
+	var res = [];
+	var _g = 0;
+	var _g1 = m;
+	while(_g < _g1.length) {
+		var i = _g1[_g];
+		++_g;
+		res = res.concat(i);
+	}
+	return res;
+};
 var time_Time = $hxEnums["time.Time"] = { __ename__ : true, __constructs__ : ["Milliseconds","Seconds","Minutes"]
 	,Milliseconds: ($_=function(value) { return {_hx_index:0,value:value,__enum__:"time.Time",toString:$estr}; },$_.__params__ = ["value"],$_)
 	,Seconds: ($_=function(value) { return {_hx_index:1,value:value,__enum__:"time.Time",toString:$estr}; },$_.__params__ = ["value"],$_)
@@ -4384,7 +4662,7 @@ tools_ColorTools.toMono = function(color1) {
 	return new color_MonoColor(Math.floor((color1.get_r() + color1.get_g() + color1.get_b()) / 3));
 };
 tools_ColorTools.toPoint3D = function(color) {
-	return new geometry_Point3D(color.get_r(),color.get_g(),color.get_b());
+	return science_geometry__$Point3D_Point3D_$Impl_$._new(color.get_r(),color.get_g(),color.get_b());
 };
 tools_ColorTools.compareMono = function(color1,color2,threshold) {
 	if(threshold == null) {
@@ -4412,10 +4690,10 @@ tools_ColorTools.compare = function(color1,color2,threshold) {
 };
 var tools_GeometryTools = function() { };
 tools_GeometryTools.__name__ = true;
-tools_GeometryTools.distToLine = function(pointLike,line) {
+tools_GeometryTools.distToLine = function(p,line) {
 	var d = tools_GeometryTools.distTo(line.point1,line.point2);
-	var vector = geometry_Vector.fromPointLike(pointLike);
-	var s = vector.sub(line.point1).vector_product(vector.sub(line.point2));
+	var vector = p;
+	var s = science_geometry__$Vector_Vector_$Impl_$.vector_product(science_geometry__$Vector_Vector_$Impl_$.sub(vector,line.point1),science_geometry__$Vector_Vector_$Impl_$.sub(vector,line.point2));
 	return Math.abs(s) / d;
 };
 tools_GeometryTools.det = function(a,b,c,d) {
@@ -4436,45 +4714,38 @@ tools_GeometryTools.getIntersectionPoint = function(line1,line2) {
 		return null;
 	}
 	var d = tools_GeometryTools.det(line1.a,line1.b,line2.a,line2.b);
-	return new geometry_Point(-tools_GeometryTools.det(line1.c,line1.b,line2.c,line2.b) / d,-tools_GeometryTools.det(line1.a,line1.c,line2.a,line2.c) / d);
+	return science_geometry__$Point_Point_$Impl_$._new(-tools_GeometryTools.det(line1.c,line1.b,line2.c,line2.b) / d,-tools_GeometryTools.det(line1.a,line1.c,line2.a,line2.c) / d);
 };
-tools_GeometryTools.toPoint = function(pointLike) {
-	return new geometry_Point(pointLike.x,pointLike.y);
-};
-tools_GeometryTools.distTo = function(pointLike1,pointLike2) {
-	return Math.sqrt(Math.pow(pointLike1.x - pointLike2.x,2) + Math.pow(pointLike1.y - pointLike2.y,2));
+tools_GeometryTools.distTo = function(p1,p2) {
+	return Math.sqrt(Math.pow(science_geometry__$Point_Point_$Impl_$.get_x(p1) - science_geometry__$Point_Point_$Impl_$.get_x(p2),2) + Math.pow(science_geometry__$Point_Point_$Impl_$.get_y(p1) - science_geometry__$Point_Point_$Impl_$.get_y(p2),2));
 };
 var tools_ImageTools = function() { };
 tools_ImageTools.__name__ = true;
 tools_ImageTools.toGreyscale = function(image1) {
 	var _g = [];
-	var _g1 = 0;
-	var _g2 = image1;
-	while(_g1 < _g2.length) {
-		var i = _g2[_g1];
-		++_g1;
-		var _g21 = [];
+	var i = HxOverrides.iter(image1);
+	while(i.hasNext()) {
+		var i1 = i.next();
+		var _g2 = [];
 		var _g3 = 0;
-		while(_g3 < i.length) {
-			var j = i[_g3];
+		while(_g3 < i1.length) {
+			var j = i1[_g3];
 			++_g3;
-			_g21.push(tools_ColorTools.toMono(j));
+			_g2.push(tools_ColorTools.toMono(j));
 		}
-		_g.push(_g21);
+		_g.push(_g2);
 	}
 	return image__$Image_Image_$Impl_$._new(_g);
 };
 tools_ImageTools.findDarkestColor = function(image) {
 	var darkestColor = image[0][0];
-	var _g = 0;
-	var _g1 = image;
-	while(_g < _g1.length) {
-		var i = _g1[_g];
-		++_g;
-		var _g11 = 0;
-		while(_g11 < i.length) {
-			var j = i[_g11];
-			++_g11;
+	var i = HxOverrides.iter(image);
+	while(i.hasNext()) {
+		var i1 = i.next();
+		var _g1 = 0;
+		while(_g1 < i1.length) {
+			var j = i1[_g1];
+			++_g1;
 			if(tools_ColorTools.compareMono(tools_ColorTools.toMono(j),tools_ColorTools.toMono(darkestColor)) == ordering_Ordering.LT) {
 				darkestColor = j;
 			}
@@ -4488,19 +4759,17 @@ tools_ImageTools.toBinary = function(image1,threshold) {
 	}
 	var darkestColor = tools_ImageTools.findDarkestColor(image1);
 	var _g = [];
-	var _g1 = 0;
-	var _g2 = image1;
-	while(_g1 < _g2.length) {
-		var i = _g2[_g1];
-		++_g1;
-		var _g21 = [];
+	var i = HxOverrides.iter(image1);
+	while(i.hasNext()) {
+		var i1 = i.next();
+		var _g2 = [];
 		var _g3 = 0;
-		while(_g3 < i.length) {
-			var j = i[_g3];
+		while(_g3 < i1.length) {
+			var j = i1[_g3];
 			++_g3;
-			_g21.push(Math.abs(tools_ColorTools.toMono(j).value - tools_ColorTools.toMono(darkestColor).value) <= threshold ? new color_BinaryColor(true) : new color_BinaryColor(false));
+			_g2.push(Math.abs(tools_ColorTools.toMono(j).value - tools_ColorTools.toMono(darkestColor).value) <= threshold ? new color_BinaryColor(true) : new color_BinaryColor(false));
 		}
-		_g.push(_g21);
+		_g.push(_g2);
 	}
 	return image__$Image_Image_$Impl_$._new(_g);
 };
@@ -4517,13 +4786,13 @@ tools_ImageTools.cropSides = function(image1,sides) {
 	return image__$Image_Image_$Impl_$._new(result);
 };
 tools_ImageTools.cornersToSides = function(image,corners) {
-	return { top : Math.round(Math.min(corners.leftTop.y,corners.rightTop.y)), left : Math.round(Math.min(corners.leftTop.x,corners.leftBottom.x)), right : image[0].length - Math.round(Math.max(corners.rightTop.x,corners.rightBottom.x)), bottom : image.length - Math.round(Math.max(corners.leftBottom.y,corners.rightBottom.y))};
+	return { top : Math.round(Math.min(science_geometry__$Point_Point_$Impl_$.get_y(corners.leftTop),science_geometry__$Point_Point_$Impl_$.get_y(corners.rightTop))), left : Math.round(Math.min(science_geometry__$Point_Point_$Impl_$.get_x(corners.leftTop),science_geometry__$Point_Point_$Impl_$.get_x(corners.leftBottom))), right : image[0].length - Math.round(Math.max(science_geometry__$Point_Point_$Impl_$.get_x(corners.rightTop),science_geometry__$Point_Point_$Impl_$.get_x(corners.rightBottom))), bottom : image.length - Math.round(Math.max(science_geometry__$Point_Point_$Impl_$.get_y(corners.leftBottom),science_geometry__$Point_Point_$Impl_$.get_y(corners.rightBottom)))};
 };
 tools_ImageTools.cropCorners = function(image,corners) {
 	return tools_ImageTools.cropSides(image,tools_ImageTools.cornersToSides(image,corners));
 };
 tools_ImageTools.findCorners = function(image1,color1) {
-	var targetColor = color1 != null ? color1 : new color_BinaryColor(true);
+	var targetColor = tools_NullTools.coalesce(color1,new color_BinaryColor(true));
 	var res = new image_Corners();
 	var width = image1[0].length;
 	var height = image1.length;
@@ -4535,7 +4804,7 @@ tools_ImageTools.findCorners = function(image1,color1) {
 		var j = k;
 		while(i < height && j >= 0) {
 			if(tools_ColorTools.compare(image1[i][j],targetColor)) {
-				res.leftTop = new image_Pixel(j,i,width,height);
+				res.leftTop = image__$Pixel_Pixel_$Impl_$._new(j,i,width,height);
 				break;
 			}
 			++i;
@@ -4554,7 +4823,7 @@ tools_ImageTools.findCorners = function(image1,color1) {
 		var j1 = k1;
 		while(i1 < height && j1 < width) {
 			if(tools_ColorTools.compare(image1[i1][j1],targetColor)) {
-				res.rightTop = new image_Pixel(j1,i1,width,height);
+				res.rightTop = image__$Pixel_Pixel_$Impl_$._new(j1,i1,width,height);
 				break;
 			}
 			++i1;
@@ -4573,7 +4842,7 @@ tools_ImageTools.findCorners = function(image1,color1) {
 		var j2 = k2;
 		while(i2 >= 0 && j2 < width) {
 			if(tools_ColorTools.compare(targetColor,image1[i2][j2])) {
-				res.rightBottom = new image_Pixel(j2,i2,width,height);
+				res.rightBottom = image__$Pixel_Pixel_$Impl_$._new(j2,i2,width,height);
 				break;
 			}
 			--i2;
@@ -4591,7 +4860,7 @@ tools_ImageTools.findCorners = function(image1,color1) {
 		var j3 = k3;
 		while(i3 >= 0 && j3 >= 0) {
 			if(tools_ColorTools.compare(image1[i3][j3],targetColor)) {
-				res.leftBottom = new image_Pixel(j3,i3,width,height);
+				res.leftBottom = image__$Pixel_Pixel_$Impl_$._new(j3,i3,width,height);
 				break;
 			}
 			--i3;
@@ -4605,19 +4874,17 @@ tools_ImageTools.findCorners = function(image1,color1) {
 };
 tools_ImageTools.inverse = function(image1) {
 	var _g = [];
-	var _g1 = 0;
-	var _g2 = image1;
-	while(_g1 < _g2.length) {
-		var i = _g2[_g1];
-		++_g1;
-		var _g21 = [];
+	var i = HxOverrides.iter(image1);
+	while(i.hasNext()) {
+		var i1 = i.next();
+		var _g2 = [];
 		var _g3 = 0;
-		while(_g3 < i.length) {
-			var j = i[_g3];
+		while(_g3 < i1.length) {
+			var j = i1[_g3];
 			++_g3;
-			_g21.push(j.value ? new color_BinaryColor(false) : new color_BinaryColor(true));
+			_g2.push(j.value ? new color_BinaryColor(false) : new color_BinaryColor(true));
 		}
-		_g.push(_g21);
+		_g.push(_g2);
 	}
 	return image__$Image_Image_$Impl_$._new(_g);
 };
@@ -4713,24 +4980,6 @@ tools_ImageTools.downscale = function(image1,squareSize,repeat) {
 	}
 	return tools_ImageTools.downscale(image__$Image_Image_$Impl_$._new(res),squareSize,repeat - 1);
 };
-tools_ImageTools.rotate90 = function(image1) {
-	var res = [];
-	var _g = 0;
-	var _g1 = range__$Range_Range_$Impl_$._new(image1.length - 1,-1);
-	while(_g < _g1.length) {
-		var j = _g1[_g];
-		++_g;
-		var tmp = [];
-		var _g11 = 0;
-		var _g2 = image1[0].length;
-		while(_g11 < _g2) {
-			var i = _g11++;
-			tmp.push(image1[i][j]);
-		}
-		res.push(tmp);
-	}
-	return image__$Image_Image_$Impl_$._new(res);
-};
 var tools_TimeTools = function() { };
 tools_TimeTools.__name__ = true;
 tools_TimeTools.toMilliseconds = function(time1) {
@@ -4782,22 +5031,24 @@ trik_robot_display__$DisplayHigher_DisplayHigher_$Impl_$._new = function() {
 	return this1;
 };
 trik_robot_display__$DisplayHigher_DisplayHigher_$Impl_$.addLabel = function(this1,text,pixel) {
-	this1.addLabel(text,pixel.x,pixel.y);
+	this1.addLabel(text,science_geometry__$Point_Point_$Impl_$.get_x(pixel),science_geometry__$Point_Point_$Impl_$.get_y(pixel));
 };
 trik_robot_display__$DisplayHigher_DisplayHigher_$Impl_$.drawArc = function(this1,rect,from,to) {
-	this1.drawArc(rect.points[0].x,rect.points[0].y,rect.length,rect.height,from,to);
+	this1.drawArc(science_geometry__$Point_Point_$Impl_$.get_x(rect.points[0]),science_geometry__$Point_Point_$Impl_$.get_y(rect.points[0]),rect.length,rect.height,from,to);
 };
 trik_robot_display__$DisplayHigher_DisplayHigher_$Impl_$.drawEllipse = function(this1,rect) {
-	this1.drawEllipse(rect.points[0].x,rect.points[0].y,rect.length,rect.height);
+	this1.drawEllipse(science_geometry__$Point_Point_$Impl_$.get_x(rect.points[0]),science_geometry__$Point_Point_$Impl_$.get_y(rect.points[0]),rect.length,rect.height);
 };
 trik_robot_display__$DisplayHigher_DisplayHigher_$Impl_$.drawLine = function(this1,line) {
-	this1.drawLine(line.first.x,line.first.y,line.second.x,line.second.y);
+	var p1 = science_geometry__$Point_Point_$Impl_$.round(line.point1);
+	var p2 = science_geometry__$Point_Point_$Impl_$.round(line.point2);
+	this1.drawLine(science_geometry__$Point_Point_$Impl_$.get_x(p1),science_geometry__$Point_Point_$Impl_$.get_y(p1),science_geometry__$Point_Point_$Impl_$.get_x(p2),science_geometry__$Point_Point_$Impl_$.get_y(p2));
 };
 trik_robot_display__$DisplayHigher_DisplayHigher_$Impl_$.drawPixel = function(this1,pixel) {
-	this1.drawPoint(pixel.x,pixel.y);
+	this1.drawPoint(science_geometry__$Point_Point_$Impl_$.get_x(pixel),science_geometry__$Point_Point_$Impl_$.get_y(pixel));
 };
 trik_robot_display__$DisplayHigher_DisplayHigher_$Impl_$.drawRect = function(this1,rect) {
-	this1.drawRect(rect.points[0].x,rect.points[0].y,rect.length,rect.height);
+	this1.drawRect(science_geometry__$Point_Point_$Impl_$.get_x(rect.points[0]),science_geometry__$Point_Point_$Impl_$.get_y(rect.points[0]),rect.length,rect.height);
 };
 trik_robot_display__$DisplayHigher_DisplayHigher_$Impl_$.setBackground = function(this1,color) {
 	this1.setBackground(color.name);
@@ -4929,37 +5180,9 @@ trik_Script.writeToFile = function(filename,content) {
 trik_Script.print = function(obj) {
 	print(Std.string(obj));
 };
-var trik_robot_display_Line = function(first,second) {
-	this.first = first;
-	this.second = second;
-};
-trik_robot_display_Line.__name__ = true;
-trik_robot_display_Line.prototype = {
-	__class__: trik_robot_display_Line
-};
-var trik_robot_display_Pixel = function(x,y) {
-	if(y == null) {
-		y = 0;
-	}
-	if(x == null) {
-		x = 0;
-	}
-	if(x < 0 || x > 240) {
-		throw new js__$Boot_HaxeError(new exceptions_ValueException("x value must be in the range [0; 240]"));
-	}
-	if(y < 0 || y > 320) {
-		throw new js__$Boot_HaxeError(new exceptions_ValueException("y value must be in the range [0; 320]"));
-	}
-	this.x = x;
-	this.y = y;
-};
-trik_robot_display_Pixel.__name__ = true;
-trik_robot_display_Pixel.prototype = {
-	__class__: trik_robot_display_Pixel
-};
 var trik_robot_display_Rectangle = function(pixel,length,height) {
 	try {
-		this.points = [pixel,new trik_robot_display_Pixel(pixel.x + length,pixel.y),new trik_robot_display_Pixel(pixel.x + length,pixel.y + height),new trik_robot_display_Pixel(pixel.x,pixel.y + height)];
+		this.points = [pixel,image__$Pixel_Pixel_$Impl_$._new(science_geometry__$Point_Point_$Impl_$.get_x(pixel) + length,science_geometry__$Point_Point_$Impl_$.get_y(pixel)),image__$Pixel_Pixel_$Impl_$._new(science_geometry__$Point_Point_$Impl_$.get_x(pixel) + length,science_geometry__$Point_Point_$Impl_$.get_y(pixel) + height),image__$Pixel_Pixel_$Impl_$._new(science_geometry__$Point_Point_$Impl_$.get_x(pixel),science_geometry__$Point_Point_$Impl_$.get_y(pixel) + height)];
 	} catch( err ) {
 		var err1 = ((err) instanceof js__$Boot_HaxeError) ? err.val : err;
 		if(((err1) instanceof exceptions_ValueException)) {
