@@ -1,18 +1,22 @@
 package image;
 
 import color.Color;
-import tools.ColorTools.*;
+import science.matrix.Matrix;
 import exceptions.ValueException;
 
 
 @:forward
-abstract Image<C:Color>(Array<Array<C>>) {
-    public function new(pixels:Array<Array<C>>) {
+abstract Image<C:Color>(Matrix<C>) from Matrix<C> to Matrix<C> {
+    public function new(pixels:Matrix<C>) {
         for (i in pixels) 
             if (i.length != pixels[0].length)
                 throw new ValueException("all row arrays must have the same length");
 
         this = pixels;
+    }
+
+    public inline function at(?x:Int=0, ?y:Int=0):C {
+        return this[y][x];
     }
 
     @:arrayAccess
