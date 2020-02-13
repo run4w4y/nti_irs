@@ -1,6 +1,6 @@
 package trik.robot.display;
 
-import trik.robot.display.Pixel;
+import image.Pixel;
 import trik.robot.display.exceptions.RectangleSizeException;
 
 
