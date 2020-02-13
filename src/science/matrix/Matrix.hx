@@ -23,11 +23,11 @@ abstract Matrix<T>(Array<Array<T>>) from Array<Array<T>> to Array<Array<T>> {
         this = a.coalesce([]);
     }
 
-    @:op([]) public function getIndex(i:Int):Array<T> {
+    @:op([]) public inline function getIndex(i:Int):Array<T> {
         return this[i];
     }
 
-    @:op([]) public function setIndex(i:Int, value:Array<T>):Array<T> {
+    @:op([]) public inline function setIndex(i:Int, value:Array<T>):Array<T> {
         return this[i] = value;
     }
 }
