@@ -74,8 +74,8 @@ class ArtagTestCase extends Test {
         return 'pt ${pixel.x} ${pixel.y}\n';
     }
 
-    function getPointString<T:Float>(pointLike:Point<T>):String {
-        return 'pt ${pointLike.x} ${pointLike.y}\n';
+    function getPointString<T:Float>(point:Point<T>):String {
+        return 'pt ${point.x} ${point.y}\n';
     }
 
     function getLineString(line:Line):String {

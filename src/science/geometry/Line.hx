@@ -12,16 +12,16 @@ class Line {
     public var point1:Point<Float>;
     public var point2:Point<Float>;
 
-    public function new<T:Float>(pointLike1:Point<T>, pointLike2:Point<T>) {
-        if (abs(pointLike1.x - pointLike2.x) <= 1e-6 && abs(pointLike1.y - pointLike2.y) <= 1e-6) 
+    public function new<T:Float>(point1:Point<T>, point2:Point<T>) {
+        if (abs(point1.x - point2.x) <= 1e-6 && abs(point1.y - point2.y) <= 1e-6) 
             throw new SamePointException('cant define a line with two same points');
         
-        this.point1 = new Point<Float>(pointLike1.x, pointLike1.y);
-        this.point2 = new Point<Float>(pointLike2.x, pointLike2.y);
+        this.point1 = new Point<Float>(point1.x, point1.y);
+        this.point2 = new Point<Float>(point2.x, point2.y);
 
-        a = pointLike1.y - pointLike2.y;
-        b = pointLike2.x - pointLike1.x;
-        c = -a * pointLike1.x - b * pointLike1.y;
+        a = point1.y - point2.y;
+        b = point2.x - point1.x;
+        c = -a * point1.x - b * point1.y;
     }
 
     public function moveX(value:Float):Line {
@@ -43,8 +43,8 @@ class Line {
     public function moveXY(valueX:Float, valueY:Float):Line {
         var delta = new Point<Float>(valueX, valueY);
         return new Line(
-            point1.add(delta),
-            point2.add(delta)
+            point1 + delta,
+            point2 + delta
         );
     }
 
