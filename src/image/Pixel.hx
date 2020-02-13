@@ -1,35 +1,34 @@
 package image;
 
-class Pixel {
-    public var x:Int;
-    public var y:Int;
-    public var constraintsX:Null<Int>;
-    public var constraintsY:Null<Int>;
+import science.geometry.Point;
 
-    function constrain() {
-        this.x = if (this.x < 0) 0 else this.x;
-        this.y = if (this.y < 0) 0 else this.y;
-        if (this.constraintsX != null && this.x > this.constraintsX) 
-            this.x = this.constraintsX;
-        if (this.constraintsY != null && this.y > this.constraintsY) 
-            this.y = this.constraintsY;
+
+@:forward
+abstract Pixel(Point<Int>) from Point<Int> to Point<Int> {
+    public var x(get, set):Int;
+    public var y(get, set):Int;
+
+    private inline function get_x():Int {
+        return this.x;
+    }
+
+    private inline function set_x(value:Int):Int {
+        return this.x = value;
+    }
+
+    private inline function get_y():Int {
+        return this.y;
+    }
+
+    private inline function set_y(value:Int):Int {
+        return this.y = value;
     }
 
     public function new(x:Int, y:Int, ?constraintsX:Int, ?constraintsY:Int):Void {
-        this.x = x;
-        this.y = y;
-        this.constraintsX = constraintsX;
-        this.constraintsY = constraintsY;
-        this.constrain();
-    }
-
-    public function add(pixel:Pixel):Void {
-        this.x += pixel.x; 
-        this.y += pixel.y;
-        this.constrain();
-    }
-
-    public function toString():String {
-        return 'Pixel($x, $y)';
+        this = new Point<Int>(if (x < 0) 0 else x, if (y < 0) 0 else y);
+        if (constraintsX != null && this.x > constraintsX) 
+            this.x = constraintsX;
+        if (constraintsY != null && this.y > constraintsY) 
+            this.y = constraintsY;
     }
 }

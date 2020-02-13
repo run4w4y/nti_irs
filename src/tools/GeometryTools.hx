@@ -9,9 +9,9 @@ import Math.*;
 class GeometryTools {
     public static var epsilon = 1e-6;
 
-    public static function distToLine<T:Float>(pointLike:Point<T>, line:Line) {
+    public static function distToLine<T:Float, P:Point<T>>(p:P, line:Line) {
         var d:Float = distTo(line.point1, line.point2);
-        var vector:Vector<T> = pointLike;
+        var vector:Vector<T> = p;
         var s:Float = (vector - line.point1) * (vector - line.point2);
         return abs(s)/d;
     }
@@ -40,7 +40,7 @@ class GeometryTools {
         );
     }
 
-    public static function distTo<T:Float>(pointLike1:Point<T>, pointLike2:Point<T>):Float {
-        return sqrt(pow(pointLike1.x - pointLike2.x, 2) + pow(pointLike1.y - pointLike2.y, 2));
+    public static function distTo<T:Float, P:Point<T>>(p1:P, p2:P):Float {
+        return sqrt(pow(p1.x - p2.x, 2) + pow(p1.y - p2.y, 2));
     }
 }

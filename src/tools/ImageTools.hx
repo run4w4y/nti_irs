@@ -17,6 +17,7 @@ import exceptions.ValueException;
 import Math.*;
 
 using tools.ColorTools;
+using tools.NullTools;
 using Lambda;
 
 
@@ -72,7 +73,7 @@ class ImageTools {
     }
 
     public static function findCorners(image:Image<BinaryColor>, ?color:BinaryColor):Corners {
-        var targetColor = if (color != null) color else new BinaryColor(true); 
+        var targetColor = color.coalesce(new BinaryColor(true)); 
 
         var res:Corners = new Corners();
         var width = image[0].length, height = image.length;
@@ -204,20 +205,5 @@ class ImageTools {
         }
 
         return downscale(new Image(res), squareSize, repeat - 1);
-    }
-
-    public static function rotate90<C:Color>(image:Image<C>):Image<C> {
-        var res:Array<Array<C>> = [];
-
-        for (j in new Range(image.length - 1, -1)) {
-            var tmp:Array<C> = [];
-            
-            for (i in 0...image[0].length)
-                tmp.push(image[i][j]);
-            
-            res.push(tmp);
-        }
-
-        return new Image<C>(res);
     }
 }

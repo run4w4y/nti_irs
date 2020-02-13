@@ -9,14 +9,16 @@ import color.BinaryColor;
 import science.geometry.Line;
 import science.geometry.Point;
 import science.geometry.Vector;
+import science.matrix.Matrix;
 import artag.exceptions.ArtagException;
 import Math.*;
 
 using tools.ImageTools;
 using tools.GeometryTools;
+using science.matrix.MatrixTools;
 
 
-typedef Cells = Array<Array<Corners>>;
+typedef Cells = Matrix<Corners>;
 
 class Artag {
     public var image:Image<BinaryColor>;
@@ -30,27 +32,8 @@ class Artag {
     public var verticalLines:Array<Line>;
     public var horizontalLines:Array<Line>;
 
-    function pixelToPoint(pixel:Pixel):Point<Int> {
-        return new Point(
-            pixel.x,
-            -pixel.y
-        );
-    }
-
-    function pointToPixel<T:Float>(pointLike:Point<T>):Pixel {
-        return new Pixel(
-            round(pointLike.x), 
-            -round(pointLike.y)
-        );
-    }
-
-    function invY<T:Float>(pointLike:Point<T>):Point<T> {
-        pointLike.y *= -1;
-        return pointLike;
-    }
-
-    function pixelDist(pixel1:Pixel, pixel2:Pixel):Float {
-        return pixelToPoint(pixel1).distTo(pixelToPoint(pixel2));
+    function invY<T:Float>(p:Point<T>):Point<T> {
+        return new Point<T>(p.x, -p.y);
     }
 
     function filter<C:Color>(image:Image<C>):Image<BinaryColor> {
@@ -59,29 +42,16 @@ class Artag {
 
     public function getCells():Cells {
         var res:Cells = [];
-        var w = image[0].length, h = image.length;
         
-        leftLine = new Line(
-            pixelToPoint(corners.leftTop), 
-            pixelToPoint(corners.leftBottom)
-        );
-        rightLine = new Line(
-            pixelToPoint(corners.rightTop), 
-            pixelToPoint(corners.rightBottom)
-        );
-        topLine = new Line(
-            pixelToPoint(corners.leftTop), 
-            pixelToPoint(corners.rightTop)
-        );
-        bottomLine = new Line(
-            pixelToPoint(corners.leftBottom), 
-            pixelToPoint(corners.rightBottom)
-        );
+        leftLine = new Line(invY(corners.leftTop), invY(corners.leftBottom));
+        rightLine = new Line(invY(corners.rightTop), invY(corners.rightBottom));
+        topLine = new Line(invY(corners.leftTop), invY(corners.rightTop));
+        bottomLine = new Line(invY(corners.leftBottom), invY(corners.rightBottom));
 
-        var leftDist = pixelDist(corners.leftBottom, corners.leftTop);
-        var rightDist = pixelDist(corners.rightBottom, corners.rightTop);
-        var topDist = pixelDist(corners.leftTop, corners.rightTop);
-        var bottomDist = pixelDist(corners.leftBottom, corners.rightBottom);
+        var leftDist = corners.leftBottom.distTo(corners.leftTop);
+        var rightDist = corners.rightBottom.distTo(corners.rightTop);
+        var topDist = corners.leftTop.distTo(corners.rightTop);
+        var bottomDist = corners.leftBottom.distTo(corners.rightBottom);
 
         verticalLines = [];
         horizontalLines = [];
@@ -101,10 +71,10 @@ class Artag {
             var tmp:Array<Corners> = [];
             for (j in 0...markerSize) {
                 tmp.push(new Corners(
-                    pointToPixel(verticalLines[j].getIntersectionPoint(horizontalLines[i])),
-                    pointToPixel(verticalLines[j + 1].getIntersectionPoint(horizontalLines[i])),
-                    pointToPixel(verticalLines[j + 1].getIntersectionPoint(horizontalLines[i + 1])),
-                    pointToPixel(verticalLines[j].getIntersectionPoint(horizontalLines[i + 1]))
+                    invY(verticalLines[j].getIntersectionPoint(horizontalLines[i])).round(),
+                    invY(verticalLines[j + 1].getIntersectionPoint(horizontalLines[i])).round(),
+                    invY(verticalLines[j + 1].getIntersectionPoint(horizontalLines[i + 1])).round(),
+                    invY(verticalLines[j].getIntersectionPoint(horizontalLines[i + 1])).round()
                 ));
             }
             res.push(tmp);
@@ -115,14 +85,14 @@ class Artag {
 
     function getCellColor(cell:Corners):BinaryColor {
         var line1 = new Line(
-            pixelToPoint(cell.leftTop),
-            pixelToPoint(cell.rightBottom)
+            invY(cell.leftTop),
+            invY(cell.rightBottom)
         );
         var line2 = new Line(
-            pixelToPoint(cell.rightTop),
-            pixelToPoint(cell.leftBottom)
+            invY(cell.rightTop),
+            invY(cell.leftBottom)
         );
-        var intersection:Pixel = pointToPixel(line1.getIntersectionPoint(line2));
+        var intersection:Pixel = invY(line1.getIntersectionPoint(line2)).round();
         return image[intersection.y][intersection.x];
     }
 
@@ -139,13 +109,13 @@ class Artag {
                 !marker[i][markerSize - 1].value
             ) return false;
 
-        return true && checkControlBit();
+        return checkControlBit();
     }
 
     function rotateMarker():Void {
         var rotateCount = 0;
         while (!checkControlBit()) {
-            marker = marker.rotate90();
+            marker = marker.rotateRight();
             ++rotateCount;
             if (rotateCount >= 4)
                 throw new ArtagException('Could not find control bit in the given marker');
