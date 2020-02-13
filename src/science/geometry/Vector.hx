@@ -39,7 +39,7 @@ abstract Vector<T:Float>(Point<T>) from Point<T> to Point<T> {
         return this.x * pointLike.x + this.y * pointLike.y;
     }
 
-    @:op(A *  B)
+    @:op(A * B)
     public function vector_product<T:Float>(pointLike:Point<T>):Float {
         return this.x * pointLike.y - this.y * pointLike.x;
     }
