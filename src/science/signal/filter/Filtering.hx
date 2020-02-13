@@ -2,7 +2,7 @@ package science.signal.filter;
 
 import exceptions.ValueException;
 import science.matrix.Matrix;
-import range.Range;
+import ds.Range;
 
 using science.ScientificTools;
 using science.matrix.MatrixTools;

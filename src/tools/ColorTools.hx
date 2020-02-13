@@ -9,7 +9,7 @@ import color.MonoColor;
 import color.BinaryColor;
 import color.HexColor;
 import science.geometry.Point3D;
-import ordering.Ordering;
+import ds.Ordering;
 import exceptions.TypeException;
 import Math.*;
 

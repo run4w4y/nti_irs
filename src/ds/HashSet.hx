@@ -1,4 +1,4 @@
-package hashset;
+package ds;
 
 import polygonal.ds.ListSet;
 

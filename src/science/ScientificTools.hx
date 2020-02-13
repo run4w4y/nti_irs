@@ -2,7 +2,7 @@ package science;
 
 import exceptions.ValueException;
 import exceptions.IndexException;
-import range.Range;
+import ds.Range;
 import science.matrix.Matrix;
 
 using tools.NullTools;

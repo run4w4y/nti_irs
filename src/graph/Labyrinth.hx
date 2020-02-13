@@ -1,7 +1,7 @@
 package graph;
 
 import graph.Node;
-import hashmap.HashMap;
+import ds.HashMap;
 import polygonal.ds.LinkedQueue;
 import movementExecutor.Movement;
 import movementExecutor.MovementExecutor;

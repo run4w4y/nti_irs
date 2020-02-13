@@ -1,7 +1,7 @@
 package graph;
 
 import graph.Direction;
-import hashmap.HashMap;
+import ds.HashMap;
 
 using tools.NullTools;
 

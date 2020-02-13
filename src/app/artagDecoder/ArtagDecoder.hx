@@ -2,7 +2,7 @@ package app.artagDecoder;
 
 import artag.Artag;
 import color.BinaryColor;
-import range.Range;
+import ds.Range;
 
 
 abstract ArtagDecoder(Artag) {

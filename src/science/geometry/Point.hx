@@ -1,6 +1,6 @@
 package science.geometry;
 
-import pair.Pair;
+import ds.Pair;
 
 
 abstract Point<T:Float>(Pair<T, T>) from Pair<T, T> to Pair<T, T> {

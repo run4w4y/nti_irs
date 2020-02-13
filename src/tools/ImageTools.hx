@@ -11,8 +11,7 @@ import color.MonoColor;
 import color.LiteralColors.*;
 import color.BinaryColor;
 import tools.ColorTools.*;
-import range.Range;
-import ordering.Ordering;
+import ds.Range;
 import exceptions.ValueException;
 import Math.*;
 

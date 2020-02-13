@@ -1,7 +1,7 @@
 package science.matrix;
 
 import science.matrix.Matrix;
-import range.Range;
+import ds.Range;
 
 using science.ScientificTools;
 

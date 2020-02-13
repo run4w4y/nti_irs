@@ -1,4 +1,4 @@
-package pair;
+package ds;
 
 class Pair<T1, T2> {
     public var first:T1;
