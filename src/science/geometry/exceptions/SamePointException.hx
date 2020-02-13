@@ -1,4 +1,4 @@
-package geometry.exceptions;
+package science.geometry.exceptions;
 
 import exceptions.BaseException;
 

@@ -1,19 +1,18 @@
 package tools;
 
-import geometry.Line;
-import geometry.Point;
-import geometry.Vector;
-import geometry.PointLike;
+import science.geometry.Line;
+import science.geometry.Point;
+import science.geometry.Vector;
 import Math.*;
 
 
 class GeometryTools {
     public static var epsilon = 1e-6;
 
-    public static function distToLine<T:PointLike>(pointLike:T, line:Line) {
+    public static function distToLine<T:Float>(pointLike:Point<T>, line:Line) {
         var d:Float = distTo(line.point1, line.point2);
-        var vector = Vector.fromPointLike(pointLike);
-        var s:Float = (vector.sub(line.point1)).vector_product(vector.sub(line.point2));
+        var vector:Vector<T> = pointLike;
+        var s:Float = (vector - line.point1) * (vector - line.point2);
         return abs(s)/d;
     }
 
@@ -31,21 +30,17 @@ class GeometryTools {
            && abs(det(line1.b, line1.c, line2.b, line2.c)) < epsilon;
     }
 
-    public static function getIntersectionPoint(line1:Line, line2:Line):Null<Point> {
+    public static function getIntersectionPoint(line1:Line, line2:Line):Null<Point<Float>> {
         if (paralell(line1, line2) || equivalent(line1, line2)) return null;
         
         var d = det(line1.a, line1.b, line2.a, line2.b);
-        return new Point(
+        return new Point<Float>(
             -det(line1.c, line1.b, line2.c, line2.b) / d,
             -det(line1.a, line1.c, line2.a, line2.c) / d
         );
     }
 
-    public static function toPoint<T:PointLike>(pointLike:T):Point {
-        return new Point(pointLike.x, pointLike.y);
-    }
-
-    public static function distTo<T:PointLike>(pointLike1:T, pointLike2:T):Float {
+    public static function distTo<T:Float>(pointLike1:Point<T>, pointLike2:Point<T>):Float {
         return sqrt(pow(pointLike1.x - pointLike2.x, 2) + pow(pointLike1.y - pointLike2.y, 2));
     }
 }

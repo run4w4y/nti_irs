@@ -6,8 +6,8 @@ import color.RGBColor;
 import color.BinaryColor;
 import image.Image;
 import artag.Artag;
-import geometry.Line;
-import geometry.PointLike;
+import science.geometry.Line;
+import science.geometry.Point;
 import tools.ColorTools.*;
 import app.tests.exceptions.NoClueException;
 import app.tests.artag.exceptions.NoSizeException;
@@ -74,7 +74,7 @@ class ArtagTestCase extends Test {
         return 'pt ${pixel.x} ${pixel.y}\n';
     }
 
-    function getPointString<T:PointLike>(pointLike:T):String {
+    function getPointString<T:Float>(pointLike:Point<T>):String {
         return 'pt ${pointLike.x} ${pointLike.y}\n';
     }
 

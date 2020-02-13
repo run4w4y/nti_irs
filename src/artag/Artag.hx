@@ -6,10 +6,9 @@ import image.Sides;
 import image.Pixel;
 import color.Color;
 import color.BinaryColor;
-import geometry.Line;
-import geometry.Point;
-import geometry.Vector;
-import geometry.PointLike;
+import science.geometry.Line;
+import science.geometry.Point;
+import science.geometry.Vector;
 import artag.exceptions.ArtagException;
 import Math.*;
 
@@ -31,21 +30,21 @@ class Artag {
     public var verticalLines:Array<Line>;
     public var horizontalLines:Array<Line>;
 
-    function pixelToPoint(pixel:Pixel):Point {
+    function pixelToPoint(pixel:Pixel):Point<Int> {
         return new Point(
             pixel.x,
             -pixel.y
         );
     }
 
-    function pointToPixel<T:PointLike>(pointLike:T):Pixel {
+    function pointToPixel<T:Float>(pointLike:Point<T>):Pixel {
         return new Pixel(
             round(pointLike.x), 
             -round(pointLike.y)
         );
     }
 
-    function invY<T:PointLike>(pointLike:T):T {
+    function invY<T:Float>(pointLike:Point<T>):Point<T> {
         pointLike.y *= -1;
         return pointLike;
     }

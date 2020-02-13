@@ -8,9 +8,8 @@ import color.RGBColor;
 import color.BinaryColor;
 import image.Image;
 import app.artagDecoder.ArtagDecoder;
-import geometry.Line;
-import geometry.Point;
-import geometry.PointLike;
+import science.geometry.Line;
+import science.geometry.Point;
 
 using tools.ColorTools;
 

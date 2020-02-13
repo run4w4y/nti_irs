@@ -8,7 +8,7 @@ import color.RGB24Color;
 import color.MonoColor;
 import color.BinaryColor;
 import color.HexColor;
-import geometry.Point3D;
+import science.geometry.Point3D;
 import ordering.Ordering;
 import exceptions.TypeException;
 import Math.*;
@@ -50,7 +50,7 @@ class ColorTools {
         return new MonoColor(floor((color.r + color.g + color.b) / 3));
     }
 
-    public static function toPoint3D<T:Color>(color:T):Point3D {
+    public static function toPoint3D<T:Color>(color:T):Point3D<Int> {
         return new Point3D(color.r, color.g, color.b);
     }
 

@@ -1,6 +1,6 @@
 package trik.robot.display;
 
-import geometry.Point;
+import science.geometry.Point;
 import exceptions.ValueException;
 
 

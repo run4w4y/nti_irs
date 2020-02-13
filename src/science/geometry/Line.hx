@@ -1,8 +1,7 @@
-package geometry;
+package science.geometry;
 
-import geometry.exceptions.SamePointException;
-import geometry.PointLike;
-import geometry.Point;
+import science.geometry.exceptions.SamePointException;
+import science.geometry.Point;
 import Math.*;
 
 
@@ -10,15 +9,15 @@ class Line {
     public var a:Float;
     public var b:Float;
     public var c:Float;
-    public var point1:Point;
-    public var point2:Point;
+    public var point1:Point<Float>;
+    public var point2:Point<Float>;
 
-    public function new<T:PointLike>(pointLike1:T, pointLike2:T) {
+    public function new<T:Float>(pointLike1:Point<T>, pointLike2:Point<T>) {
         if (abs(pointLike1.x - pointLike2.x) <= 1e-6 && abs(pointLike1.y - pointLike2.y) <= 1e-6) 
             throw new SamePointException('cant define a line with two same points');
         
-        this.point1 = new Point(pointLike1.x, pointLike1.y);
-        this.point2 = new Point(pointLike2.x, pointLike2.y);
+        this.point1 = new Point<Float>(pointLike1.x, pointLike1.y);
+        this.point2 = new Point<Float>(pointLike2.x, pointLike2.y);
 
         a = pointLike1.y - pointLike2.y;
         b = pointLike2.x - pointLike1.x;
@@ -26,23 +25,23 @@ class Line {
     }
 
     public function moveX(value:Float):Line {
-        var delta = new Point(value, 0);
+        var delta = new Point<Float>(value, 0);
         return new Line(
-            point1.add(delta),
-            point2.add(delta)
+            point1 + delta,
+            point2 + delta
         );
     }
 
     public function moveY(value:Float):Line {
-        var delta = new Point(0, value);
+        var delta = new Point<Float>(0, value);
         return new Line(
-            point1.add(delta),
-            point2.add(delta)
+            point1 + delta,
+            point2 + delta
         );
     }
 
     public function moveXY(valueX:Float, valueY:Float):Line {
-        var delta = new Point(valueX, valueY);
+        var delta = new Point<Float>(valueX, valueY);
         return new Line(
             point1.add(delta),
             point2.add(delta)
@@ -57,12 +56,12 @@ class Line {
         return -(a*x + c)/b;
     }
 
-    public function getPointX(x:Float):Point {
-        return new Point(x, getY(x));
+    public function getPointX(x:Float):Point<Float> {
+        return new Point<Float>(x, getY(x));
     }
 
-    public function getPointY(y:Float):Point {
-        return new Point(getX(y), y);
+    public function getPointY(y:Float):Point<Float> {
+        return new Point<Float>(getX(y), y);
     }
 
     public function toString():String {
