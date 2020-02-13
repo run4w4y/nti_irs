@@ -6,7 +6,7 @@ import trik.Script;
 import trik.Brick;
 import trik.robot.sensor.Sensor;
 import time.Time;
-import trik.robot.display.Pixel;
+import image.Pixel;
 import Math.*;
 import app.artagDecoder.ArtagDecoder;
 import color.HexColor;

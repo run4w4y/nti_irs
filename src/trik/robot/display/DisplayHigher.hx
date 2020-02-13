@@ -1,9 +1,9 @@
 package trik.robot.display;
 
 import trik.robot.display.Display;
-import trik.robot.display.Pixel;
+import image.Pixel;
 import trik.robot.display.Rectangle;
-import trik.robot.display.Line;
+import science.geometry.Line;
 import color.LiteralColor;
 
 
@@ -26,7 +26,9 @@ abstract DisplayHigher(Display) {
     }
 
     public function drawLine(line:Line):Void {
-        this.drawLine(line.first.x, line.first.y, line.second.x, line.second.y);
+        var p1 = line.point1.round();
+        var p2 = line.point2.round();
+        this.drawLine(p1.x, p1.y, p2.x, p2.y);
     }
 
     public function drawPixel(pixel:Pixel):Void {
