@@ -1,9 +1,11 @@
-package science.signal;
+package science.signal.filter;
 
 import exceptions.ValueException;
-import science.Matrix;
+import science.matrix.Matrix;
+import range.Range;
 
 using science.ScientificTools;
+using science.matrix.MatrixTools;
 
 
 class Filtering {
@@ -18,6 +20,14 @@ class Filtering {
 
     public static function medianFilter2d<T:Float>(values:Matrix<T>, ?windowSize:Int=7):Matrix<Float> {
         var res:Matrix<Float> = [];
+
+        var wh:Int = Math.ceil(windowSize / 2) - 1;
+        for (i in new Range(0, values.height).slice_(wh, -wh)) {
+            var tmp:Array<Float> = [];
+            for (j in new Range(0, values.width).slice_(wh, -wh))
+                tmp.push(values.submatrix(j - wh, i - wh, j + wh + 1, i + wh + 1).median2d());
+            res.push(tmp);
+        }
         
         return res;
     }
