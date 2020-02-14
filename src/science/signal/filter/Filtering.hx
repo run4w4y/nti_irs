@@ -3,6 +3,7 @@ package science.signal.filter;
 import exceptions.ValueException;
 import science.matrix.Matrix;
 import ds.Range;
+import science.signal.convolve.Convolution;
 
 using science.ScientificTools;
 using science.matrix.MatrixTools;
@@ -30,5 +31,9 @@ class Filtering {
         }
         
         return res;
+    }
+
+    public static function movingAverage<T:Float>(values:Array<T>, ?windowSize:Int=3):Array<Float> {
+        return Convolution.convolve1d(values, [for (_ in 0...windowSize) 1 / windowSize], Valid);
     }
 }
