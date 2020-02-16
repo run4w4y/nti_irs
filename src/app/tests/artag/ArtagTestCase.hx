@@ -96,13 +96,20 @@ class ArtagTestCase extends Test {
         return markerToString(artag.marker);
     }
 
+    function writeFile(path:String, str:String):Void {
+        var f = sys.io.File.write(path);
+        f.writeString(str);
+        f.close();
+    }
+
     public function testMarkers():Void {
         trace('Running artag tests.');
         for (test in tests) {
             trace('Running test "${test.testname}"');
             var artag = new Artag(test.input, false, test.size);
 
-            sys.io.File.write('$testsDir/out/${test.testname}.binimg').writeString(
+            writeFile(
+                '$testsDir/out/${test.testname}.binimg',
                 haxe.Json.stringify(artag.image.map(
                     function(array:Array<BinaryColor>) return array.map(
                         function(color:BinaryColor) return toMono(color).value
@@ -119,8 +126,14 @@ class ArtagTestCase extends Test {
                     plotOut += getPixelString(j.rightBottom);
                 }
 
-            sys.io.File.write('$testsDir/out/${test.testname}.grid').writeString(plotOut);
-            sys.io.File.write('$testsDir/out/${test.testname}.marker').writeString(markerToString(artag.marker));
+            writeFile(
+                '$testsDir/out/${test.testname}.grid', 
+                plotOut
+            );
+            writeFile(
+                '$testsDir/out/${test.testname}.marker', 
+                markerToString(artag.marker)
+            );
 
             Assert.isTrue(artag.checkMarker());
             Assert.equals(test.result.trim(), artagResult(artag));
