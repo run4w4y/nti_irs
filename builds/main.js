@@ -193,7 +193,7 @@ app_artagDecoder__$ArtagDecoder_ArtagDecoder_$Impl_$.binaryToInt = function(this
 	var res = 0;
 	var cur = 1;
 	var _g = 0;
-	var _g1 = range__$Range_Range_$Impl_$._new(str.length - 1,-1);
+	var _g1 = ds__$Range_Range_$Impl_$._new(str.length - 1,-1);
 	while(_g < _g1.length) {
 		var i = _g1[_g];
 		++_g;
@@ -763,6 +763,65 @@ color_RGB24Color.prototype = $extend(color_BaseColor.prototype,{
 	}
 	,__class__: color_RGB24Color
 });
+var ds__$HashMap_HashMap_$Impl_$ = {};
+ds__$HashMap_HashMap_$Impl_$.__name__ = true;
+ds__$HashMap_HashMap_$Impl_$._new = function() {
+	var this1 = new haxe_ds_StringMap();
+	return this1;
+};
+ds__$HashMap_HashMap_$Impl_$.get = function(this1,key) {
+	var key1 = Std.string(key);
+	return __map_reserved[key1] != null ? this1.getReserved(key1) : this1.h[key1];
+};
+ds__$HashMap_HashMap_$Impl_$.set = function(this1,key,val) {
+	var key1 = Std.string(key);
+	if(__map_reserved[key1] != null) {
+		this1.setReserved(key1,val);
+	} else {
+		this1.h[key1] = val;
+	}
+	return val;
+};
+var ds_Ordering = $hxEnums["ds.Ordering"] = { __ename__ : true, __constructs__ : ["EQ","GT","LT"]
+	,EQ: {_hx_index:0,__enum__:"ds.Ordering",toString:$estr}
+	,GT: {_hx_index:1,__enum__:"ds.Ordering",toString:$estr}
+	,LT: {_hx_index:2,__enum__:"ds.Ordering",toString:$estr}
+};
+var ds_Pair = function(first,second) {
+	this.first = first;
+	this.second = second;
+};
+ds_Pair.__name__ = true;
+ds_Pair.prototype = {
+	toString: function() {
+		return "{" + Std.string(this.first) + ", " + Std.string(this.second) + "}";
+	}
+	,__class__: ds_Pair
+};
+var ds__$Range_Range_$Impl_$ = {};
+ds__$Range_Range_$Impl_$.__name__ = true;
+ds__$Range_Range_$Impl_$._new = function(start,end,step) {
+	if(step == null) {
+		if(start < end) {
+			step = 1;
+		} else {
+			step = -1;
+		}
+	} else if(start < end && step < 0) {
+		throw new js__$Boot_HaxeError(new exceptions_ValueException("start is smaller than end and step is negative"));
+	} else if(start > end && step > 0) {
+		throw new js__$Boot_HaxeError(new exceptions_ValueException("start is bigger than end and step is positive"));
+	} else if(step == 0) {
+		throw new js__$Boot_HaxeError(new exceptions_ValueException("step cant be zero"));
+	}
+	var this1 = [start];
+	if(start < end) {
+		while(start + step < end) this1.push(start += step);
+	} else {
+		while(start + step > end) this1.push(start += step);
+	}
+	return this1;
+};
 var exceptions_IndexException = function(errorMessage) {
 	exceptions_BaseException.call(this,errorMessage);
 };
@@ -793,10 +852,10 @@ var graph_Direction = $hxEnums["graph.Direction"] = { __ename__ : true, __constr
 	,Undefined: {_hx_index:4,__enum__:"graph.Direction",toString:$estr}
 };
 var graph_Labyrinth = function(n,m,walls) {
-	this.used = hashmap__$HashMap_HashMap_$Impl_$._new();
+	this.used = ds__$HashMap_HashMap_$Impl_$._new();
 	this.nodes = [];
-	this.previousTurn = hashmap__$HashMap_HashMap_$Impl_$._new();
-	this.allowedDirections = hashmap__$HashMap_HashMap_$Impl_$._new();
+	this.previousTurn = ds__$HashMap_HashMap_$Impl_$._new();
+	this.allowedDirections = ds__$HashMap_HashMap_$Impl_$._new();
 	walls = tools_NullTools.coalesce(walls,[]);
 	this.rows = n;
 	this.cols = m;
@@ -943,7 +1002,7 @@ var graph_Labyrinth = function(n,m,walls) {
 graph_Labyrinth.__name__ = true;
 graph_Labyrinth.prototype = {
 	bfs: function(nodeStart) {
-		var used = hashmap__$HashMap_HashMap_$Impl_$._new();
+		var used = ds__$HashMap_HashMap_$Impl_$._new();
 		var _g = 0;
 		var _g1 = this.nodes;
 		while(_g < _g1.length) {
@@ -1078,7 +1137,7 @@ graph_Labyrinth.prototype = {
 	,path: function(nodeFrom,nodeTo) {
 		var currentPath = [];
 		var this1 = this.previousTurn;
-		var val = hashmap__$HashMap_HashMap_$Impl_$._new();
+		var val = ds__$HashMap_HashMap_$Impl_$._new();
 		var key = Std.string(nodeFrom);
 		var _this = this1;
 		if(__map_reserved[key] != null) {
@@ -1271,7 +1330,7 @@ graph_Labyrinth.prototype = {
 		}
 		var addToRow = js_Boot.__cast(Math.abs(minRow) , Int);
 		var addToCol = js_Boot.__cast(Math.abs(minCol) , Int);
-		var tmpAllowed = hashmap__$HashMap_HashMap_$Impl_$._new();
+		var tmpAllowed = ds__$HashMap_HashMap_$Impl_$._new();
 		var tmpNodes = [];
 		var _g2 = 0;
 		var _g3 = this.nodes;
@@ -1363,25 +1422,6 @@ graph_Node.prototype = {
 		return "Node(" + this.row + ", " + this.col + ", " + Std.string(this.direction) + ")";
 	}
 	,__class__: graph_Node
-};
-var hashmap__$HashMap_HashMap_$Impl_$ = {};
-hashmap__$HashMap_HashMap_$Impl_$.__name__ = true;
-hashmap__$HashMap_HashMap_$Impl_$._new = function() {
-	var this1 = new haxe_ds_StringMap();
-	return this1;
-};
-hashmap__$HashMap_HashMap_$Impl_$.get = function(this1,key) {
-	var key1 = Std.string(key);
-	return __map_reserved[key1] != null ? this1.getReserved(key1) : this1.h[key1];
-};
-hashmap__$HashMap_HashMap_$Impl_$.set = function(this1,key,val) {
-	var key1 = Std.string(key);
-	if(__map_reserved[key1] != null) {
-		this1.setReserved(key1,val);
-	} else {
-		this1.h[key1] = val;
-	}
-	return val;
 };
 var haxe_IMap = function() { };
 haxe_IMap.__name__ = true;
@@ -2144,22 +2184,6 @@ movementExecutor_exceptions_MovementException.prototype = $extend(exceptions_Bas
 	}
 	,__class__: movementExecutor_exceptions_MovementException
 });
-var ordering_Ordering = $hxEnums["ordering.Ordering"] = { __ename__ : true, __constructs__ : ["EQ","GT","LT"]
-	,EQ: {_hx_index:0,__enum__:"ordering.Ordering",toString:$estr}
-	,GT: {_hx_index:1,__enum__:"ordering.Ordering",toString:$estr}
-	,LT: {_hx_index:2,__enum__:"ordering.Ordering",toString:$estr}
-};
-var pair_Pair = function(first,second) {
-	this.first = first;
-	this.second = second;
-};
-pair_Pair.__name__ = true;
-pair_Pair.prototype = {
-	toString: function() {
-		return "{" + Std.string(this.first) + ", " + Std.string(this.second) + "}";
-	}
-	,__class__: pair_Pair
-};
 var pid_PID = function(interval,min,max,ks) {
 	this.integral = 0;
 	this.prevError = 0;
@@ -3793,6 +3817,8 @@ polygonal_ds_Printf.pad = function(s,l,type,dir) {
 		}
 	}
 };
+polygonal_ds_Printf.roundTo = function(x,y) return Math.round(x / y) * y;
+polygonal_ds_Printf.iabs = function(x) return x < 0 ? -x : x;
 var polygonal_ds_PrintfError = function(message) {
 	this.message = message;
 };
@@ -4202,30 +4228,6 @@ polygonal_ds_tools_Shuffle.setRandom = function(f) {
 polygonal_ds_tools_Shuffle.frand = function() {
 	return polygonal_ds_tools_Shuffle._f();
 };
-var range__$Range_Range_$Impl_$ = {};
-range__$Range_Range_$Impl_$.__name__ = true;
-range__$Range_Range_$Impl_$._new = function(start,end,step) {
-	if(step == null) {
-		if(start < end) {
-			step = 1;
-		} else {
-			step = -1;
-		}
-	} else if(start < end && step < 0) {
-		throw new js__$Boot_HaxeError(new exceptions_ValueException("start is smaller than end and step is negative"));
-	} else if(start > end && step > 0) {
-		throw new js__$Boot_HaxeError(new exceptions_ValueException("start is bigger than end and step is positive"));
-	} else if(step == 0) {
-		throw new js__$Boot_HaxeError(new exceptions_ValueException("step cant be zero"));
-	}
-	var this1 = [start];
-	if(start < end) {
-		while(start + step < end) this1.push(start += step);
-	} else {
-		while(start + step > end) this1.push(start += step);
-	}
-	return this1;
-};
 var robotModel_Environment = $hxEnums["robotModel.Environment"] = { __ename__ : true, __constructs__ : ["Real","Simulator"]
 	,Real: {_hx_index:0,__enum__:"robotModel.Environment",toString:$estr}
 	,Simulator: {_hx_index:1,__enum__:"robotModel.Environment",toString:$estr}
@@ -4376,7 +4378,7 @@ science_ScientificTools.slice_ = function(a,start,end,step) {
 	if(start == null) {
 		start = 0;
 	}
-	var _this = range__$Range_Range_$Impl_$._new(start < 0 ? a.length + start : start,end < 0 ? a.length + end : tools_NullTools.coalesce(end,a.length),step);
+	var _this = ds__$Range_Range_$Impl_$._new(start < 0 ? a.length + start : start,end < 0 ? a.length + end : tools_NullTools.coalesce(end,a.length),step);
 	var result = new Array(_this.length);
 	var _g = 0;
 	var _g1 = _this.length;
@@ -4453,7 +4455,7 @@ science_geometry__$Point_Point_$Impl_$.set_y = function(this1,value) {
 	return this1.second = value;
 };
 science_geometry__$Point_Point_$Impl_$._new = function(x,y) {
-	var this1 = new pair_Pair(x,y);
+	var this1 = new ds_Pair(x,y);
 	return this1;
 };
 science_geometry__$Point_Point_$Impl_$.round = function(this1) {
@@ -4580,7 +4582,7 @@ science_matrix_MatrixTools.__name__ = true;
 science_matrix_MatrixTools.rotateRight = function(m) {
 	var res = science_matrix__$Matrix_Matrix_$Impl_$._new();
 	var _g = 0;
-	var _g1 = range__$Range_Range_$Impl_$._new(m[0].length - 1,-1);
+	var _g1 = ds__$Range_Range_$Impl_$._new(m[0].length - 1,-1);
 	while(_g < _g1.length) {
 		var i = _g1[_g];
 		++_g;
@@ -4603,7 +4605,7 @@ science_matrix_MatrixTools.rotateLeft = function(m) {
 		var i = _g++;
 		var tmp = [];
 		var _g2 = 0;
-		var _g11 = range__$Range_Range_$Impl_$._new(m.length - 1,-1);
+		var _g11 = ds__$Range_Range_$Impl_$._new(m.length - 1,-1);
 		while(_g2 < _g11.length) {
 			var j = _g11[_g2];
 			++_g2;
@@ -4669,12 +4671,12 @@ tools_ColorTools.compareMono = function(color1,color2,threshold) {
 		threshold = 0;
 	}
 	if(color1.value < color2.value) {
-		return ordering_Ordering.LT;
+		return ds_Ordering.LT;
 	}
 	if(color1.value > color2.value) {
-		return ordering_Ordering.GT;
+		return ds_Ordering.GT;
 	}
-	return ordering_Ordering.EQ;
+	return ds_Ordering.EQ;
 };
 tools_ColorTools.compare = function(color1,color2,threshold) {
 	if(threshold == null) {
@@ -4746,7 +4748,7 @@ tools_ImageTools.findDarkestColor = function(image) {
 		while(_g1 < i1.length) {
 			var j = i1[_g1];
 			++_g1;
-			if(tools_ColorTools.compareMono(tools_ColorTools.toMono(j),tools_ColorTools.toMono(darkestColor)) == ordering_Ordering.LT) {
+			if(tools_ColorTools.compareMono(tools_ColorTools.toMono(j),tools_ColorTools.toMono(darkestColor)) == ds_Ordering.LT) {
 				darkestColor = j;
 			}
 		}
@@ -4815,7 +4817,7 @@ tools_ImageTools.findCorners = function(image1,color1) {
 		}
 	}
 	var _g2 = 0;
-	var _g3 = range__$Range_Range_$Impl_$._new(width - 1,-1);
+	var _g3 = ds__$Range_Range_$Impl_$._new(width - 1,-1);
 	while(_g2 < _g3.length) {
 		var k1 = _g3[_g2];
 		++_g2;
@@ -4834,7 +4836,7 @@ tools_ImageTools.findCorners = function(image1,color1) {
 		}
 	}
 	var _g4 = 0;
-	var _g5 = range__$Range_Range_$Impl_$._new(width - 1,-1);
+	var _g5 = ds__$Range_Range_$Impl_$._new(width - 1,-1);
 	while(_g4 < _g5.length) {
 		var k2 = _g5[_g4];
 		++_g4;
@@ -4950,13 +4952,13 @@ tools_ImageTools.downscale = function(image1,squareSize,repeat) {
 	var height = image1.length;
 	var res = [];
 	var _g = 0;
-	var _g1 = range__$Range_Range_$Impl_$._new(0,height,squareSize);
+	var _g1 = ds__$Range_Range_$Impl_$._new(0,height,squareSize);
 	while(_g < _g1.length) {
 		var i = _g1[_g];
 		++_g;
 		var newLine = [];
 		var _g11 = 0;
-		var _g2 = range__$Range_Range_$Impl_$._new(0,width,squareSize);
+		var _g2 = ds__$Range_Range_$Impl_$._new(0,width,squareSize);
 		while(_g11 < _g2.length) {
 			var j = _g2[_g11];
 			++_g11;

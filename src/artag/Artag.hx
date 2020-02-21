@@ -146,6 +146,7 @@ class Artag {
         @param image image from which artag marker need to be read
         @param checkFlag if true then ArtagException will be thrown in case marker isn't valid
         @param markerSize the expected size of marker on the image
+        @throws ArtagException in case checkFlag is true and read marker was not valid
     **/
     public function new<C:Color>( image:Image<C>, ?checkFlag:Bool=true, ?markerSize:Int = 5 ) {
         this.markerSize = markerSize;
