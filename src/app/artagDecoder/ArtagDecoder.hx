@@ -5,7 +5,15 @@ import color.BinaryColor;
 import ds.Range;
 
 
+/**
+    Class for decoding the artag marker. Note: to read the artag marker from image use Artag class.
+**/
 abstract ArtagDecoder(Artag) {
+    /**
+        Class constructor.
+
+        @param artag artag which needs to be decoded.
+    **/
     public function new(artag:Artag):Void {
         this = artag;
     }
@@ -26,6 +34,11 @@ abstract ArtagDecoder(Artag) {
         return if (color.value) 1 else 0;
     }
 
+    /**
+        Get the value decoded from artag marker.
+
+        @returns value encoded in artag marker
+    **/
     public function read():Int {
         return binaryToInt(
             Std.string(colorToDigit(this.marker[1][2])) + 
