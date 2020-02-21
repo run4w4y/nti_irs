@@ -1,21 +1,17 @@
 package angle;
 
-class Angle {
-    public var value:Float;
-
+abstract Angle(Float) from Float to Float {
     public function new(value:Float) {
-        this.value = (360 + value) % 360;
+        this = (360 + value) % 360;
     }
 
-    public function add(angle:Float):Angle {
-        return new Angle(this.value + angle);
+    @:op(A + B)
+    public function add(angle:Angle):Angle {
+        return new Angle(this + cast(angle, Float));
     }
 
+    @:op(A - B)
     public function getDelta(angle:Angle):Float {
-        return (this.value - angle.value + 900) % 360 - 180;
-    }
-
-    public function toString():String {
-        return 'Angle($value)';
+        return (this - cast(angle, Float) + 900) % 360 - 180;
     }
 }

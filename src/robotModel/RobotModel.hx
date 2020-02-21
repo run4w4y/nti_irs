@@ -75,7 +75,7 @@ class RobotModel {
             ki: 0.0001
         };
         move(speed, currentDirection, readGyro, function(value, setpoint) {
-                return value.getDelta(setpoint);
+                return value - setpoint;
             }, 
             if (coefficients == null) defaults else coefficients, 
             condition, interval
@@ -83,9 +83,9 @@ class RobotModel {
     }
 
     function turnSimulator(angle:Float):Void {
-        currentDirection = currentDirection.add(angle);
+        currentDirection = currentDirection + angle;
         moveGyro(0, function() {
-                return abs(currentDirection.getDelta(readGyro())) > 1;
+                return abs(currentDirection - readGyro()) > 1;
             }, Seconds(0.01), {kp: 1 }
         );
         stop(Seconds(0.1));
