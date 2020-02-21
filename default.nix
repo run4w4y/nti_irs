@@ -20,6 +20,7 @@ mkShell {
         [ 
             git 
             haxe
+            neko
         ];
     shellHook = 
         ''
