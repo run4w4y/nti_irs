@@ -20,17 +20,28 @@ using science.matrix.MatrixTools;
 
 typedef Cells = Matrix<Corners>;
 
+/**
+    Class for reading artag markers from pictures. Note: to decode the marker use ArtagDecoder class.
+**/
 class Artag {
-    public var image:Image<BinaryColor>;
+    // this var is public for debug/testing purposes
+    @:dox(hide) public var image:Image<BinaryColor>;
+    /**
+        Field for storing corners found on the image.
+    **/
     public var corners:Corners;
     var markerSize:Int;
+    /**
+        Marker read from the image.
+    **/
     public var marker:Image<BinaryColor>;
-    public var leftLine:Line;
-    public var rightLine:Line;
-    public var topLine:Line;
-    public var bottomLine:Line;
-    public var verticalLines:Array<Line>;
-    public var horizontalLines:Array<Line>;
+    // the following vars are public for debug/testing purposes
+    @:dox(hide) public var leftLine:Line;
+    @:dox(hide) public var rightLine:Line;
+    @:dox(hide) public var topLine:Line;
+    @:dox(hide) public var bottomLine:Line;
+    @:dox(hide) public var verticalLines:Array<Line>;
+    @:dox(hide) public var horizontalLines:Array<Line>;
 
     function invY<T:Float>(p:Point<T>):Point<T> {
         return new Point<T>(p.x, -p.y);
@@ -40,6 +51,8 @@ class Artag {
         return image.toBinary(20).erode();
     }
 
+    // the following function is public for debug purposes as well
+    @:dox(hide)
     public function getCells():Cells {
         var res:Cells = [];
         
@@ -100,6 +113,11 @@ class Artag {
         return !marker[markerSize - 2][markerSize - 2].value;
     }
 
+    /**
+        Checks if the marker found on the image is valid.
+
+        @returns true if marker is valid, false otherwise
+    **/
     public function checkMarker():Bool {
         for (i in 0...markerSize)
             if (
@@ -122,6 +140,13 @@ class Artag {
         }
     }
 
+    /**
+        Class constructor.
+
+        @param image image from which artag marker need to be read
+        @param checkFlag if true then ArtagException will be thrown in case marker isn't valid
+        @param markerSize the expected size of marker on the image
+    **/
     public function new<C:Color>( image:Image<C>, ?checkFlag:Bool=true, ?markerSize:Int = 5 ) {
         this.markerSize = markerSize;
         this.image = filter(image);
