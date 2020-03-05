@@ -24,7 +24,10 @@ using tools.ColorTools;
 using tools.TimeTools;
 using StringTools;
 
-
+/**
+    Type used for objects that are passed as arguments for the FinalModel class constructor. 
+    Motors, sensor and all the other stuff must be passed like this.
+**/
 typedef FinalArguments = ModelArguments & {
     frontSensor:Sensor,
     leftSensor:Sensor,
@@ -32,6 +35,9 @@ typedef FinalArguments = ModelArguments & {
     cellSize:Float
 }
 
+/**
+    Class for defining the robot model used in the task. All the stuff with sensors is done in here.
+**/
 class FinalModel extends RobotModel {
     var frontSensor :Sensor;
     var leftSensor  :Sensor;
@@ -39,6 +45,11 @@ class FinalModel extends RobotModel {
     var cellSize    :Float;
     var frontDist   = 25;
 
+    /**
+        Class constructor. Takes an object defined by FinalArguments as its only argument.
+
+        @param args object with arguments defined by FinalArguments type.
+    **/
     public function new(args:FinalArguments):Void {
         super(args);
         this.frontSensor = args.frontSensor;
@@ -117,6 +128,10 @@ class FinalModel extends RobotModel {
         stop(Seconds(0.1));
     }
 
+
+    /**
+        Function in which the solution algorithm must be defined.
+    **/
     public function solution():Void {
         goEnc(150);
 
