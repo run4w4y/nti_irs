@@ -16,6 +16,13 @@ haxe build.hxml
 nix-shell --pure
 ```
 
+## Tips
+You might want to use `xclip` CLI tool, to copy and paste code in the TRIK Studio faster. Example usage:
+```bash
+xclip -sel cli < builds/main.js
+```
+This command copies the contents of `result/build.js` to your clipboard.
+
 # Working on Windows/without nix
 ## Configuring haxelib
 ```bash
@@ -31,13 +38,6 @@ Tests dependencies:
 ```bash
 haxelib install test.hxml
 ```
-
-## Tips
-You might want to use `xclip` CLI tool, to copy and paste code in the TRIK Studio faster. Example usage:
-```bash
-xclip -sel cli < builds/main.js
-```
-This command copies the contents of `result/build.js` to your clipboard.
 
 # Second stage solutions
 You can find our team solutions for the second stage online tasks in the `archive` folder. 
