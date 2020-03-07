@@ -2,3 +2,4 @@ vscode-project.hxml
 lib
 .vscode
 result
+.haxelib
