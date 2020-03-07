@@ -1,19 +1,3 @@
-# Working on Windows/without nix
-## Configuring haxelib
-```bash
-haxelib setup ./lib
-```
-
-## Installing dependencies
-Build dependencies:
-```bash
-haxelib install build.hxml
-```
-Tests dependencies:
-```bash
-haxelib install test.hxml
-```
-
 # Building the code
 ## With nix
 ```bash
@@ -30,6 +14,22 @@ haxe build.hxml
 ## Entering nix-shell
 ```bash
 nix-shell --pure
+```
+
+# Working on Windows/without nix
+## Configuring haxelib
+```bash
+haxelib setup ./lib
+```
+
+## Installing dependencies
+Build dependencies:
+```bash
+haxelib install build.hxml
+```
+Tests dependencies:
+```bash
+haxelib install test.hxml
 ```
 
 ## Tips
