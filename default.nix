@@ -21,7 +21,7 @@ pkgs.stdenv.mkDerivation {
         haxelib setup ./lib --quiet
         haxelib dev polygonal-ds ${haxePackages.polygonal-ds} --quiet
         rm -rf build.js
-        haxe -cp src -D js-es=3 -js build.js -main app.main.Main -lib polygonal-ds
+        haxe build.hxml
         mkdir -p $out
         mv build.js $out 
     '';
