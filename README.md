@@ -16,6 +16,11 @@ haxe build.hxml
 nix-shell --pure
 ```
 
+## Run unit tests
+```bash
+haxe test.hxml
+```
+
 ## Tips
 You might want to use `xclip` CLI tool, to copy and paste code in the TRIK Studio faster. Example usage:
 ```bash
