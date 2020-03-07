@@ -9,6 +9,9 @@ import constraints.Constraints.*;
 using tools.NullTools;
 
 
+/**
+    Class used to store colors using HSV color model.
+**/
 class HSVColor extends BaseColor {
     public var h:Float;
     public var s:Float;
@@ -58,6 +61,13 @@ class HSVColor extends BaseColor {
         });
     }
     
+    /**
+        Class constructor.
+
+        @param h h value of the color
+        @param s s value of the color
+        @param v v value of the color
+    **/
     public function new(h:Float, s:Float, v:Float):Void {
         checkRange(h, 0, 360);
         checkRange(s, 0, 1);
