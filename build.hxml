@@ -1,5 +1,5 @@
 -cp src
 -D js-es=3
--js builds/main.js
+-js build.js
 -main app.main.Main 
 -lib polygonal-ds
