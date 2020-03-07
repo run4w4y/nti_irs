@@ -17,6 +17,11 @@ nix-shell --pure
 ```
 
 ## Run unit tests
+### With nix
+```bash
+haxe test.hxml
+```
+### Without nix/within nix-shell
 ```bash
 haxe test.hxml
 ```
