@@ -1,3 +1,5 @@
+[![Actions Status](https://github.com/run4w4y/nti_irs/workflows/CI/badge.svg)](https://github.com/run4w4y/nti_irs/actions)
+
 # Building the code
 ## With nix
 ```bash
