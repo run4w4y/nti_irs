@@ -5,8 +5,8 @@ with rec {
         (import pkgsPath {}).fetchFromGitHub {
             owner = "run4w4y";
             repo = "haxe4nix";
-            rev = "657b8eb6bd6c783d25956c47957007a5cbc7d38b";
-            sha256 = "14mgqrjknihw3qygmkn8n0kyh58qpgarfdjx6silk4ywz0jm6x7a";
+            rev = "caf2123e19d4252c3d4510470afcf4a8820404d1";
+            sha256 = "1f7nh7s9nsa7z428w41i7hmxzbyzh7d553m9pshm4yv9xphh3vdn";
         };
     pkgsOverlay = 
         import "${haxe4nix}/nixpkgs-overlay";
