@@ -1,6 +1,5 @@
 package ds;
 
-using tools.NullTools;
 using science.ScientificTools;
 
 
@@ -18,6 +17,17 @@ abstract Bitset(Array<Bool>) from Array<Bool> to Array<Bool> {
     @:to
     public function toIntArray():Array<Int> {
         return [for (i in this) if (i) 1 else 0];
+    }
+
+    @:from
+    public static function fromInt(n:Int):Bitset {
+        var l = Std.int(Math.log(n) / Math.log(2)) + 1;
+        return [for (i in 0...l) (n >> (l - 1 - i)) & 1];
+    }
+
+    @:to
+    public function toInt():Int {
+        return [for (i in 0...this.length) if (this[i]) Std.int(Math.pow(2, this.length - i - 1)) else 0].sum();
     }
 
     static function isPowerOfTwo(n:Int):Bool {
