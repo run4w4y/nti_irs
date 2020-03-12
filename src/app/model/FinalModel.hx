@@ -58,40 +58,6 @@ class FinalModel extends RobotModel {
         this.cellSize    = args.cellSize;
     }
 
-    function stringToImage(str:String):Image<RGBColor> {
-        var w = 160;
-        var h = 120;
-        var contents = str.trim().split(' ');
-        var res:Array<Array<RGBColor>> = [];
-
-        for (i in 0...h) {
-            var tmp:Array<RGBColor> = [];
-            for (j in 0...w) {
-                var curIndex = w * i + j;
-                if (contents[curIndex] != null)
-                    tmp.push(new HexColor(contents[curIndex]).toRGB()); 
-            }
-            res.push(tmp);
-        }
-
-        return new Image<RGBColor>(res);
-    }
-
-    function getDestination():{x:Int, y:Int} {
-        var lines = Script.readAll('input.txt');
-        var first = new ArtagDecoder(
-            new Artag(stringToImage(lines[0]))
-        ).read();
-        var second = new ArtagDecoder(
-            new Artag(stringToImage(lines[1]))
-        ).read();
-
-        return if (first < 8) 
-                {x: first, y: second - 8} 
-            else 
-                {x: second, y: first - 8};
-    }
-
     function checkLeft():Bool { // is there anything to the left
         return leftSensor.read() <= 70;
     }
@@ -128,40 +94,10 @@ class FinalModel extends RobotModel {
         stop(Seconds(0.1));
     }
 
-
     /**
         Function in which the solution algorithm must be defined.
     **/
     public function solution():Void {
-        goEnc(150);
-
-        var cellEnc = round(cellSize / (wheelRadius * 2 * PI) * 360 / 10.45);
-        var dest = getDestination();
-        Script.print('${dest.x} ${dest.y}');
-        var executor = new MovementExecutor(
-            function (val:Int) { 
-                turn(val); 
-                align(); 
-            },
-            function () { 
-                goEnc(cellEnc); 
-                align(); 
-            } 
-        );
-        
-        var lab = new Labyrinth(8, 8);
-        var startNode = lab.localizeUndefined(
-            Right, 
-            executor,
-            checkLeft,
-            checkRight,
-            checkFront
-        );
-
-        for (move in lab.getPath(startNode, new Node(dest.y, dest.x)))
-            executor.add(move);
-        executor.execute();
-
-        Brick.display.addLabel('finish', new Pixel(0, 0));
+        Brick.display.addLabel('solution', new Pixel(0, 0));
     }
 }
