@@ -3,6 +3,10 @@ package app.artagDecoder;
 import artag.Artag;
 import color.BinaryColor;
 import ds.Range;
+import ds.Bitset;
+import movementExecutor.Movement;
+
+using science.ScientificTools;
 
 
 /**
@@ -18,20 +22,22 @@ abstract ArtagDecoder(Artag) {
         this = artag;
     }
 
-    function binaryToInt(str:String):Int {
-        var res = 0;
-        var cur = 1;
+    /**
+        Get raw bits read from artag marker
 
-        for (i in new Range(str.length - 1, -1)) {
-            res += Std.parseInt(str.charAt(i)) * cur;
-            cur *= 2;
-        }
-
-        return res;
-    }
-
-    function colorToDigit(color:BinaryColor):Int {
-        return if (color.value) 1 else 0;
+        @returns raw bits from the marker
+    **/
+    public function readRaw():Bitset {
+        var res = [];
+        trace(this.marker);
+        for (i in 1...this.marker.height - 1)
+            res = res.concat(
+                if (i == 1 || i == this.marker.height - 2)
+                    this.marker[i].slice(2, this.marker.width - 2)
+                else
+                    this.marker[i].slice(1, this.marker.width - 1)
+            );
+        return res.map(function (a) return a.value);
     }
 
     /**
@@ -39,12 +45,15 @@ abstract ArtagDecoder(Artag) {
 
         @returns value encoded in artag marker
     **/
-    public function read():Int {
-        return binaryToInt(
-            Std.string(colorToDigit(this.marker[1][2])) + 
-            Std.string(colorToDigit(this.marker[2][1])) + 
-            Std.string(colorToDigit(this.marker[2][3])) + 
-            Std.string(colorToDigit(this.marker[3][2]))
-        );
+    public function read():Array<Movement> {
+        var b:Array<Bitset> = readRaw().decodeHamming().chunks(2);
+        return [for (i in b) i.toInt()].map(function (a) {
+            return switch (a) {
+                case 0: Undefined;
+                case 1: TurnLeft;
+                case 2: TurnRight;
+                case _: Go;
+            }
+        });
     }
 }
