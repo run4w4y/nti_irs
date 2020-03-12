@@ -136,4 +136,8 @@ class ScientificTools {
             res += i;
         return res;
     }
+
+    public static function chunks<T>(array:Array<T>, ?chunkSize:Int=1):Array<Array<T>> {
+        return new Range(0, array.length, chunkSize).map(function (i) return array.slice(i, i + chunkSize));
+    }
 }
