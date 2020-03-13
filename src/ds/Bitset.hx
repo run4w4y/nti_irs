@@ -37,13 +37,13 @@ abstract Bitset(Array<Bool>) from Array<Bool> to Array<Bool> {
     }
 
     static function getBits(n:Int, seq:Bitset):Bitset {
-        var res = [];
-        var indexId = n - 1;
-
-        while (indexId < seq.length) {
-            res = res.concat(seq.slice(indexId, indexId + cast(Math.min(n, seq.length - indexId), Int)));
-            indexId += 2 * n;
-        }
+        var res:Bitset = [];
+        
+        var t:Array<Bitset> = seq.slice_(n).chunks(n);
+        for (i in 0...t.length)
+            if (i % 2 == 0) res = res.concat(t[i]);
+        
+        trace(n, seq, t.map(function (a) return a.toString()), res);
 
         return res;
     }
@@ -92,7 +92,7 @@ abstract Bitset(Array<Bool>) from Array<Bool> to Array<Bool> {
 
         for (i in 0...actual.length)
             if (actual[i] != expected[i])
-                error += cast(Math.pow(i, 2), Int);
+                error += Std.int(Math.pow(i, 2));
         
         return (if (error == 0) removeHammingBits() else inverse(error).removeHammingBits());
     }
@@ -101,5 +101,13 @@ abstract Bitset(Array<Bool>) from Array<Bool> to Array<Bool> {
         var res = this;
         res[index] = !res[index];
         return res;
+    }
+
+    public function toString():String {
+        return '0b' + this.map(function (a) return switch (a) {
+            case true:  '1';
+            case false: '0';
+            case null:  'N';
+        }).join('');
     }
 }
