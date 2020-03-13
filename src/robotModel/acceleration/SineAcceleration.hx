@@ -15,6 +15,8 @@ class SineAcceleration {
     public function new(minSpeed:Int, maxSpeed:Int, ?accelPoint:Int=0, ?decelPoint:Int=0, ?path:Int) {
         if (decelPoint - accelPoint < 0)
             throw new ValueException('accelPoint and decelPoint cant overlap with each other');
+        if (decelPoint > path)
+            throw new ValueException('decelPoint must not be bigger than path');
         
         this.accelPoint = accelPoint;
         this.decelPoint = decelPoint;
@@ -30,7 +32,7 @@ class SineAcceleration {
                 function (x:Float) {
                     if (path == null)
                         throw new ValueException('path must not be null if decelPoint was defined');
-                    return sin((path - x) * (PI / 2 / decelPoint));
+                    return sin((path - x) * (PI / 2 / (path - decelPoint)));
                 }
             else
                 null;
