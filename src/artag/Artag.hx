@@ -48,7 +48,12 @@ class Artag {
     }
 
     function filter<C:Color>(image:Image<C>):Image<BinaryColor> {
-        return image.toBinary(20).erode();
+        return image.toBinary(20).erode().cropSides({
+            left: 6,
+            right: 0,
+            top: 0,
+            bottom: 0
+        });
     }
 
     // the following function is public for debug purposes as well
