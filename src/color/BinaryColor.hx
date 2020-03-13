@@ -12,9 +12,9 @@ class BinaryColor extends BaseColor {
     override function calculateRGB():Void {
         rgbValue = rgbValue.coalesce(
             if (value)
-                {r: 255, g: 255, b: 255}
-            else 
                 {r: 0, g: 0, b: 0}
+            else 
+                {r: 255, g: 255, b: 255}
         );
     }
 
