@@ -8,12 +8,12 @@ import image.Image;
 import artag.Artag;
 import science.geometry.Line;
 import science.geometry.Point;
-import tools.ColorTools.*;
 import app.tests.exceptions.NoClueException;
 import app.tests.artag.exceptions.NoSizeException;
 import sys.FileSystem in FS;
 
 using StringTools;
+using tools.ColorTools;
 
 
 typedef TestItem = {
@@ -112,7 +112,7 @@ class ArtagTestCase extends Test {
                 '$testsDir/out/${test.testname}.binimg',
                 haxe.Json.stringify(artag.image.map(
                     function(array:Array<BinaryColor>) return array.map(
-                        function(color:BinaryColor) return toMono(color).value
+                        function(color:BinaryColor) return color.toMono().value
                     )
                 ))
             );
