@@ -29,7 +29,6 @@ abstract ArtagDecoder(Artag) {
     **/
     public function readRaw():Bitset {
         var res = [];
-        trace(this.marker);
         for (i in 1...this.marker.height - 1)
             res = res.concat(
                 if (i == 1 || i == this.marker.height - 2)

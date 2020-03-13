@@ -25,7 +25,6 @@ class Smoothing {
         ).concat(
             values.slice_(-2, -windowSize - 1, -1)
         );
-        trace(s);
 
         return Convolution.convolve1d(s, [for (i in window) i / window.sum()], Valid).slice(0, -windowSize + 1);
     }
