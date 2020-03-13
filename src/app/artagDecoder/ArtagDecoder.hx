@@ -36,7 +36,7 @@ abstract ArtagDecoder(Artag) {
                 else
                     this.marker[i].slice(1, this.marker.width - 1)
             );
-        return res.map(function (a) return a.value);
+        return res.map(function (a) return !a.value);
     }
 
     /**
@@ -45,7 +45,7 @@ abstract ArtagDecoder(Artag) {
         @returns value encoded in artag marker
     **/
     public function read():Array<Movement> {
-        var b:Array<Bitset> = readRaw().decodeHamming().chunks(2);
+        var b:Array<Bitset> = readRaw().removeHammingBits().chunks(2);
         return [for (i in b) i.toInt()].map(function (a) {
             return switch (a) {
                 case 0: Undefined;
