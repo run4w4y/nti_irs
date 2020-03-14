@@ -8,7 +8,6 @@ pkgs.stdenv.mkDerivation {
 
     buildInputs = with pkgs; [
         haxe
-        neko
     ];
 
     configurePhase = ''
