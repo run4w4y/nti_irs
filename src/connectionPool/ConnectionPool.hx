@@ -2,9 +2,9 @@ package connectionPool;
 
 import trik.Mailbox;
 import trik.Script;
-import time.Time;
 import ds.HashMap;
 import connectionPool.PoolMember;
+import connectionPool.Message;
 
 
 class ConnectionPool {
@@ -34,15 +34,19 @@ class ConnectionPool {
 
         if (isMaster()) {
             while (!checkConnection()) {
-                var slave = slaves[Std.parseInt(Mailbox.receive())];
+                var slave = Message.receive().sender;
                 Mailbox.connect(slave);
-                Mailbox.send("OK", slave);
+                new Message("", self, slave).send();
                 connected[slave.id] = true;
             }
+            new Message("OK", self).send();
         } else {
             while (!Mailbox.hasMessages()) {
                 Mailbox.connect(master);
-                Mailbox.send("${self.id}");
+                new Message("", self, master).send();
+                Script.wait(Milliseconds(10));
+            }
+            while (!Mailbox.hasMessages()) {
                 Script.wait(Milliseconds(10));
             }
         }
