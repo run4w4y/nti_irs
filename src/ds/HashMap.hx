@@ -17,4 +17,11 @@ abstract HashMap<K, V>(Map<String, V>) {
         this.set(Std.string(key), val);
         return val;
     }
+
+    public function values():Array<V> {
+        var res = [];
+        for (v in this.iterator())
+            res.push(v);
+        return res;
+    }
 }
