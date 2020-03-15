@@ -27,7 +27,8 @@ class Labyrinth {
 	var allowedDirections = new HashMap<Node, Bool>();
 	var previousTurn = new HashMap<Node,HashMap<Node,Movement>>();
 	var nodes = new Array<Node>();
-
+	var forbiddenPositions = new HashMap<Node,Bool>();
+	
 	public function new(n:Int, m:Int, ?walls:Array<Array<Int>>) {
 		walls = walls.coalesce([]);
 		rows = n;
@@ -75,6 +76,52 @@ class Labyrinth {
 		}
 	}
 
+	public function init_table(n:Int, m:Int, table:Array<String>) {
+		rows = n;
+		cols = m;
+		nodes = [for (row in 0...rows){for(col in 0...cols){for(direction in [Left,Right,Up,Down]){
+			new Node(row,col,direction);
+		}}}];
+		
+		for(node in nodes) {
+		allowedDirections[node] = true;
+		}
+
+		for(row in 0...rows) {
+		allowedDirections[new Node(row, 0, Left)] = false;
+		allowedDirections[new Node(row, cols - 1, Right)] = false;
+		}
+
+		for(col in 0...cols) {
+		allowedDirections[new Node(0, col, Up)] = false;
+		allowedDirections[new Node(rows - 1, col, Down)] = false;
+		}
+
+		for(row in 0...rows) {
+			for(col in 0...cols) {
+				if(table[row].charAt(col) == "W") {
+					allowedDirections[new Node(row, col, Up)] = false;
+					allowedDirections[new Node(row, col, Down)] = false;
+					allowedDirections[new Node(row, col, Left)] = false;
+					allowedDirections[new Node(row, col, Right)] = false;
+					if(row != 0) {
+						allowedDirections[new Node(row - 1, col, Down)] = false;
+					}
+					if(row != rows - 1) {
+						allowedDirections[new Node(row + 1, col, Up)] = false;
+					}
+					if(col != 0) {
+						allowedDirections[new Node(row, col - 1, Right)] = false;
+					}
+					if(col != cols - 1) {
+						allowedDirections[new Node(row, col + 1, Left)] = false;
+					}
+				}
+			}
+		}
+  	}
+
+
 	function bfs(nodeStart:Node) {
 		var used = new HashMap<Node, Bool>();
 		for (node in nodes) {
@@ -102,18 +149,21 @@ class Labyrinth {
 			}
 			if(currentNode.canGo(allowedDirections)){
 				nextNode = currentNode.go();
-				if (!used[nextNode]) {
+				if (!used[nextNode] && !forbiddenPositions[nextNode]) {
 					queue.enqueue(nextNode);
 					used[nextNode] = true;
 					previousTurn[nodeStart][nextNode] = Go;
-				}}
+				}
+			}
 		}
-		// trace("next Node");
 	}
-
-	public function getPath(nodeFrom:Node, nodeTo:Node){
+	
+	public function getPath(nodeFrom:Node, nodeTo:Node, ?forbiddenNodes:List<Node>){
 		if(nodeFrom.direction == Undefined)
 			throw "Undefined starting node direction";
+		forbiddenPositions = new HashMap<Node,Bool>();
+		for(node in forbiddenNodes)
+			forbiddenPositions[node] = true;
 		switch (nodeTo.direction) {
 			case Undefined:
 				var minPath = path(nodeFrom, nodeTo.changeDirection(Left));
@@ -144,7 +194,7 @@ class Labyrinth {
 				case TurnRight:
 					nodeTo = nodeTo.turnLeft();
 				case TurnAround:
-					nodeTo = nodeTo.turnLeft().turnLeft();
+					nodeTo = nodeTo.reverseDirection();
 				case Undefined:
 					throw "Undifined Movement";
 			}

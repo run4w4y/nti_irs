@@ -9,7 +9,7 @@ the build output is `/result/build.js`
 
 ## Without nix
 ```bash
-haxe build.hxml
+./build.sh
 ```
 
 # Development
@@ -31,11 +31,11 @@ haxe test.hxml
 ## Tips
 You might want to use `xclip` CLI tool, to copy and paste code in the TRIK Studio faster. Example usage:
 ```bash
-xclip -sel cli < result/build.js
+xclip -sel cli < result/patched.js
 ```
 This command copies the contents of `result/build.js` to your clipboard.
 
-# Working on Windows/without nix
+# Working without nix
 ## Configuring haxelib
 ```bash
 haxelib setup ./lib

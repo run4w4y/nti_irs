@@ -3,3 +3,7 @@
 -js build.js
 -main app.main.Main 
 -lib polygonal-ds
+# -lib closure
+# # -D closure_overwrite
+# -D closure_language_in=ECMASCRIPT3
+# -D closure_prettyprint
