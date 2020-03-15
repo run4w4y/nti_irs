@@ -30,7 +30,7 @@ abstract Bitset(Array<Bool>) from Array<Bool> to Array<Bool> {
         return [for (i in 0...this.length) if (this[i]) Std.int(Math.pow(2, this.length - i - 1)) else 0].sum();
     }
 
-    static function isPowerOfTwo(n:Int):Bool {
+    public function isPowerOfTwo(n:Int):Bool {
         if (n == 0) return false;
         var t = Math.log(n) / Math.log(2);
         return Math.ceil(t) == Math.floor(t);
@@ -42,8 +42,6 @@ abstract Bitset(Array<Bool>) from Array<Bool> to Array<Bool> {
         var t:Array<Bitset> = seq.slice_(n).chunks(n);
         for (i in 0...t.length)
             if (i % 2 == 0) res = res.concat(t[i]);
-        
-        trace(n, seq, t.map(function (a) return a.toString()), res);
 
         return res;
     }
@@ -53,21 +51,28 @@ abstract Bitset(Array<Bool>) from Array<Bool> to Array<Bool> {
         var hammingIndexes = [];
         var i = 0;
         var t = 0;
-
+        var lg = 1;
         while (t < this.length) {
             ++i;
             if (isPowerOfTwo(i)) {
                 hammingIndexes.push(i - 1);
                 res.push(false);
+                ++lg;
             } else {
                 res.push(this[t]);
                 ++t;
             }
         }
-
-        for (i in hammingIndexes)
-            res[i] = getBits(i + 1, res).filter(function (a) return a).length % 2 != 0;
-        
+        for(pos in 0...res.length){
+            var power = 1;
+            if(!res[pos])
+                continue;
+            for(j in 0...lg){
+                if(((pos + 1) & power) > 0)
+                    res[power - 1] = !res[power - 1];
+                power *= 2; 
+            }
+        }
         return res;
     }
 
@@ -89,12 +94,10 @@ abstract Bitset(Array<Bool>) from Array<Bool> to Array<Bool> {
         var actual = getHammingBits();
         var expected = removeHammingBits().addHammingBits().getHammingBits();
         var error = 0;
-
         for (i in 0...actual.length)
             if (actual[i] != expected[i])
-                error += Std.int(Math.pow(i, 2));
-        
-        return (if (error == 0) removeHammingBits() else inverse(error).removeHammingBits());
+                error += Std.int(Math.pow(2, i));
+        return (if (error == 0) removeHammingBits() else inverse(error - 1).removeHammingBits());
     }
 
     public function inverse(index:Int):Bitset {
