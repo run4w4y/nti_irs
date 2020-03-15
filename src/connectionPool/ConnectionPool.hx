@@ -25,7 +25,7 @@ class ConnectionPool implements Messenger {
     var handlers = new HashMap<Int, RequestHandler>();
     var forwarder:ForwardHandler;
 
-    inline function isMaster(?member:PoolMember):Bool {
+    function isMaster(?member:PoolMember):Bool {
         return member.coalesce(self).id == master.id;
     }
 
@@ -49,22 +49,19 @@ class ConnectionPool implements Messenger {
             this.handlers[handler.id] = handler;
 
         var tempId = Mailbox.myHullNumber();
-        self = if (tempId == master.id) master else slaves[tempId];
+        self = if (tempId == master.id) master else this.slaves[tempId];
 
         if (isMaster()) {
             while (!checkConnection()) {
                 var slave = waitForMessage().sender;
-                Mailbox.connect(slave);
-                send('', slave);
+                send('OK', slave);
                 connected[slave.id] = true;
             }
-            send('OK');
+            for (slave in this.slaves.values())
+                send('OK', slave);
         } else {
-            while (!Mailbox.hasMessages()) {
-                Mailbox.connect(master);
-                send('', master);
-                Script.wait(Milliseconds(10));
-            }
+            Mailbox.connect(master);
+            send('OK', master);
             waitForMessage();
         }
     }
@@ -98,8 +95,13 @@ class ConnectionPool implements Messenger {
                 }
             }
         } else
-            while (!areActionsDone())
-                actions[waitForMessage().object].execute();
+            while (!areActionsDone()) {
+                var m = waitForMessage();
+                Script.print(m.object);
+                // apparently no key in the actions map was found
+                actions[m.object].execute();
+                send('OK', master);
+            }
     }
 
     public function waitForResponse():Message {
