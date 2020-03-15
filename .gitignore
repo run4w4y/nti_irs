@@ -3,3 +3,4 @@ lib
 .vscode
 result
 .haxelib
+*.js
