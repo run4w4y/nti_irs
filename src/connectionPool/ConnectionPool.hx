@@ -7,10 +7,11 @@ import connectionPool.PoolMember;
 import connectionPool.message.Message;
 import connectionPool.message.MessageType;
 import connectionPool.message.Messenger;
-import connectionPool.message.Receiver;
+import connectionPool.message.ChildMessenger;
 import connectionPool.action.PoolAction;
 import connectionPool.request.RequestHandler;
 import connectionPool.request.RequestForm;
+import connectionPool.forward.ForwardHandler;
 
 using tools.NullTools;
 
@@ -22,9 +23,10 @@ class ConnectionPool implements Messenger {
     var self:PoolMember;
     var actions = new HashMap<Int, PoolAction>();
     var handlers = new HashMap<Int, RequestHandler>();
+    var forwarder:ForwardHandler;
 
-    inline function isMaster():Bool {
-        return self.id == master.id;
+    inline function isMaster(?member:PoolMember):Bool {
+        return member.coalesce(self).id == master.id;
     }
 
     function checkConnection():Bool {
@@ -35,6 +37,8 @@ class ConnectionPool implements Messenger {
 
     public function new(master:PoolMember, slaves:Array<PoolMember>, ?handlers:Array<RequestHandler>) {
         this.master = master;
+        this.forwarder = new ForwardHandler();
+        initChildMessenger(this.forwarder);
 
         for (slave in slaves) {
             this.slaves[slave.id] = slave;
@@ -72,8 +76,7 @@ class ConnectionPool implements Messenger {
             else 
                 actions
         ) {
-            action.addHandlers(handlers.values());
-            action.addMembers(slaves.values());
+            initChildMessenger(action);
             this.actions[action.id] = action;
         }
     }
@@ -99,22 +102,65 @@ class ConnectionPool implements Messenger {
                 actions[waitForMessage().object].execute();
     }
 
-    public function waitForMessage():Message {
-        return Receiver.waitForMessage(response);
+    public function waitForResponse():Message {
+        while (true) {
+            var received = Message.receive();
+
+            switch (received) {
+                case Response(m):
+                    return m.object;
+                case Request(m):
+                    response(m);
+                case _:
+                    continue;
+            }
+        }
     }
 
-    public function waitForResponse():Message {
-        return Receiver.waitForResponse(response);
+    public function waitForMessage():Message {
+        while (true) {
+            var received = Message.receive();
+            
+            switch (received) {
+                case Info(m):
+                    return m;
+                case Request(m):
+                    response(m);
+                case _:
+                    continue;
+            }
+        }
     }
 
     public function send(object:Dynamic, ?receiver:PoolMember) {
-        new Message(object, 'Info', self, receiver).send();
+        if (!isMaster() && !isMaster(receiver))
+            request({
+                handler: forwarder,
+                args: {
+                    type: 'Info',
+                    object: object,
+                    receiver: receiver
+                }
+            }, master);
+        else
+            new Message(object, 'Info', self, receiver).send();
     }
 
     public function request(form:RequestForm, receiver:PoolMember):Dynamic {
-        var rawForm = {handlerId: form.handler.id, params: form.params};
-        new Message(rawForm, 'Request', self, receiver).send();
-        return waitForResponse();
+        if (!isMaster() && !isMaster(receiver))
+            return request({
+                handler: forwarder,
+                args: {
+                    type: 'Request',
+                    object: form,
+                    receiver: receiver
+                }
+            }, master);
+        else {
+            var rawForm = {handlerId: form.handler.id, args: form.args};
+            new Message(rawForm, 'Request', self, receiver).send();
+            return waitForResponse();
+        }
     }
 
     // TODO: error handling when RequestHandler was not found
@@ -125,5 +171,13 @@ class ConnectionPool implements Messenger {
             self, 
             request.sender
         ).send();
+    }
+
+    public function initChildMessenger(child:ChildMessenger):Void {
+        child.send = send;
+        child.request = request;
+        child.response = response;
+        child.waitForMessage = waitForMessage;
+        child.waitForResponse = waitForResponse;
     }
 }
