@@ -18,7 +18,7 @@ class PoolAction implements ChildMessenger {
     public var waitForMessage:WaitFunction;
     public var waitForResponse:WaitFunction;
 
-    public function new(action:Void -> Void, agent:PoolMember) {
+    public function new(agent:PoolMember) {
         state = NotStarted;
         this.agent = agent;
         this.id = newId;
