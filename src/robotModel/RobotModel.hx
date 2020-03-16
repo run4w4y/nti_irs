@@ -52,12 +52,14 @@ class RobotModel {
     }
 
     public function solution():Void {
-        restoreCalibration();
-        manager.turnLeft();
+        manager.goEncoders(2000);
     }
 
     public function new(manager:MotorManager, args:ModelArguments):Void {
+        restoreCalibration();
         this.manager = manager;
+        Script.wait(Seconds(0.05));
+        manager.currentDirection = Brick.gyroscope.read();
         cameraPort  = args.cameraPort.coalesce("video2");
         environment = args.environment;
         frontSensor = args.frontSensor;
