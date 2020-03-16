@@ -90,7 +90,7 @@ class BaseManager {
             kd: 0.4,
             ki: 0.0001
         };
-        var pid = new PID(interval, -100, 100, coefficients.coalesce(defaults));
+        var pid = new PID(interval.coalesce(Seconds(.01)), -100, 100, coefficients.coalesce(defaults));
         move(speed, pid, function() {
                 return Brick.gyroscope.read() - currentDirection;
             }, 
