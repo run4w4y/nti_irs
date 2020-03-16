@@ -71,7 +71,7 @@ class BaseManager {
     function move(speed:Int, controller:SpeedManager, getError:Void -> Float, 
     ?condition:Void -> Bool, ?interval:Time):Void {
         interval = interval.coalesce(Seconds(0.1));
-        resetEncoders();
+        // resetEncoders();
         
         do {
             var u = controller.calculate(getError());
