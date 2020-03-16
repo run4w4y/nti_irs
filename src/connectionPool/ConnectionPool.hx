@@ -50,20 +50,6 @@ class ConnectionPool implements Messenger {
 
         var tempId = Mailbox.myHullNumber();
         self = if (tempId == master.id) master else this.slaves[tempId];
-
-        if (isMaster()) {
-            while (!checkConnection()) {
-                var slave = waitForMessage().sender;
-                send('OK', slave);
-                connected[slave.id] = true;
-            }
-            for (slave in this.slaves.values())
-                send('OK', slave);
-        } else {
-            Mailbox.connect(master);
-            send('OK', master);
-            waitForMessage();
-        }
     }
 
     public function addActions(actions:Array<PoolAction>):Void {
