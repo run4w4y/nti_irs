@@ -13,28 +13,29 @@ class SineAcceleration implements SpeedManager {
     var maxSpeed:Int;
     var minSpeed:Int;
 
-    public function new(minSpeed:Int, maxSpeed:Int, ?accelPoint:Int=0, ?decelPoint:Int=0, ?path:Int) {
+    public function new(minSpeed:Int, maxSpeed:Int, ?accelPoint:Int, ?decelPoint:Int, ?path:Int) {
         if (decelPoint - accelPoint < 0)
             throw new ValueException('accelPoint and decelPoint cant overlap with each other');
         if (decelPoint > path)
             throw new ValueException('decelPoint must not be bigger than path');
-        
+        if (decelPoint != null && path == null)
+            throw new ValueException('path must not be null if decelPoint was defined');
+
+        this.minSpeed = minSpeed;
+        this.maxSpeed = maxSpeed;
         this.accelPoint = accelPoint;
         this.decelPoint = decelPoint;
 
         accelF = 
             if (accelPoint != null) 
                 function (x:Float) 
-                    return sin(x * (PI / 2 / accelPoint))
+                    return sin(x * PI / 2 / accelPoint)
             else
                 null;
         decelF = 
             if (decelPoint != null)
-                function (x:Float) {
-                    if (path == null)
-                        throw new ValueException('path must not be null if decelPoint was defined');
-                    return sin((path - x) * (PI / 2 / (path - decelPoint)));
-                }
+                function (x:Float)
+                    return sin((path - x) * (PI / 2 / (path - decelPoint)))
             else
                 null;
     }
@@ -43,6 +44,12 @@ class SineAcceleration implements SpeedManager {
         var k = if (accelPoint != null && x < accelPoint) accelF(x)
             else if (decelPoint != null && x > decelPoint) decelF(x)
             else 1;
-        return minSpeed + (maxSpeed - minSpeed) * k;
+        var delta = (maxSpeed - minSpeed) * k;
+        trik.Script.print('
+            K:     $k
+            X:     $x
+            Delta: $delta
+        ');
+        return minSpeed + delta;
     }
 }
