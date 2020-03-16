@@ -1,4 +1,4 @@
-package pid;
+package robotModel.speedManager.pid;
 
 typedef PIDCoefficients = {
     kp: Float,
