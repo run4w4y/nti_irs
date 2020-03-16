@@ -24,6 +24,7 @@ if [ "$#" == 0 ]; then
 fi
 
 filepath="$1"
+filename=$(basename "$filepath")
 
 if [ "$#" == 2 ]; then 
     address="$2"
@@ -31,24 +32,30 @@ else
     address='192.168.77.1'
 fi
 
-filename=$(basename "$filepath")
-fileCmd="file:$filename:"
+./upload.sh "$filepath" $address
 
-cmdLen=$(( $(byteLength "$fileCmd") + $(stat --printf="%s" "$filepath") ))
-fileCmd=$(cmdWrap $fileCmd $cmdLen)
+exec 3<> "/dev/tcp/$address/8888"
 
-file=$(cat "$filepath")
+trap ctrl_c INT
+
+ctrl_c() {
+    echo "Stopping..."
+    echo -n "4:stop" >&3
+    exec 3<&-
+    exit 0
+}
+
 runCmd=$(cmdWrap "run:$filename")
-echo "$fileCmd$file$runCmd" - | nc $address 8888
+echo -n "$runCmd" >&3
 
 KEEPALIVE_PERIOD=3
 last_keepalive=$SECONDS
 while :; do
     data=""
     while :; do
-        r=$(nc -vv -l 8888 -I 1 )
-        if [ $r != ":" ]; then
-            data="$data$r"
+        read -n 1 b 0<&3
+        if [ $b != ":" ]; then
+            data="$data$b"
 
             if (( $SECONDS - $last_keepalive >= $KEEPALIVE_PERIOD )); then
                 last_keepalive=$SECONDS
@@ -59,21 +66,26 @@ while :; do
         fi
     done
 
-    echo $data
-    case "$data" in
-        "*:keepalive*")
+    read -n $data cmdRaw <&3
+    IFS=":"
+    read -ra ARR <<< "$cmdRaw"
+    cmd="${ARR[0]}"
+    if (( "${#ARR[@]}" == 1 )); then
+        arg=""
+    else
+        arg="${ARR[-1]}"
+    fi
+    
+    case "$cmd" in
+        keepalive)
             last_keepalive=$SECONDS
             echo "9:keepalive" - | nc $address 8888
             ;;
-        "*:print:*")
-            IFS=":"
-            read -ra ARR <<< "$data"
-            echo "${ARR[-1]}"
+        print)
+            echo "$arg"
             ;;
-        "*:error:*")
-            IFS=":"
-            read -ra ARR <<< "$data"
-            echo "Received an error: ${ARR[-1]}"
+        error)
+            echo "Received an error: $arg"
             exit -1
             ;;
         *)
