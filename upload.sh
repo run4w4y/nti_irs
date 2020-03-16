@@ -6,6 +6,10 @@ upload_file () {
     echo "Done"
 }
 
-for file in result/*.js; do
-    upload_file "$file" "$1"
-done
+if [ "$#" == 1 ]; then
+    for file in result/*.js; do
+        upload_file "$file" "$1"
+    done
+else
+    upload_file "$1" "$2"
+fi
