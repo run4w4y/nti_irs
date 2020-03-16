@@ -2,41 +2,24 @@ package image;
 
 import color.RGBColor;
 import color.RGB24Color;
-import color.HexColor;
 import image.Image;
 
-using StringTools;
-using tools.NullTools;
 using tools.ColorTools;
 
 
-enum RawColorScheme {
-    Rgb24;
-    Hex;
-}
-
-
 class RawImage {
-    var photoString:String;
+    var photo:Array<Int>;
     var w:Int;
     var h:Int;
-    var colorScheme:RawColorScheme;
 
-    public function new(rawString, ?colorScheme:RawColorScheme, ?w:Int = 160, ?h:Int = 120):Void {
-        photoString = rawString;
+    public function new(photo, ?w:Int = 160, ?h:Int = 120):Void {
+        this.photo = photo;
         this.w = w;
         this.h = h;
-        this.colorScheme = colorScheme.coalesce(Rgb24);
     }
 
     public function toImage():Image<RGBColor> {
-        var raw:Array<RGBColor> = switch (colorScheme) {
-            case Rgb24:
-                [for (i in 0...photoString.length) new RGB24Color(Std.parseInt(photoString.charAt(i))).toRGB()];
-            case Hex:
-                photoString.trim().split(' ').map(function (a) return new HexColor(a).toRGB());
-        };
-
+        var raw:Array<RGBColor> = [for (i in 0...photo.length) new RGB24Color(photo[i]).toRGB()];
         var res:Array<Array<RGBColor>> = [];
 
         for (i in 0...h) {
