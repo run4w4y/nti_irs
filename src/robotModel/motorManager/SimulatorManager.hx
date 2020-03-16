@@ -18,11 +18,11 @@ class SimulatorManager extends BaseManager implements MotorManager {
     }
 
     public inline function turnLeft():Void {
-        turn(90);
+        turn(-90);
     }
 
     public inline function turnRight():Void {
-        turn(-90);
+        turn(90);
     }
 
     public inline function turnAround():Void {
