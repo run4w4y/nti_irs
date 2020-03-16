@@ -21,7 +21,7 @@ class RobotModel {
     var cellSize    :Float;
     var manager     :MotorManager;
 
-    function checkSensor(sensor:Sensor) {
+    function checkSensor(sensor:Sensor):Bool {
         return switch (environment) {
             case Simulator: sensor.read() <= 70;
             case Real:      sensor.read() <= 15;
@@ -52,14 +52,14 @@ class RobotModel {
     }
 
     public function solution():Void {
-        manager.goEncoders(2000);
+        manager.goEncoders(2000, 360, 360);
     }
 
     public function new(manager:MotorManager, args:ModelArguments):Void {
         restoreCalibration();
         this.manager = manager;
         Script.wait(Seconds(0.05));
-        manager.currentDirection = Brick.gyroscope.read();
+        this.manager.currentDirection = Brick.gyroscope.read();
         cameraPort  = args.cameraPort.coalesce("video2");
         environment = args.environment;
         frontSensor = args.frontSensor;
@@ -67,5 +67,7 @@ class RobotModel {
         rightSensor = args.rightSensor;
         backSensor  = args.backSensor;
         cellSize    = args.cellSize;
+        this.manager.leftSensor = leftSensor;
+        this.manager.rightSensor = rightSensor;
     }
 }
