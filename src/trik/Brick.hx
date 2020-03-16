@@ -66,6 +66,10 @@ class Brick {
         return getRawPhoto().toImage();
     }
 
+    public static function playTone(frequency:Int, duration:Int):Void {
+        untyped __js__("brick.playTone({0}, {1})", frequency, duration);
+    }
+
     // TODO: complete
     // public function getStillImage():
 }
