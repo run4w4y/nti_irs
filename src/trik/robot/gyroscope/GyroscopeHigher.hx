@@ -14,7 +14,7 @@ abstract GyroscopeHigher(Gyroscope) {
     }
 
     public function read():Angle {
-        return new Angle(this.read()[6]/1000 - 360);
+        return new Angle(360 + this.read()[6]/1000);
     }
 
     public function calibrate(duration:Time):Void {
