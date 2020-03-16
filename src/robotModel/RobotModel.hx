@@ -44,16 +44,16 @@ class RobotModel {
         return checkSensor(backSensor);
     }
 
-    function calibrateGyro(?duration:Time) {
+    function restoreCalibration():Void {
         if (environment == Simulator)
             return;
-        duration = duration.coalesce(Seconds(10));
-        Brick.gyroscope.calibrate(duration);
+
         Brick.gyroscope.setCalibrationValues(Brick.gyroscope.getCalibrationValues());
     }
 
     public function solution():Void {
-        // ...
+        restoreCalibration();
+        manager.turnLeft();
     }
 
     public function new(manager:MotorManager, args:ModelArguments):Void {
