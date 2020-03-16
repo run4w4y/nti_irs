@@ -1,10 +1,11 @@
-package robotModel.acceleration;
+package robotModel.speedManager;
 
+import robotModel.speedManager.SpeedManager;
 import Math.*;
 import exceptions.ValueException;
 
 
-class SineAcceleration {
+class SineAcceleration implements SpeedManager {
     var accelF:Null<Float -> Float>;
     var decelF:Null<Float -> Float>;
     var accelPoint:Null<Int>;
