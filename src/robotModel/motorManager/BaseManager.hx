@@ -6,7 +6,7 @@ import trik.Brick;
 import trik.Script;
 import trik.robot.motor.Motor;
 import trik.robot.encoder.Encoder;
-import robotModel.motorManager.MotorManager;
+import trik.robot.sensor.Sensor;
 import robotModel.speedManager.SpeedManager;
 import robotModel.speedManager.pid.PID;
 import robotModel.speedManager.pid.PIDCoefficients;
@@ -20,6 +20,8 @@ class BaseManager {
     public var leftEncoder:Encoder;
     public var rightEncoder:Encoder;
     public var currentDirection:Angle;
+    public var leftSensor:Null<Sensor> = null;
+    public var rightSensor:Null<Sensor> = null;
     var wheelRadius:Float;
     var inversedVelocity:Bool;
     var inversedEncoders:Bool;
