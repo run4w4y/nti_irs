@@ -20,11 +20,9 @@ pkgs.stdenv.mkDerivation {
         mkdir -p lib
         haxelib setup ./lib --quiet
         haxelib dev polygonal-ds ${haxePackages.polygonal-ds} --quiet
-        rm -rf build.js
-        rm -rf patched.js
+        rm -rf *.js
         ./build.sh
         mkdir -p $out
-        mv build.js $out 
-        mv patched.js $out
+        mv *.js $out   
     '';
 }
