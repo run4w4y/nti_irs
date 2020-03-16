@@ -11,5 +11,9 @@ if [ "$#" == 1 ]; then
         upload_file "$file" "$1"
     done
 else
-    upload_file "$1" "$2"
+    file="$1"
+    shift
+    for i; do
+        upload_file "$file" "$i"
+    done
 fi
