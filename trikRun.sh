@@ -59,7 +59,7 @@ while :; do
 
             if (( $SECONDS - $last_keepalive >= $KEEPALIVE_PERIOD )); then
                 last_keepalive=$SECONDS
-                echo "9:keepalive" - | nc $address 8888
+                echo -n "9:keepalive" >&3
             fi
         else
             break
@@ -79,7 +79,7 @@ while :; do
     case "$cmd" in
         keepalive)
             last_keepalive=$SECONDS
-            echo "9:keepalive" - | nc $address 8888
+            echo -n "9:keepalive" >&3
             ;;
         print)
             echo "$arg"
