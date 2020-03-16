@@ -19,10 +19,10 @@ class BaseManager {
     public var rightMotor:Motor;
     public var leftEncoder:Encoder;
     public var rightEncoder:Encoder;
+    public var currentDirection:Angle;
     var wheelRadius:Float;
     var inversedVelocity:Bool;
     var inversedEncoders:Bool;
-    var currentDirection:Angle;
 
     public function new(leftMotor:Motor, rightMotor:Motor, leftEncoder:Encoder, rightEncoder:Encoder,
     wheelRadius:Float, ?inversedVelocity = false, ?inversedEncoders = false):Void {
@@ -74,8 +74,8 @@ class BaseManager {
         do {
             var u = controller.calculate(getError());
             
-            startLeft(Math.round(speed + u));
-            startRight(Math.round(speed - u));
+            startLeft(Math.round(speed - u));
+            startRight(Math.round(speed + u));
 
             if (condition == null) return;
             Script.wait(interval);
