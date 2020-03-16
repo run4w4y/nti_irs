@@ -78,7 +78,6 @@ while :; do
         arg="${ARR[-1]}"
     fi
 
-    res=""
     case "$cmd" in
         keepalive)
             last_keepalive=$SECONDS
