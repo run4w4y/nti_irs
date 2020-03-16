@@ -3,112 +3,67 @@ package robotModel;
 import time.Time;
 import trik.Script;
 import trik.Brick;
-import trik.robot.motor.Motor;
 import trik.robot.sensor.Sensor;
-import trik.robot.encoder.Encoder;
 import robotModel.Environment;
 import robotModel.ModelArguments;
-import pid.PID;
-import pid.PIDCoefficients;
-import angle.Angle;
-import Math.*;
+import robotModel.motorManager.MotorManager;
 
-using Lambda;
 using tools.NullTools;
 
 
 class RobotModel {
-    public var leftMotor    :Motor;
-    public var rightMotor   :Motor;
-    public var leftEncoder  :Encoder;
-    public var rightEncoder :Encoder;
-    public var cameraPort   :String;
-    public var environment  :Environment;
-    public var wheelRadius  :Float;
-    public var currentDirection = new Angle(0);
+    var cameraPort  :String;
+    var environment :Environment;
+    var frontSensor :Sensor;
+    var leftSensor  :Sensor;
+    var rightSensor :Sensor;
+    var backSensor  :Sensor;
+    var cellSize    :Float;
+    var manager     :MotorManager;
 
-    public function stop(?delayTime:Time):Void {
-        delayTime = delayTime.coalesce(Milliseconds(0));
-        this.leftMotor.setPower(0);
-        this.rightMotor.setPower(0);
-        Script.wait(delayTime);
-    }
-
-    public function resetEncoders():Void {
-        leftEncoder.reset();
-        rightEncoder.reset();
-    }
-
-    public function calibrateGyro(?duration:Time) {
-        duration = duration.coalesce(Seconds(10));
-        Brick.gyroscope.calibrate(duration);
-    }
-
-    public function readGyro():Angle {
-        return new Angle(360 - Brick.gyroscope.read()[6]/1000);
-    }
-
-    public function move<T>(speed:Int=100, setpoint:T, readF:(Void -> T), getError:(T -> T -> Float),
-    koefficients:PIDCoefficients, ?condition:(Void -> Bool), ?interval:Time):Void {
-        interval = interval.coalesce(Seconds(0.1));
-        resetEncoders();
-
-        var pid = new PID(interval, -100, 100, koefficients);
-        
-        do {
-            var u = pid.calculate(getError(readF(), setpoint));
-            
-            leftMotor.setPower(round(speed + u));
-            rightMotor.setPower(round(speed - u));
-
-            if (condition == null) return;
-            Script.wait(interval);
-        } while (condition());
-
-        stop(Seconds(0.1));
-    }
-
-    public function moveGyro(speed:Int=100, ?condition:(Void -> Bool), ?interval:Time, ?coefficients:PIDCoefficients):Void {
-        var defaults:PIDCoefficients = {
-            kp: 1.05,
-            kd: 0.4,
-            ki: 0.0001
-        };
-        move(speed, currentDirection, readGyro, function(value, setpoint) {
-                return value - setpoint;
-            }, 
-            if (coefficients == null) defaults else coefficients, 
-            condition, interval
-        );
-    }
-
-    function turnSimulator(angle:Float):Void {
-        currentDirection = currentDirection + angle;
-        moveGyro(0, function() {
-                return abs(currentDirection - readGyro()) > 1;
-            }, Seconds(0.01), {kp: 1 }
-        );
-        stop(Seconds(0.1));
-    }
-
-    public function turn(angle:Float):Void {
-        resetEncoders();
-
-        switch (environment) {
-            case Simulator:
-                turnSimulator(angle);
-            case _:
-                return;
+    function checkSensor(sensor:Sensor) {
+        return switch (environment) {
+            case Simulator: sensor.read() <= 70;
+            case Real:      sensor.read() <= 15;
         }
     }
 
-    public function new(args:ModelArguments):Void {
-        this.leftMotor    = args.leftMotor;
-        this.rightMotor   = args.rightMotor;
-        this.leftEncoder  = args.leftEncoder;
-        this.rightEncoder = args.rightEncoder;
-        this.cameraPort   = args.cameraPort.coalesce("video1");
-        this.environment  = args.environment;
-        this.wheelRadius  = args.wheelRadius;
+    inline function checkLeft():Bool {
+        return checkSensor(leftSensor);
+    }
+
+    inline function checkRight():Bool {
+        return checkSensor(rightSensor);
+    }
+
+    inline function checkFront():Bool {
+        return checkSensor(frontSensor);
+    }
+
+    inline function checkBack():Bool {
+        return checkSensor(backSensor);
+    }
+
+    function calibrateGyro(?duration:Time) {
+        if (environment == Simulator)
+            return;
+        duration = duration.coalesce(Seconds(10));
+        Brick.gyroscope.calibrate(duration);
+        Brick.gyroscope.setCalibrationValues(Brick.gyroscope.getCalibrationValues());
+    }
+
+    public function solution():Void {
+        // ...
+    }
+
+    public function new(manager:MotorManager, args:ModelArguments):Void {
+        this.manager = manager;
+        cameraPort  = args.cameraPort.coalesce("video2");
+        environment = args.environment;
+        frontSensor = args.frontSensor;
+        leftSensor  = args.leftSensor;
+        rightSensor = args.rightSensor;
+        backSensor  = args.backSensor;
+        cellSize    = args.cellSize;
     }
 }
