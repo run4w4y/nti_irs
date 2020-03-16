@@ -39,7 +39,7 @@ exec 3<> "/dev/tcp/$address/8888"
 trap ctrl_c INT
 
 ctrl_c() {
-    echo "Stopping..."
+    echo \nStopping...
     echo -n "4:stop" >&3
     exec 3<&-
     exit 0
@@ -50,11 +50,13 @@ echo -n "$runCmd" >&3
 
 KEEPALIVE_PERIOD=3
 last_keepalive=$SECONDS
+
 while :; do
+    IFS=
     data=""
     while :; do
         read -n 1 b 0<&3
-        if [ $b != ":" ]; then
+        if [[ "$b" != ":" ]]; then
             data="$data$b"
 
             if (( $SECONDS - $last_keepalive >= $KEEPALIVE_PERIOD )); then
@@ -75,21 +77,22 @@ while :; do
     else
         arg="${ARR[-1]}"
     fi
-    
+
+    res=""
     case "$cmd" in
         keepalive)
             last_keepalive=$SECONDS
             echo -n "9:keepalive" >&3
             ;;
         print)
-            echo "$arg"
+            echo "$arg" >&2
             ;;
         error)
-            echo "Received an error: $arg"
+            echo "Received an error: $arg" >&2
             exit -1
             ;;
         *)
-            echo "Received an unknown command"
+            echo "Received an unknown command" >&2
             ;;
     esac
     sleep 0
