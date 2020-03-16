@@ -80,14 +80,16 @@ class ConnectionPool implements Messenger {
                     waitForMessage();
                 }
             }
-        } else
+            for (slave in slaves.values())
+                send('OK', slave);
+        } else {
             while (!areActionsDone()) {
                 var m = waitForMessage();
-                Script.print(m.object);
-                // apparently no key in the actions map was found
                 actions[m.object].execute();
                 send('OK', master);
             }
+            waitForMessage();
+        }
     }
 
     public function waitForResponse():Message {
