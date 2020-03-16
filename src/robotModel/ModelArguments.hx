@@ -7,11 +7,11 @@ import robotModel.Environment;
 
 
 typedef ModelArguments = {
-    leftMotor:Motor,
-    rightMotor:Motor,
-    leftEncoder:Encoder,
-    rightEncoder:Encoder,
+    cellSize:Float,
     environment:Environment,
-    wheelRadius:Float,
-    ?cameraPort:String
+    ?cameraPort:String,
+    ?frontSensor:Sensor,
+    ?leftSensor:Sensor,
+    ?rightSensor:Sensor,
+    ?backSensor:Sensor,
 }

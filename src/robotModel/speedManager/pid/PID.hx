@@ -1,14 +1,15 @@
-package pid;
+package robotModel.speedManager.pid;
 
+import robotModel.speedManager.SpeedManager;
 import time.Time;
-import pid.PIDCoefficients;
+import robotModel.speedManager.pid.PIDCoefficients;
 import Math.*;
 
 using tools.TimeTools;
 using tools.NullTools;
 
 
-class PID {
+class PID implements SpeedManager {
     var interval  :Time;
     var min       :Float;
     var max       :Float;
