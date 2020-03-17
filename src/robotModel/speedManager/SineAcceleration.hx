@@ -45,11 +45,6 @@ class SineAcceleration implements SpeedManager {
             else if (decelPoint != null && x > decelPoint) decelF(x)
             else 1;
         var delta = (maxSpeed - minSpeed) * k;
-        trik.Script.print('
-            K:     $k
-            X:     $x
-            Delta: $delta
-        ');
         return minSpeed + delta;
     }
 }
