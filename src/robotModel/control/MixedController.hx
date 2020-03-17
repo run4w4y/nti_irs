@@ -3,9 +3,10 @@ package robotModel.control;
 import time.Time;
 import robotModel.control.MixedArguments;
 import robotModel.speedManager.pid.PID;
+import robotModel.speedManager.SpeedManager;
 
 
-class MixedController {
+class MixedController implements SpeedManager {
     var checkWalls:Void -> Bool;
     var getWallError:Void -> Int;
     var getGyroError:Void -> Float;
@@ -21,6 +22,7 @@ class MixedController {
         getEncodersError = args.getEncodersError;
         getGyroError = args.getGyroError;
         getWallError = args.getWallError;
+        this.checkWalls = checkWalls;
         
         wallK = args.wallK;
         gyroK = args.gyroK;
@@ -30,15 +32,23 @@ class MixedController {
         gyroFullK = sum * gyroK / (gyroK + encodersK);
         encodersFullK = sum - gyroFullK;
 
-        pid = new PID(interval, -40, 40, { kp: .8, kd: .75, ki:.002 });
+        pid = new PID(-40, 40, { kp: .8, kd: .75, ki:.002 });
     }
 
-    public function calculate():Float {
-        var error = 
+    public function getError():Float {
+        var wallError = getWallError();
+        var gyroError = -cast(getGyroError(), Float);
+        var encodersError = getEncodersError();
+        var res = 
             if (checkWalls()) 
-                wallK * getWallError() + gyroK * getGyroError() + encodersK * getEncodersError()
+                wallK * wallError + gyroK * gyroError + encodersK * encodersError
             else 
-                gyroFullK * getGyroError() + encodersFullK * getEncodersError();
+                gyroFullK * gyroError + encodersFullK * encodersError;
+        return res;
+            
+    }
+
+    public function calculate(error:Float):Float {
         return pid.calculate(error);
     }
 }
