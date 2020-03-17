@@ -147,9 +147,12 @@ class ConnectionPool implements Messenger {
                 }
             }, master);
         else {
-            var rawForm = {handlerId: form.handler.id, args: form.args};
-            new Message(rawForm, 'Request', self, receiver).send();
-            return waitForResponse();
+            if (receiver.id != self.id) {
+                var rawForm = {handlerId: form.handler.id, args: form.args};
+                new Message(rawForm, 'Request', self, receiver).send();
+                return waitForResponse();
+            } else
+                return handlers[form.handler.id].call(form.args);
         }
     }
 
