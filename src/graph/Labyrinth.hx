@@ -164,8 +164,11 @@ class Labyrinth {
 		if(nodeFrom.direction == Undefined)
 			throw "Undefined starting node direction";
 		forbiddenPositions = new HashMap<Node,Bool>();
+		
 		for(node in forbiddenNodes)
-			forbiddenPositions[node] = true;
+			for(direction in [Left,Right,Up,Down])
+				forbiddenPositions[new Node(node.row,node.col,direction)] = true;
+
 		switch (nodeTo.direction) {
 			case Undefined:
 				var minPath = path(nodeFrom, nodeTo.changeDirection(Left));
