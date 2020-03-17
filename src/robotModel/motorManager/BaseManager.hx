@@ -25,6 +25,11 @@ class BaseManager {
     var wheelRadius:Float;
     var inversedVelocity:Bool;
     var inversedEncoders:Bool;
+    static var gyroPID = new PID(-100, 100, {
+        kp: 1.05,
+        kd: 0.4,
+        ki: 0.0001
+    });
 
     public function new(leftMotor:Motor, rightMotor:Motor, leftEncoder:Encoder, rightEncoder:Encoder,
     wheelRadius:Float, ?inversedVelocity = false, ?inversedEncoders = false):Void {
@@ -92,8 +97,9 @@ class BaseManager {
             kd: 0.4,
             ki: 0.0001
         };
-        var pid = new PID(interval.coalesce(Seconds(.01)), -100, 100, coefficients.coalesce(defaults));
-        move(speed, pid, function() {
+        if (condition != null)
+            gyroPID = new PID(-100, 100, coefficients.coalesce(defaults));
+        move(speed, gyroPID, function() {
                 return Brick.gyroscope.read() - currentDirection;
             }, 
             condition, interval
