@@ -26,8 +26,8 @@ class Script {
         untyped __js__("script.run()");
     }
 
-    public static function system(command:String):Void {
-        untyped __js__("script.system({0})", command);
+    public static function system(command:String, ?wait:Bool=true):Void {
+        untyped __js__("script.system({0}, {1})", command, wait);
     }
 
     public static function time():Time {
