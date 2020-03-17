@@ -10,4 +10,7 @@ class PoolMember {
         this.port = port;
         this.id = id;
     }
+    public function toString(){
+        return "PoolMember " +  id + " " + ip + " " + port;
+    }
 }
