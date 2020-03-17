@@ -13,7 +13,8 @@ import connectionPool.PoolMember;
 import connectionPool.ConnectionPool;
 import connectionPool.action.PoolAction;
 import connectionPool.request.RequestHandler;
-
+import graph.Labyrinth;
+import graph.LabyrinthPoolActions;
 
 class PoolConfig {
     public static var helloHandler = new HelloWorldHandler();
