@@ -12,7 +12,7 @@ the build output is `/result/build.js`
 ./build.sh
 ```
 
-## Build day solutions
+## Build daily solutions
 To get your day solutions built do:
 ```bash
 ./batchBuild.sh dayN
