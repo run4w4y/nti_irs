@@ -8,7 +8,10 @@ import robotModel.Environment;
 import robotModel.ModelArguments;
 import robotModel.motorManager.MotorManager;
 import movementExecutor.MovementExecutor;
-import movementExecutor.Movement;
+// import movementExecutor.Movement;
+import graph.Direction;
+import graph.Node;
+import graph.Labyrinth;
 
 using tools.NullTools;
 using StringTools;
@@ -68,12 +71,14 @@ class RobotModel {
             else
                 new MovementExecutor(manager, 615);
 
-        var actions = [Go, Go, TurnRight, Go, Go, TurnLeft, Go, Go, Go, Go, TurnLeft, Go, Go];
-        // var actions = [Go, TurnRight];
-
-        for (action in actions)
-            executor.add(action);
-        executor.execute();
+        var startNode = new Node(1, 1, Up);
+        var finishNode = new Node(5, 1, Undefined);
+        var g = new Labyrinth(8, 8);
+        var res = g.goToPositionInUnknownLabybrinth(
+            startNode, finishNode, executor, checkLeft, checkRight, checkFront, checkBack
+        );
+        
+        Script.print(res);
 
         Brick.display.addLabel('finish', new image.Pixel(0, 0));
     }
