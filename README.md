@@ -12,6 +12,22 @@ the build output is `/result/build.js`
 ./build.sh
 ```
 
+## Build the solutions
+```bash
+./batchBuild.sh dayN
+```
+Note that `builds/in/dayN.in` must be defined for that. To pass the inputs from `.in` file to your haxe code use `@:inputFrom` metadata. Example:
+```haxe
+class Model extends RobotModel {
+    @:inputFrom("real_1")
+    static function getInput():String return "";
+    
+    public function solution():Void {
+        // your solution goes here
+    }
+}
+```
+
 # Development
 ## Entering nix-shell
 ```bash
