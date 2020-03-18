@@ -7,8 +7,14 @@ import trik.robot.sensor.Sensor;
 import robotModel.Environment;
 import robotModel.ModelArguments;
 import robotModel.motorManager.MotorManager;
+import movementExecutor.MovementExecutor;
+import movementExecutor.Movement;
+import graph.Direction;
+import graph.Node;
+import graph.Labyrinth;
 
 using tools.NullTools;
+using StringTools;
 
 
 class RobotModel {
@@ -21,10 +27,15 @@ class RobotModel {
     var cellSize    :Float;
     var manager     :MotorManager;
 
+    @:updateFrequency(10)
+    inline function readSensor(sensor:Sensor):Int {
+        return sensor.read();
+    }
+
     function checkSensor(sensor:Sensor):Bool {
         return switch (environment) {
-            case Simulator: sensor.read() <= 70;
-            case Real:      sensor.read() <= 15;
+            case Simulator: readSensor(sensor) <= 70;
+            case Real:      readSensor(sensor) <= 15;
         }
     }
 
@@ -52,7 +63,33 @@ class RobotModel {
     }
 
     public function solution():Void {
-        manager.goEncoders(2000, 360, 360);
+        if (environment == Simulator)
+            manager.goEncoders(150);
+        
+        var executor = 
+            if (environment == Simulator)
+                new MovementExecutor(manager, 1370)
+            else
+                new MovementExecutor(manager, 580);
+
+        var lines = Script.readAll("input.txt").map(
+            function (x) 
+                return x.trim().split(' ').map(Std.parseInt)
+        ).filter(function (x) return x[0] != null);
+        var startNode = new Node(lines[0][1], lines[0][0], switch (lines[0][2]) {
+            case 0: Up;
+            case 1: Right;
+            case 2: Down;
+            case _: Left;
+        });
+        var finishNode = new Node(lines[1][1], lines[1][0], Undefined);
+        var g = new Labyrinth(8, 8);
+        var res = g.goToPositionInUnknownLabybrinth(
+            startNode, finishNode, executor, checkLeft, checkRight, checkFront, checkBack
+        );
+        
+        Script.print(res);
+        Brick.display.addLabel('finish', new image.Pixel(0, 0));
     }
 
     public function new(manager:MotorManager, args:ModelArguments):Void {
