@@ -49,6 +49,10 @@ class RealManager extends BaseManager implements MotorManager {
         var curR = iRight;
         var curL = iLeft;
 
+        var t = Script.time();
+        while (Script.time().getDifference(t) < 800)
+            alignImaginaryEncoders();
+
         if (sign < 0) {
             while (iRight < curR + path) {
                 iRight += step;
@@ -68,9 +72,9 @@ class RealManager extends BaseManager implements MotorManager {
         }
 
         var t = Script.time();
-        while (Script.time().getDifference(t) < 2000) {
+        while (Script.time().getDifference(t) < 2000)
             alignImaginaryEncoders();
-        }
+            
         currentDirection = readGyro();
     }
 
@@ -96,9 +100,9 @@ class RealManager extends BaseManager implements MotorManager {
         do {
             var curLeft = readLeftSensor();
             var curRight = readRightSensor();
-            if (curLeft < 20)
+            if (curLeft < 25)
                 wallDriveLeft();
-            else if (curRight < 20) 
+            else if (curRight < 25) 
                 wallDriveRight();
             else {
                 iLeft += 8;
