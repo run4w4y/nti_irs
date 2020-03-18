@@ -43,34 +43,6 @@ class HelloWorldAction extends PoolAction {
 
 class Main {
     public static function main():Void {
-        // var env = Real;
-        // var manager:MotorManager = new RealManager(
-        //     Brick.motor("M4"),
-        //     Brick.motor("M3"),
-        //     Brick.encoder("E4"),
-        //     Brick.encoder("E3"),
-        //     54,
-        //     true
-        // );
-        // var model = new RobotModel(manager, {
-        //     frontSensor: Brick.sensor("D1"),
-        //     backSensor: Brick.sensor("D2"),
-        //     leftSensor: Brick.sensor("A1"),
-        //     rightSensor: Brick.sensor("A2"),
-        //     environment: env,
-        //     cellSize: 400
-        // });
-        // model.solution();
-
-        // var pic = Brick.getPhoto();
-        // var picString = haxe.Json.stringify(pic.map(function (a) return a.map(function (b) return [b.r, b.g, b.b])));
-        // // Script.system("rm pic.json");
-        // // Script.wait(Seconds(1));
-        // Script.writeToFile("pic.json", picString);
-        // var artag = new Artag(pic);
-        // var decoder = new ArtagDecoder(artag);
-        // Script.print(decoder.read());
-
         var pool = new ConnectionPool(PoolConfig.master, [PoolConfig.slave], [PoolConfig.helloHandler]);
         pool.addActions([
             new HelloWorldAction(PoolConfig.master),

@@ -4,3 +4,8 @@ lib
 result
 .haxelib
 *.js
+.cache
+.local
+.npm
+.pki
+.gitignore

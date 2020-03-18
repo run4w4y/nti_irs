@@ -524,7 +524,7 @@ class Labyrinth {
 		}
 		return positions;
 	}
-	public function goToInUnknownLabybrinth(startNode:Node, finishNode:Node,
+	public function goToPositionInUnknownLabybrinth(startNode:Node, finishNode:Node,
 	executor:MovementExecutor,
 	readLeft:ReadFunction,
 	readRight:ReadFunction,
@@ -544,7 +544,7 @@ class Labyrinth {
 		return cast (abs(node1.row - node2.row), Int) + cast (abs(node1.col - node2.col), Int);
 	}
 
-	public function dfsToKnownPoint(currentNode:Node,finishNode:Node,executor:MovementExecutor):Bool{
+	public function dfsToKnownPostion(currentNode:Node,finishNode:Node,executor:MovementExecutor):Bool{
 		if(getDistance(currentNode,finishNode) == 0)
 			return true;
 		for(move in [TurnLeft,TurnRight,TurnAround]){
