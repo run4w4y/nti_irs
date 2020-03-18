@@ -140,4 +140,11 @@ class ScientificTools {
     public static function chunks<T>(array:Array<T>, ?chunkSize:Int=1):Array<Array<T>> {
         return new Range(0, array.length, chunkSize).map(function (i) return array.slice(i, i + chunkSize));
     }
+
+    public static function sign<T:Float>(n:T):Int {
+        return 
+            if (n < 0) -1
+            else if (n > 0) 1
+            else 0;
+    }
 }
