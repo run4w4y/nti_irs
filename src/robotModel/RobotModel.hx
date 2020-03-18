@@ -8,10 +8,10 @@ import robotModel.Environment;
 import robotModel.ModelArguments;
 import robotModel.motorManager.MotorManager;
 import movementExecutor.MovementExecutor;
-// import movementExecutor.Movement;
-import graph.Direction;
-import graph.Node;
-import graph.Labyrinth;
+import movementExecutor.Movement;
+// import graph.Direction;
+// import graph.Node;
+// import graph.Labyrinth;
 
 using tools.NullTools;
 using StringTools;
@@ -35,7 +35,7 @@ class RobotModel {
     function checkSensor(sensor:Sensor):Bool {
         return switch (environment) {
             case Simulator: readSensor(sensor) <= 70;
-            case Real:      readSensor(sensor) <= 15;
+            case Real:      readSensor(sensor) <= 25;
         }
     }
 
@@ -71,16 +71,33 @@ class RobotModel {
             else
                 new MovementExecutor(manager, 615);
 
-        var startNode = new Node(1, 1, Up);
-        var finishNode = new Node(5, 1, Undefined);
-        var g = new Labyrinth(8, 8);
-        var res = g.goToPositionInUnknownLabybrinth(
-            startNode, finishNode, executor, checkLeft, checkRight, checkFront, checkBack
-        );
-        
-        Script.print(res);
+        // var actions = [Go, Go, TurnRight, Go, Go, TurnLeft, Go, Go, Go, Go, TurnLeft, Go, Go];
+        var actions = [Go, TurnLeft, Go];
+
+        for (action in actions)
+            executor.add(action);
+        executor.execute();
 
         Brick.display.addLabel('finish', new image.Pixel(0, 0));
+        
+        // if (environment == Simulator)
+        //     manager.goEncoders(150);
+        // var executor = 
+        //     if (environment == Simulator)
+        //         new MovementExecutor(manager, 1370)
+        //     else
+        //         new MovementExecutor(manager,  619);
+
+        // var startNode = new Node(1, 6, Up);
+        // var finishNode = new Node(0, 3, Undefined);
+        // var g = new Labyrinth(8, 8);
+        // var res = g.goToPositionInUnknownLabybrinth(
+        //     startNode, finishNode, executor, checkLeft, checkRight, checkFront, checkBack
+        // );
+        
+        // Script.print(res);
+
+        // Brick.display.addLabel('finish', new image.Pixel(0, 0));
     }
 
     public function new(manager:MotorManager, args:ModelArguments):Void {
