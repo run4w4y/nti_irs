@@ -6,6 +6,7 @@ patch_file() {
     rm -rf "$1"
 }
 
+rm *.js
 haxe build.hxml
 haxe gyroCalibration.hxml
 for buildResult in *.js; do 
