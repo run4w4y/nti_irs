@@ -18,6 +18,7 @@ To get your day solutions built do:
 ./batchBuild.sh dayN
 ```
 This will result in files like `builds/out/dayN/real_1_1.js` and so on.
+To have your build output uploaded as well, add `--upload ip1 ip2 ...` in the end of the command above.
 
 Note that `builds/in/dayN.in` must be defined for that. To pass the inputs from `.in` file to your haxe code use `@:inputFrom` metadata. Example:
 ```haxe
@@ -30,6 +31,20 @@ class Model extends RobotModel {
     }
 }
 ```
+
+# Uploading builds
+## Upload and run
+```bash
+./trikRun.sh [path] [ip]
+```
+Script.print calls are echoed to stdout while script runs. Ctrl+C stops execution on the TRIK brick.
+You can also omit the ip if it's meant to be 192.168.77.1
+
+## Upload
+```bash
+./upload.sh [path1 path2 ...] -- [ip1 ip2 ...]
+```
+`--` is omittable if there's only one ip
 
 # Development
 ## Entering nix-shell
