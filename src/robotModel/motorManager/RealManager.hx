@@ -9,6 +9,7 @@ import robotModel.motorManager.BaseManager;
 import robotModel.motorManager.MotorManager;
 import robotModel.speedManager.pid.PID;
 import robotModel.speedManager.pid.PIDSim;
+import robotModel.speedManager.pid.PIDCoefficients;
 import robotModel.speedManager.SineAcceleration;
 
 using tools.NullTools;
@@ -19,13 +20,15 @@ using science.ScientificTools;
 class RealManager extends BaseManager implements MotorManager {
     static var iLeft:Int = 0;
     static var iRight:Int = 0;
-    static var iLPid = new PID(-100, 100, {
-        kp: .95,
-        kd: 1.2
-    });
-    static var iRPid = new PID(-100, 100, {
-        kp: .95,
-        kd: 1.2
+    static var imgKs:PIDCoefficients = {
+        kp: 1.15,
+        kd: 1.7
+    };
+    static var iLPid = new PID(-100, 100, imgKs);
+    static var iRPid = new PID(-100, 100, imgKs);
+    static var wallPid = new PID(-100, 100, {
+        kp: .1,
+        kd: .2
     });
 
     function alignImaginaryEncoders():Void {
@@ -36,10 +39,13 @@ class RealManager extends BaseManager implements MotorManager {
     }
 
     public function turn(angle:Float):Void {
+        iRight = 0;
+        iLeft = 0;
+        resetEncoders();
         currentDirection += angle;
         var sign = angle.sign();
-        var step = 4;
-        var path = round(318 * abs(angle) / 90);
+        var step = 3;
+        var path = round(228 * abs(angle) / 90);
         var curR = iRight;
         var curL = iLeft;
 
@@ -68,7 +74,44 @@ class RealManager extends BaseManager implements MotorManager {
         currentDirection = readGyro();
     }
 
+    function wallDriveRight():Void {
+        var u = wallPid.calculate(13.5 - readRightSensor());
+        iRight += round(8 + u);
+        iLeft += round(8 - u);
+        Script.wait(Seconds(.01));
+        alignImaginaryEncoders();
+    }
+
+    function wallDriveLeft():Void {
+        var u = wallPid.calculate(13.5 - readLeftSensor());
+        iRight += round(8 - u);
+        iLeft += round(8 + u);
+        Script.wait(Seconds(.01));
+        alignImaginaryEncoders();
+    }
+
+    function movePoint(path:Int):Void {
+        var resetL = iLeft;
+        var resetR = iRight;
+        do {
+            var curLeft = readLeftSensor();
+            var curRight = readRightSensor();
+            if (curLeft < 20)
+                wallDriveLeft();
+            else if (curRight < 20) 
+                wallDriveRight();
+            else {
+                iLeft += 8;
+                iRight += 8;
+                alignImaginaryEncoders();
+                Script.wait(Seconds(.01));
+            }
+        } while ((Math.abs(iLeft - resetL) + Math.abs(iRight - resetR)) / 2 < path);
+    }
+
     public function goEncoders(path:Int, ?accelPoint:Int, ?decelPoint:Int):Void {
+        movePoint(path);
+        return;
         var accel = new SineAcceleration(40, 60, accelPoint, decelPoint, path);
         resetEncoders();
         var pidWalls = new PID(-100, 100, {
@@ -80,11 +123,6 @@ class RealManager extends BaseManager implements MotorManager {
             kd: 2.65,
             ki: .0025
         });
-        // var pidGyro = new PIDSim(Seconds(.01), -100, 100, {
-        //     kp: 1.05,
-        //     kd: 0.4,
-        //     ki: 0.0001
-        // });
 
         var curPath:Float;
         do {
