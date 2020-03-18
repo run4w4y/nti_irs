@@ -4,6 +4,7 @@ import Math.*;
 import trik.Brick;
 import trik.Script;
 import time.Time;
+import robotModel.speedManager.SpeedManager;
 import robotModel.speedManager.pid.PIDSim;
 import robotModel.speedManager.pid.PIDCoefficients;
 import robotModel.motorManager.BaseManager;
@@ -51,7 +52,7 @@ class SimulatorManager extends BaseManager implements MotorManager {
         goEncoders(round(mmToEnc(length)));
     }
 
-    override function moveGyro(speed:Int, ?condition:(Void -> Bool), ?interval:Time, ?coefficients:PIDCoefficients):Void {
+    function moveGyro(speed:Int, ?condition:(Void -> Bool), ?interval:Time, ?coefficients:PIDCoefficients):Void {
         var defaults:PIDCoefficients = {
             kp: 1.05,
             kd: 0.4,
