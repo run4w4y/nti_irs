@@ -35,12 +35,12 @@ class PID implements SpeedManager {
         var pOut:Float = error * kp;
         
         integral += error;
-        var derivative = prevError - error;
+        var derivative = error - prevError;
         
         var iOut:Float = integral * ki;
         var dOut:Float = derivative * kd;
 
-        var res:Float = pOut + iOut + dOut;
+        var res:Float = pOut + iOut - dOut;
         if (res > max) res = max;
         if (res < min) res = min;
 
