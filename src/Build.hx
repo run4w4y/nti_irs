@@ -46,7 +46,6 @@ class Build {
                         pos: Context.currentPos()
                     });
 
-                    trace(f.expr.toString());
                     f.expr = Context.parse('{
                         var read = function () ${ f.expr.toString() };
 
