@@ -9,7 +9,8 @@ using tools.TimeTools;
 using tools.NullTools;
 
 
-class PID implements SpeedManager {
+class PIDSim implements SpeedManager {
+    var interval  :Time;
     var min       :Float;
     var max       :Float;
     var kp        :Float;
@@ -18,7 +19,8 @@ class PID implements SpeedManager {
     var prevError :Float = 0;
     var integral  :Float = 0;
 
-    public function new(min:Float, max:Float, ks:PIDCoefficients) {
+    public function new(interval:Time, min:Float, max:Float, ks:PIDCoefficients) {
+        this.interval = interval;
         this.min = min;
         this.max = max;
         this.kp = ks.kp;
@@ -34,13 +36,19 @@ class PID implements SpeedManager {
     public function calculate(error:Float):Float {
         var pOut:Float = error * kp;
         
-        integral += error;
-        var derivative = error - prevError;
+        var derivative:Float;
+        switch (interval.toMilliseconds()) {
+            case Milliseconds(timeValue):
+                integral += error * timeValue;
+                derivative = (prevError * error) / timeValue;
+            case _:
+                return 0;
+        }
         
         var iOut:Float = integral * ki;
         var dOut:Float = derivative * kd;
 
-        var res:Float = pOut + iOut - dOut;
+        var res:Float = pOut + iOut + dOut;
         if (res > max) res = max;
         if (res < min) res = min;
 

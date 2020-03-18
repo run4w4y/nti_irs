@@ -35,7 +35,8 @@ class BaseManager {
         this.inversedVelocity = inversedVelocity;
         this.inversedEncoders = inversedEncoders;
         this.wheelRadius = wheelRadius;
-        currentDirection = Brick.gyroscope.read();
+        currentDirection = readGyro();
+        resetEncoders();
     }
 
     inline function startMotor(motor:Motor, velocity:Int):Void {
@@ -50,6 +51,7 @@ class BaseManager {
         startMotor(rightMotor, velocity);
     }
 
+    @:updateFrequency(7)
     inline function readEncoder(encoder:Encoder):Int {
         var val = encoder.read();
         return if (inversedEncoders) -val else val;
@@ -68,10 +70,25 @@ class BaseManager {
         rightEncoder.reset();
     }
 
+    function stop(?delayTime:Time):Void {
+        delayTime = delayTime.coalesce(Milliseconds(0));
+        this.leftMotor.setPower(0);
+        this.rightMotor.setPower(0);
+        Script.wait(delayTime);
+    }
+
+    inline function mmToEnc(length:Float):Float {
+        return length / (2 * Math.PI * wheelRadius) * 360;
+    }
+
+    @:updateFrequency(50)
+    inline function readGyro():Angle {
+        return Brick.gyroscope.read();
+    }
+
     function move(speed:Int, controller:SpeedManager, getError:Void -> Float, 
     ?condition:Void -> Bool, ?interval:Time):Void {
         interval = interval.coalesce(Seconds(0.1));
-        // resetEncoders();
         
         do {
             var u = controller.calculate(getError());
@@ -84,30 +101,5 @@ class BaseManager {
         } while (condition());
 
         stop(Seconds(0.1));
-    }
-
-    function moveGyro(speed:Int, ?condition:(Void -> Bool), ?interval:Time, ?coefficients:PIDCoefficients):Void {
-        var defaults:PIDCoefficients = {
-            kp: 1.05,
-            kd: 0.4,
-            ki: 0.0001
-        };
-        var pid = new PID(interval.coalesce(Seconds(.01)), -100, 100, coefficients.coalesce(defaults));
-        move(speed, pid, function() {
-                return Brick.gyroscope.read() - currentDirection;
-            }, 
-            condition, interval
-        );
-    }
-
-    function stop(?delayTime:Time):Void {
-        delayTime = delayTime.coalesce(Milliseconds(0));
-        this.leftMotor.setPower(0);
-        this.rightMotor.setPower(0);
-        Script.wait(delayTime);
-    }
-
-    inline function mmToEnc(length:Float):Float {
-        return length / (2 * Math.PI * wheelRadius) * 360;
     }
 }
