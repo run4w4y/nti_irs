@@ -2,7 +2,7 @@ package graph;
 
 import graph.Direction;
 import ds.HashMap;
-
+import movementExecutor.Movement;
 using tools.NullTools;
 
 
@@ -35,7 +35,20 @@ class Node {
 	public function changeDirection(direction:Direction):Node {
 		return new Node(row, col, direction);
 	}
-
+	public function executeMove(move:Movement){
+		switch(move){
+			case TurnLeft:
+				return new Node(row,col,leftDirection[direction]);
+			case TurnRight:
+				return new Node(row,col,rightDirection[direction]);
+			case TurnAround:
+				return new Node(row,col,backwardDirection[direction]);
+			case Go:
+				return go();
+			case Undefined:
+				throw "undefined move";
+		}
+	}
 	public function go(?direction:Direction):Node {
 		direction = if(direction != null) direction else this.direction;
 		switch (direction) {
@@ -61,7 +74,7 @@ class Node {
 	}
 
 	public function goBack():Node {
-		var newNode = new Node(row , col, backwardDirection[direction]);
+		var newNode = new Node(row, col, backwardDirection[direction]);
 		newNode = newNode.go();
 		return newNode.changeDirection(direction);
 	}
