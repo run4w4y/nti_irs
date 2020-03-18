@@ -1,5 +1,7 @@
 #!/bin/sh
 
+exitCode=0
+
 patchFile() {
     sed 's/Type.typeof/Type.typeOf/g' "$1" > "$1"
     rm -rf "$1"
@@ -17,6 +19,9 @@ buildHaxe() {
         -js "builds/out/$4/$1""_$3.js" \
         -main $5 \
         -lib polygonal-ds
+    if (( $? != 0 )); then 
+        exit $?
+    fi
     patchFile "builds/out/$4/$1""_$3.js"
 }
 
@@ -58,3 +63,17 @@ while IFS= read line; do
             ;;
     esac
 done <<< $(cat "$buildInputPath")\=
+
+sliceFrom=
+for ((i=0; i<$#; i++)); do
+    if [[ ${!i} == "--upload" ]]; then
+        sliceFrom=$(( $i + 1 ))
+    fi
+done
+
+if [ -z "$sliceFrom" ]; then
+    exit 0
+else 
+    ips=${@:$sliceFrom}
+    ./upload.sh builds/out/$1/*.js -- "$ips"
+fi

@@ -1,19 +1,22 @@
 #!/bin/sh
 
-upload_file () {
-    echo "Uploading $1 to $2"
-    scp -q -o StrictHostKeyChecking=no "$1" "root@$2:~/trik/scripts/"
-    echo "Done"
-}
+sliceTo=$(( $# - 1 ))
+sliceFrom=$(( $# ))
+for ((i=0; i<$#; i++)); do
+    if [[ ${!i} == "--" ]]; then
+        sliceTo=$(( $i - 1 ))
+        sliceFrom=$(( $i + 1 ))
+    fi
+done
 
-if [ "$#" == 1 ]; then
-    for file in result/*.js; do
-        upload_file "$file" "$1"
+files=${@:1:$sliceTo}
+ips=${@:$sliceFrom}
+
+shift
+for ip in ${ips[@]}; do
+    for file in ${files[@]}; do
+        echo "Uploading $file to $ip"
+        scp -q -o StrictHostKeyChecking=no "$file" "root@$ip:~/trik/scripts/"
+        echo "Done"
     done
-else
-    file="$1"
-    shift
-    for i; do
-        upload_file "$file" "$i"
-    done
-fi
+done
