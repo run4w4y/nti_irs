@@ -12,10 +12,13 @@ the build output is `/result/build.js`
 ./build.sh
 ```
 
-## Build the solutions
+## Build day solutions
+To get your day solutions built do:
 ```bash
 ./batchBuild.sh dayN
 ```
+This will result in files like `builds/out/dayN/real_1_1.js` and so on.
+
 Note that `builds/in/dayN.in` must be defined for that. To pass the inputs from `.in` file to your haxe code use `@:inputFrom` metadata. Example:
 ```haxe
 class Model extends RobotModel {
