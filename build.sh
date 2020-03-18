@@ -1,6 +1,6 @@
 #!/bin/sh
 
-patch_file() {
+patchFile() {
     local newName=$(basename "$1" .js)Patched.js
     sed 's/Type.typeof/Type.typeOf/g' "$1" > "$newName"
     rm -rf "$1"
@@ -13,6 +13,6 @@ exitSum=$(( $exitSum + $? ))
 haxe gyroCalibration.hxml
 exitSum=$(( $exitSum + $? ))
 for buildResult in *.js; do 
-    patch_file "$buildResult"
+    patchFile "$buildResult"
 done
 exit $exitSum
