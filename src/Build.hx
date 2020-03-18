@@ -15,7 +15,6 @@ class Build {
             return null;
         
         var fields = Context.getBuildFields();
-        var newFields = [];
         
         for (field in fields) {
             switch (field.kind) {
@@ -61,4 +60,37 @@ class Build {
 
         return fields;
     } 
+
+    macro public static function buildReal():Array<Field> {
+        var localClass = Context.getLocalClass();
+
+        if (localClass == null)
+            return null;
+
+        var fields = Context.getBuildFields();
+
+        for (field in fields) {
+            switch (field.kind) {
+                case FFun(f):
+                    var isAffected = field.meta.map(function (a) return a.name).has(":inputFrom");
+                    var args = if (isAffected)
+                            field.meta.filter(function (a) return a.name == ":inputFrom")[0].params
+                        else
+                            null;
+                    
+                    isAffected = isAffected && args != null && f.expr != null;
+                    if (!isAffected) 
+                        continue;
+
+                    var input = Context.definedValue(args[0].getValue());
+                    f.expr = Context.parse('{
+                        return "$input";
+                    }', Context.currentPos());
+                case _:
+                    continue;
+            }
+        }
+
+        return fields;
+    }
 }
