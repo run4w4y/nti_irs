@@ -70,7 +70,7 @@ class RobotModel {
             if (environment == Simulator)
                 new MovementExecutor(manager, 1370)
             else
-                new MovementExecutor(manager, 615);
+                new MovementExecutor(manager, 619);
 
         // var actions = [Go, Go, TurnRight, Go, Go, TurnLeft, Go, Go, Go, Go, TurnLeft, Go, Go];
         var actions = [Go, TurnLeft, Go];

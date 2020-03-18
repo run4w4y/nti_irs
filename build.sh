@@ -7,8 +7,12 @@ patch_file() {
 }
 
 rm *.js
+exitSum=0
 haxe build.hxml
+exitSum=$(( $exitSum + $? ))
 haxe gyroCalibration.hxml
+exitSum=$(( $exitSum + $? ))
 for buildResult in *.js; do 
     patch_file "$buildResult"
 done
+exit $exitSum
