@@ -2,19 +2,17 @@ package movementExecutor;
 
 import movementExecutor.Movement;
 import movementExecutor.exceptions.MovementException;
+import robotModel.motorManager.MotorManager;
 
 
 class MovementExecutor {
     var execQueue:Array<Movement> = [];
-    var turn:(Int) -> Void;
-    var go:Void -> Void;
+    var manager:MotorManager;
+    var cellSize:Int;
 
-    public function new(
-        turn:(Int) -> Void,
-        go:Void -> Void
-    ):Void {
-        this.turn = turn;
-        this.go = go;
+    public function new(manager:MotorManager, cellSize:Int):Void {
+        this.manager = manager;
+        this.cellSize = cellSize;
     }
 
     public function add(movement:Movement):Void {
@@ -32,20 +30,20 @@ class MovementExecutor {
         for (movement in execQueue) {
             switch (movement) {
                 case TurnRight:
-                    turnValue -= 90;
-                case TurnLeft:
                     turnValue += 90;
+                case TurnLeft:
+                    turnValue -= 90;
                 case TurnAround:
                     turnValue += 180;
                 case _:
                     if (turnValue != 0)
-                        turn(turnValue);
+                        manager.turn(turnValue);
                     turnValue = 0;
-                    go();
+                    manager.goEncoders(cellSize);
             }
         }
         if (turnValue != 0)
-            turn(turnValue);
+            manager.turn(turnValue);
         execQueue = [];
     }
 }
