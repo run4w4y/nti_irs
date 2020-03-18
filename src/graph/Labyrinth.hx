@@ -268,7 +268,6 @@ class Labyrinth {
 			args.executor.add(TurnAround);
 		};
 	}
-
 	public function localizeUndefined(
 		startDirection:Direction, 
 		executor:MovementExecutor,
@@ -460,6 +459,7 @@ class Labyrinth {
 		readFront:ReadFunction,
 		readBack:ReadFunction
 		): List<Node> {
+
 		startDirection.coalesce(Up);
 		firstDirection = startDirection;
 		used = new HashMap<Node,Bool>();
@@ -492,6 +492,8 @@ class Labyrinth {
 				dfsWithPool(positionsOfRobots[robot],robot,connectionPool, {
 					executor: executor
 				});
+				connectionPool.addActions([new ExecuteMovementAction(robot, executor)]);
+				connectionPool.execute();
 				checked[robot] = true;
 			}
 		}
@@ -522,5 +524,68 @@ class Labyrinth {
 		}
 		return positions;
 	}
+	public function goToInUnknownLabybrinth(startNode:Node, finishNode:Node,
+	executor:MovementExecutor,
+	readLeft:ReadFunction,
+	readRight:ReadFunction,
+	readFront:ReadFunction,
+	readBack:ReadFunction): Bool {
+		
+		used = new HashMap<Node,Bool>();
+		readFunctions[TurnLeft] = readLeft;
+		readFunctions[TurnRight] = readRight;
+		readFunctions[Go] = readFront;
+		readFunctions[TurnAround] = readBack;
+	
+		return dfsToKnownPoint(startNode,finishNode, executor);
+	}
+	
+	function getDistance(node1:Node, node2:Node):Int{
+		return cast (abs(node1.row - node2.row), Int) + cast (abs(node1.col - node2.col), Int);
+	}
 
+	public function dfsToKnownPoint(currentNode:Node,finishNode:Node,executor:MovementExecutor):Bool{
+		if(getDistance(currentNode,finishNode) == 0)
+			return true;
+		for(move in [TurnLeft,TurnRight,TurnAround]){
+			var nxtNode:Node;
+			switch(move){
+				case Go:
+					nxtNode = currentNode;
+				case _:
+					nxtNode = currentNode.executeMove(move);
+			}
+			allowedDirection[nxtNode] = readFunctions[move]();
+			if(!allowedDirection[nxtNode]){
+				used[nxtNode] = true;	
+				continue;
+			}
+			if(move == Go){
+				nxtNode = nxtNode.go();
+				if(!used[nxtNode.reverseDirection()])
+					nodes.push(nxtNode.reverseDirection());
+				used[nxtNode.reverseDirection()] = true;
+			}
+			executor.add(move);
+			executor.execute();
+			if(dfsToKnownPoint(nxtNode,finishNode,executor))
+				return true;
+			switch(move){
+				case Go:
+					executor.add(TurnAround);
+					executor.add(Go);
+					executor.execute();
+					executor.add(TurnAround);
+				case TurnLeft:
+					executor.add(TurnRight);
+				case TurnRight:
+					executor.add(TurnLeft);
+				case TurnAround:
+					executor.add(TurnAround);
+				case Undefined:
+					throw "Bad move";
+			}
+		}
+		return false;
+	}
 }
