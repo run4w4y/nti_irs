@@ -10,7 +10,7 @@ import robotModel.speedManager.pid.PIDCoefficients;
 import robotModel.motorManager.BaseManager;
 import robotModel.motorManager.MotorManager;
 
-using tool.NullTools;
+using tools.NullTools;
 
 
 class SimulatorManager extends BaseManager implements MotorManager {
@@ -42,6 +42,7 @@ class SimulatorManager extends BaseManager implements MotorManager {
     }
 
     public function goEncoders(encValue:Int, ?_ :Int, ?_:Int):Void {
+        resetEncoders();
         moveGyro(90, function () {
             return (readLeft() + readRight()) / 2 <= encValue;
         });
@@ -58,8 +59,10 @@ class SimulatorManager extends BaseManager implements MotorManager {
             kd: 0.4,
             ki: 0.0001
         };
+        
         if (condition != null)
             gyroPID = new PIDSim(interval.coalesce(Seconds(.01)), -100, 100, coefficients.coalesce(defaults));
+        
         move(speed, gyroPID, function() {
                 return Brick.gyroscope.read() - currentDirection;
             }, 
