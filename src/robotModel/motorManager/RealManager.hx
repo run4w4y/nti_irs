@@ -27,8 +27,8 @@ class RealManager extends BaseManager implements MotorManager {
     static var iLPid = new PID(-100, 100, imgKs);
     static var iRPid = new PID(-100, 100, imgKs);
     static var wallPid = new PID(-100, 100, {
-        kp: .1,
-        kd: .2
+        kp: .2,
+        kd: .4
     });
 
     function alignImaginaryEncoders():Void {
@@ -39,12 +39,11 @@ class RealManager extends BaseManager implements MotorManager {
     }
 
     public function turn(angle:Float):Void {
-        
-        angle = angle % 360;
-        if(angle > 180)
-           angle = angle - 360;
-        if(angle < 180)
-            angle = angle + 360;
+        angle %= 360;
+        if (angle > 180)
+            angle -= 360;
+        if (angle < -180)
+            angle += 360;
 
         iRight = 0;
         iLeft = 0;
@@ -52,7 +51,7 @@ class RealManager extends BaseManager implements MotorManager {
         currentDirection += angle;
         var sign = angle.sign();
         var step = 3;
-        var path = round(228 * abs(angle) / 90);
+        var path = round(225 * abs(angle) / 90);
         var curR = iRight;
         var curL = iLeft;
 
@@ -81,7 +80,7 @@ class RealManager extends BaseManager implements MotorManager {
         var t = Script.time();
         while (Script.time().getDifference(t) < 2000)
             alignImaginaryEncoders();
-            
+
         currentDirection = readGyro();
     }
 
@@ -89,7 +88,7 @@ class RealManager extends BaseManager implements MotorManager {
         var u = wallPid.calculate(13.5 - readRightSensor());
         iRight += round(8 + u);
         iLeft += round(8 - u);
-        Script.wait(Seconds(.01));
+        Script.wait(Seconds(.001));
         alignImaginaryEncoders();
     }
 
@@ -121,33 +120,38 @@ class RealManager extends BaseManager implements MotorManager {
     }
 
     public function goEncoders(path:Int, ?accelPoint:Int, ?decelPoint:Int):Void {
-        movePoint(path);
-        return;
+        // movePoint(path);
+        // return;
+
+        // Gyro + walls
         var accel = new SineAcceleration(40, 60, accelPoint, decelPoint, path);
         resetEncoders();
         var pidWalls = new PID(-100, 100, {
-            kp: 15,
-            kd: 30
+            kp: 4.5,
+            kd: 7
         });
         var pidGyro = new PID(-100, 100, {
             kp: 4.75,
             kd: 2.65,
             ki: .0025
         });
+        // var pidFront = new PID(-100, 0, {
+        //     kp:
+        // });
 
         var curPath:Float;
+        // var prev = 
         do {
             curPath = (readRight() + readLeft()) / 2;
             var v = accel.calculate(curPath);
             var l = checkLeft(), r = checkRight();
             var u:Float;
 
-            // if (r)
-            //     u = pidWalls.calculate(13 - readRightSensor());
-            // else if (l)
-            //     u = pidWalls.calculate(readLeftSensor() - 13);
-            // else 
-                u = pidGyro.calculate(readGyro() - currentDirection);
+            if (r)
+                u = pidWalls.calculate(13 - readRightSensor());
+            else if (l)
+                u = pidWalls.calculate(readLeftSensor() - 13);
+            u = pidGyro.calculate(readGyro() - currentDirection);
 
             startLeft(round(v - u));
             startRight(round(v + u));
