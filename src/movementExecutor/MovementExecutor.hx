@@ -27,30 +27,19 @@ class MovementExecutor {
 
     public function execute():Void {
         var turnValue = 0;
-        var goValue = 0;
         for (movement in execQueue) {
             switch (movement) {
                 case TurnRight:
-                    if(goValue != 0)
-                        manager.goEncoders(goValue);
-                    goValue = 0;
                     turnValue += 90;
                 case TurnLeft:
-                    if(goValue != 0)
-                        manager.goEncoders(goValue);
-                    goValue = 0;
                     turnValue -= 90;
                 case TurnAround:
-                    if(goValue != 0)
-                        manager.goEncoders(goValue);
-                    goValue = 0;
                     turnValue += 180;
                 case _:
                     if (turnValue != 0)
                         manager.turn(turnValue);
                     turnValue = 0;
-                    goValue += cellSize;
-
+                    manager.goEncoders(cellSize);
             }
         }
         if (turnValue != 0)

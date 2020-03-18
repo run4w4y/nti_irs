@@ -65,6 +65,7 @@ class RobotModel {
     public function solution():Void {
         if (environment == Simulator)
             manager.goEncoders(150);
+        
         var executor = 
             if (environment == Simulator)
                 new MovementExecutor(manager, 1370)
@@ -79,7 +80,7 @@ class RobotModel {
         executor.execute();
 
         Brick.display.addLabel('finish', new image.Pixel(0, 0));
-        
+
         // if (environment == Simulator)
         //     manager.goEncoders(150);
         // var executor = 

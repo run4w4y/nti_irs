@@ -39,6 +39,13 @@ class RealManager extends BaseManager implements MotorManager {
     }
 
     public function turn(angle:Float):Void {
+        
+        angle = angle % 360;
+        if(angle > 180)
+           angle = angle - 360;
+        if(angle < 180)
+            angle = angle + 360;
+
         iRight = 0;
         iLeft = 0;
         resetEncoders();
