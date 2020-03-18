@@ -568,7 +568,7 @@ class Labyrinth {
 			}
 			executor.add(move);
 			executor.execute();
-			if(dfsToKnownPoint(nxtNode,finishNode,executor))
+			if(dfsToKnownPostion(nxtNode,finishNode,executor))
 				return true;
 			switch(move){
 				case Go:
