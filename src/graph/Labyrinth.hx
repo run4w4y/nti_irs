@@ -547,8 +547,7 @@ class Labyrinth {
 	function dfsToKnownPoint(currentNode:Node,finishNode:Node,executor:MovementExecutor):Bool{
 		if (getDistance(currentNode, finishNode) == 0)
 			return true;
-		trik.Script.print(finishNode.col);
-		trik.Script.print(getDistance(currentNode, finishNode));
+			
 		used[currentNode] = true;
 		for (move in [TurnLeft,TurnRight,Go,TurnAround]) {
 			var nxtNode:Node;
@@ -572,13 +571,11 @@ class Labyrinth {
 				used[nxtNode] = true;
 				continue;
 			}
-			// trik.Script.print(executor.execQueue);
+			
 			if(move == Go){
 				nxtNode = nxtNode.go();
 			}
-			trik.Script.print(nxtNode.toString());
-			trik.Script.print(used[nxtNode]);
-			trik.Script.print(move);
+			
 			if (used[nxtNode])
 				continue;
 			if (move == Go)
@@ -603,7 +600,7 @@ class Labyrinth {
 					throw "Bad move";
 			}
 		}
-		// trik.Script.print(executor.execQueue);
+		
 		return false;
 	}
 }
