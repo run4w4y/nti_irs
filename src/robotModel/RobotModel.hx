@@ -11,6 +11,7 @@ import movementExecutor.MovementExecutor;
 import movementExecutor.Movement;
 import graph.Direction;
 import graph.Node;
+import graph.Labyrinth;
 
 using tools.NullTools;
 using StringTools;
@@ -74,15 +75,20 @@ class RobotModel {
         var lines = Script.readAll("input.txt").map(
             function (x) 
                 return x.trim().split(' ').map(Std.parseInt)
-        );
-        var startNode = new Node(lines[0][0], lines[0][1], switch (lines[0][2]) {
+        ).filter(function (x) return x[0] != null);
+        var startNode = new Node(lines[0][1], lines[0][0], switch (lines[0][2]) {
             case 0: Up;
             case 1: Right;
             case 2: Down;
             case _: Left;
         });
-        var finishNode = new Node(lines[1][0], lines[1][1], Undefined);
+        var finishNode = new Node(lines[1][1], lines[1][0], Undefined);
+        var g = new Labyrinth(8, 8);
+        var res = g.goToPositionInUnknownLabybrinth(
+            startNode, finishNode, executor, checkLeft, checkRight, checkFront, checkBack
+        );
         
+        Script.print(res);
         Brick.display.addLabel('finish', new image.Pixel(0, 0));
     }
 

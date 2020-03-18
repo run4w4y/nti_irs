@@ -544,10 +544,12 @@ class Labyrinth {
 		return cast (abs(node1.row - node2.row), Int) + cast (abs(node1.col - node2.col), Int);
 	}
 
-	public function dfsToKnownPostion(currentNode:Node,finishNode:Node,executor:MovementExecutor):Bool{
-		if(getDistance(currentNode,finishNode) == 0)
+	function dfsToKnownPoint(currentNode:Node,finishNode:Node,executor:MovementExecutor):Bool{
+		if (getDistance(currentNode, finishNode) == 0)
 			return true;
-		for(move in [TurnLeft,TurnRight,TurnAround]){
+			
+		used[currentNode] = true;
+		for (move in [TurnLeft,TurnRight,Go,TurnAround]) {
 			var nxtNode:Node;
 			switch(move){
 				case Go:
@@ -555,20 +557,32 @@ class Labyrinth {
 				case _:
 					nxtNode = currentNode.executeMove(move);
 			}
-			allowedDirection[nxtNode] = readFunctions[move]();
+			allowedDirection[nxtNode] = !readFunctions[move]();
+		}
+		for (move in [TurnLeft,TurnRight,Go,TurnAround]) {
+			var nxtNode:Node;
+			switch(move){
+				case Go:
+					nxtNode = currentNode;
+				case _:
+					nxtNode = currentNode.executeMove(move);
+			}
 			if(!allowedDirection[nxtNode]){
-				used[nxtNode] = true;	
+				used[nxtNode] = true;
 				continue;
 			}
+			
 			if(move == Go){
 				nxtNode = nxtNode.go();
-				if(!used[nxtNode.reverseDirection()])
-					nodes.push(nxtNode.reverseDirection());
-				used[nxtNode.reverseDirection()] = true;
 			}
+			
+			if (used[nxtNode])
+				continue;
+			if (move == Go)
+				used[nxtNode.reverseDirection()] = true;
 			executor.add(move);
 			executor.execute();
-			if(dfsToKnownPostion(nxtNode,finishNode,executor))
+			if(dfsToKnownPoint(nxtNode,finishNode,executor))
 				return true;
 			switch(move){
 				case Go:
@@ -586,6 +600,7 @@ class Labyrinth {
 					throw "Bad move";
 			}
 		}
+		
 		return false;
 	}
 }
