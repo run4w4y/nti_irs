@@ -1,5 +1,10 @@
 #!/bin/sh
 
+patchFile() {
+    sed 's/Type.typeof/Type.typeOf/g' "$1" > "$1"
+    rm -rf "$1"
+}
+
 buildHaxe() {
     echo "Building $1""_$3.js with main $5"
     local base64Input=$(echo "$2" | base64)
@@ -12,6 +17,7 @@ buildHaxe() {
         -js "builds/out/$4/$1""_$3.js" \
         -main $5 \
         -lib polygonal-ds
+    patchFile "builds/out/$4/$1""_$3.js"
 }
 
 mkdir -p "builds/out/$1"
