@@ -57,7 +57,7 @@ class MovementExecutor {
         if (turnValue != 0)
             manager.turn(turnValue);
         if (goValue != 0)
-            manager.goEncoders(goValue);
+            manager.goEncoders(goValue, 150, 150);
         execQueue = [];
     }
 }
