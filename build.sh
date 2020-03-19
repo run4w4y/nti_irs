@@ -6,7 +6,7 @@ patchFile() {
     rm -rf "$1"
 }
 
-rm *.js
+rm builds/out/*.js
 exitSum=0
 haxe build.hxml
 exitSum=$(( $exitSum + $? ))
