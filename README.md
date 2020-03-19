@@ -2,10 +2,14 @@
 
 # Building the code
 ## With nix
+You can build the code via `nix-build`:
 ```bash
 nix-build
 ```
-the build output is `/result/build.js`
+or using nix-shell:
+```bash
+nix-shell --run ./build.sh
+```
 
 ## Without nix
 ```bash
