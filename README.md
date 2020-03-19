@@ -26,7 +26,7 @@ class Model extends RobotModel {
     @:inputFrom("real_1")
     static function getInput():String return "";
     
-    public function solution():Void {
+    override public function solution():Void {
         // your solution goes here
     }
 }
