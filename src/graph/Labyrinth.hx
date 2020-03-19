@@ -210,11 +210,9 @@ class Labyrinth {
 	}
 
 	var used = new HashMap<Node, Bool>();
-
 	function dfs(
 		currentNode:Node, 
-		args:DfsArgs
-	):Void {
+		args:DfsArgs):Node{
 		used[currentNode] = true;
 		nodes.push(currentNode);
 
@@ -269,7 +267,122 @@ class Labyrinth {
 			args.executor.add(TurnAround);
 		};
 	}
+	function getCheck(curNode:Node){
+		var minRow = 0;
+		var minCol = 0;
+		var maxRow = 0;
+		var maxCol = 0;
+		for (node in nodes) {
+			minRow = cast (min(node.row, minRow), Int);
+			minCol = cast (min(node.col, minCol), Int);
+			maxRow = cast (max(node.row, maxRow), Int);
+			maxCol = cast (max(node.col, maxCol), Int);
+		}
+		if(maxRow - minRow + 1 != n && maxCol - minCol + 1 != m)
+		var addToRow = cast (abs(minRow), Int);
+		var addToCol = cast (abs(minCol), Int);
+		return new Node(curNode.row + addToRow,curNode.col + addToCol,curNode.direction);
+	}
+	function undoneDfs(
+		currentNode:Node, 
+		args:DfsArgs
+	):Void {
+		used[currentNode] = true;
+		nodes.push(currentNode);
+		var tmp = getCheck();
+		if(tmp != null)
+			return tmp;
+		allowedDirection[currentNode.turnLeft()] = !args.readLeft();
+		
+		if (!allowedDirection[currentNode.turnLeft()]){
+			used[currentNode.turnLeft()] = true;
+			nodes.push(currentNode.turnLeft());
+		}
+		
+		allowedDirection[currentNode.turnRight()] = !args.readRight();
+
+		if (!allowedDirection[currentNode.turnRight()]){
+			used[currentNode.turnRight()] = true;
+			nodes.push(currentNode.turnRight());
+		}
+		
+		allowedDirection[currentNode] = !args.readFront();
+
+		if (!used[currentNode.turnLeft()] && allowedDirection[currentNode.turnLeft()]) {
+
+			args.executor.add(TurnLeft);
+			args.executor.execute();
+			
+			var node = undoneDfs(currentNode.go(), args);
+			if(node != null)
+				return node; 
+			
+			args.executor.add(TurnRight);
+		}
+
+		if (!used[currentNode.turnRight()] && allowedDirection[currentNode.turnRight()]) {
+
+			args.executor.add(TurnRight);
+			args.executor.execute();
+			
+			var node = undoneDfs(currentNode.go(), args);
+			if(node != null)
+				return node; 
+			
+			args.executor.add(TurnLeft);
+		}
+
+		if (!used[currentNode.go()] && allowedDirection[currentNode]) {
+			used[currentNode.go().reverseDirection()] = true;
+
+			args.executor.add(Go);
+			args.executor.execute();
+			
+			var node = undoneDfs(currentNode.go(), args);
+			if(node != null)
+				return node; 
+			
+			args.executor.add(TurnAround);
+			args.executor.add(Go);
+			args.executor.execute();
+			
+			args.executor.add(TurnAround);
+		}
+		return node;
+	}
 	public function localizeUndefined(
+		startDirection:Direction, 
+		executor:MovementExecutor,
+		?readLeft:ReadFunction,
+		?readRight:ReadFunction,
+		?readFront:ReadFunction,
+		?readBack:ReadFunction
+	):Node {
+
+		var startPoint = new Node(0, 0, startDirection);
+
+		var node = dfs(startPoint, {
+			executor: executor,
+			readLeft: readLeft,
+			readRight: readRight,
+			readFront: readFront,
+			readBack: readBack
+		});
+		if(node != null)
+			return node;
+		executor.add(TurnAround);
+		executor.execute();
+		
+		node = dfs(startPoint.reverseDirection(), {
+			executor: executor,
+			readLeft: readLeft,
+			readRight: readRight,
+			readFront: readFront,
+			readBack: readBack
+		});	
+		return node;
+	}
+	public function localizeUndefinedWithBuild(
 		startDirection:Direction, 
 		executor:MovementExecutor,
 		?readLeft:ReadFunction,
@@ -344,6 +457,7 @@ class Labyrinth {
 		}
 		return shortPath;
 	}
+
 	var positionsOfRobots = new HashMap<PoolMember,Node>();
 	var found = new HashMap<PoolMember,Bool>();
 	var readFunctions = new HashMap<Movement,(Void -> Bool)>();
