@@ -162,6 +162,7 @@ class Labyrinth {
 	}
 	
 	public function getPath(nodeFrom:Node, nodeTo:Node, ?forbiddenNodes:List<Node>){
+		forbiddenNodes = forbiddenNodes.coalesce(new List<Node>());
 		if(nodeFrom.direction == Undefined)
 			throw "Undefined starting node direction";
 		forbiddenPositions = new HashMap<Node,Bool>();
@@ -217,6 +218,7 @@ class Labyrinth {
 	):Void {
 		used[currentNode] = true;
 		nodes.push(currentNode);
+		trik.Script.print(currentNode);
 
 		allowedDirection[currentNode.turnLeft()] = !args.readLeft();
 		
@@ -256,6 +258,7 @@ class Labyrinth {
 
 		if (!used[currentNode.go()] && allowedDirection[currentNode]) {
 			used[currentNode.go().reverseDirection()] = true;
+			nodes.push(currentNode.go().reverseDirection());
 
 			args.executor.add(Go);
 			args.executor.execute();
@@ -277,7 +280,6 @@ class Labyrinth {
 		?readFront:ReadFunction,
 		?readBack:ReadFunction
 	):Node {
-
 		var startPoint = new Node(0, 0, startDirection);
 
 		dfs(startPoint, {
@@ -331,14 +333,17 @@ class Labyrinth {
 			nodeStrings.push(node.toString());
 		}
 		var shortPath = [];
+		if (nodeStrings.has(new Node(1, 0, Up).toString()))
+			trik.Script.print('babababaabababab');
 		for(direction in [Left,Right,Down,Up]){
 			var nxtNode:Node;
 			nxtNode = finishNode.go(direction);
+			trik.Script.print(nxtNode);
 			if(nodeStrings.has(nxtNode.toString())){
 				var path = getPath(startNode, nxtNode.changeDirection(Undefined));
-				if(path.isEmpty())
+				if(path.length == 0)
 					continue;
-				if(shortPath.isEmpty() || shortPath.length > path.length)
+				if(shortPath.length == 0 || shortPath.length > path.length)
 					shortPath = path;
 			}
 		}
