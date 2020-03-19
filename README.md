@@ -2,10 +2,14 @@
 
 # Building the code
 ## With nix
+You can build the code via `nix-build`:
 ```bash
 nix-build
 ```
-the build output is `/result/build.js`
+or using nix-shell:
+```bash
+nix-shell --run ./build.sh
+```
 
 ## Without nix
 ```bash
@@ -26,7 +30,7 @@ class Model extends RobotModel {
     @:inputFrom("real_1")
     static function getInput():String return "";
     
-    public function solution():Void {
+    override public function solution():Void {
         // your solution goes here
     }
 }
