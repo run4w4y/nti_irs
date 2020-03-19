@@ -66,7 +66,7 @@ class RobotModel {
     public function solution():Void {
         var lines = Script.readAll("input.txt").map(
             function (x) return x.trim().split(' ').map(Std.parseInt)
-        ).filter(function (x) return x.length != 0);
+        ).filter(function (x) return x.length != 0 && x[0] != null);
         var input = switch (lines[0][0]) {
             case 0: Up;
             case 1: Right;

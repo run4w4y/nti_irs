@@ -13,20 +13,19 @@ import app.artagDecoder.ArtagDecoder;
 
 class Main {
     public static function main():Void {
-        var env = Real;
-        var manager:MotorManager = new RealManager(
+        var env = Simulator;
+        var manager:MotorManager = new SimulatorManager(
             Brick.motor("M4"),
             Brick.motor("M3"),
             Brick.encoder("E4"),
             Brick.encoder("E3"),
-            54,
-            true
+            54
         );
         var model = new RobotModel(manager, {
             frontSensor: Brick.sensor("D1"),
             backSensor: Brick.sensor("D2"),
-            leftSensor: Brick.sensor("A1"),
-            rightSensor: Brick.sensor("A2"),
+            leftSensor: Brick.sensor("A2"),
+            rightSensor: Brick.sensor("A1"),
             environment: env,
             cellSize: 400
         });
