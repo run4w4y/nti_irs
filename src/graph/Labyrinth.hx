@@ -12,6 +12,7 @@ import connectionPool.ConnectionPool;
 import Math.*;
 
 using tools.NullTools;
+using Lambda;
 
 
 typedef ReadFunction = (Void -> Bool);
@@ -324,6 +325,25 @@ class Labyrinth {
 		return new Node(addToRow, addToCol, startDirection);
 	}
 
+	public function goToClosestPoint(startNode:Node,finishNode:Node):Array<Movement>{
+		var nodeStrings = new Array<String>();
+		for(node in nodes){
+			nodeStrings.push(node.toString());
+		}
+		var shortPath = [];
+		for(direction in [Left,Right,Down,Up]){
+			var nxtNode:Node;
+			nxtNode = finishNode.go(direction);
+			if(nodeStrings.has(nxtNode.toString())){
+				var path = getPath(startNode, nxtNode.changeDirection(Undefined));
+				if(path.isEmpty())
+					continue;
+				if(shortPath.isEmpty() || shortPath.length > path.length)
+					shortPath = path;
+			}
+		}
+		return shortPath;
+	}
 	var positionsOfRobots = new HashMap<PoolMember,Node>();
 	var found = new HashMap<PoolMember,Bool>();
 	var readFunctions = new HashMap<Movement,(Void -> Bool)>();
@@ -338,7 +358,7 @@ class Labyrinth {
 			var action = new ReadAction(robot, readFunctions[move]);
 			pool.addActions([action]);
 			pool.execute();
-			walls[move] = action.res;
+			walls[move] = !action.res;
 		}
 		return walls;
 	}
