@@ -124,28 +124,27 @@ class RealManager extends BaseManager implements MotorManager {
         // return;
 
         // Gyro + walls
-        var accel = new SineAcceleration(40, 60, accelPoint, decelPoint, path);
+        var accel = new SineAcceleration(40, 90, accelPoint, decelPoint, path);
         resetEncoders();
         var pidWalls = new PID(-100, 100, {
-            kp: 4.5,
-            kd: 7
+            kp: 6.5,
+            kd: 5.5
         });
         var pidGyro = new PID(-100, 100, {
-            kp: 4.75,
+            kp: 4.25,
             kd: 2.65,
-            ki: .0025
+            ki: .0009
         });
-        // var pidFront = new PID(-100, 0, {
-        //     kp:
-        // });
+        var pidFront = new PID(-100, 100, {
+            kp: 5
+        });
 
         var curPath:Float;
-        // var prev = 
         do {
             curPath = (readRight() + readLeft()) / 2;
             var v = accel.calculate(curPath);
-            var l = checkLeft(), r = checkRight();
-            var u:Float;
+            var l = checkLeft(), r = checkRight(), f = checkFront();
+            var u:Float = 0;
 
             if (r)
                 u = pidWalls.calculate(13 - readRightSensor());
@@ -156,8 +155,9 @@ class RealManager extends BaseManager implements MotorManager {
             startLeft(round(v - u));
             startRight(round(v + u));
             
-            Script.wait(Seconds(.05));
+            Script.wait(Seconds(.01));
         } while (curPath <= path);
+        // } while (true);
 
         stop(Seconds(0.1));
     }
@@ -167,7 +167,7 @@ class RealManager extends BaseManager implements MotorManager {
     }
 
     function checkSensor(sensor:Sensor):Bool {
-        return readSensor(sensor) <= 17;
+        return readSensor(sensor) <= 25;
     }
 
     inline function checkLeft():Bool {
@@ -176,6 +176,10 @@ class RealManager extends BaseManager implements MotorManager {
 
     inline function checkRight():Bool {
         return checkSensor(rightSensor);
+    }
+
+    inline function checkFront():Bool {
+        return checkSensor(frontSensor);
     }
 
     @:updateFrequency(10)
@@ -189,6 +193,10 @@ class RealManager extends BaseManager implements MotorManager {
 
     inline function readRightSensor():Int {
         return readSensor(rightSensor);
+    }
+
+    inline function readFrontSensor():Int {
+        return readSensor(frontSensor);
     }
 
     public inline function turnLeft():Void {

@@ -22,6 +22,7 @@ class BaseManager {
     public var currentDirection:Angle;
     public var leftSensor:Null<Sensor> = null;
     public var rightSensor:Null<Sensor> = null;
+    public var frontSensor:Null<Sensor> = null;
     var wheelRadius:Float;
     var inversedVelocity:Bool;
     var inversedEncoders:Bool;
