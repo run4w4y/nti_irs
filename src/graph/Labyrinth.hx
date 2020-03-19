@@ -361,6 +361,7 @@ class Labyrinth {
 			args.executor.add(TurnAround);
 			args.executor.add(Go);
 			args.executor.execute();
+			args.executor.add(TurnAround);
 			
 		}
 
