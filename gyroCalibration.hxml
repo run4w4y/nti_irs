@@ -1,5 +1,5 @@
 -cp src
 -D js-es=3
--js calibraion.js
+-js builds/out/calibraion.js
 -main robotModel.calibrate.Main
 -lib polygonal-ds

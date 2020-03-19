@@ -12,7 +12,8 @@ haxe build.hxml
 exitSum=$(( $exitSum + $? ))
 haxe gyroCalibration.hxml
 exitSum=$(( $exitSum + $? ))
-for buildResult in *.js; do 
-    patchFile "$buildResult"
-done
+
+patchFile "builds/out/build.js"
+patchFile "builds/out/calibration.js"
+
 exit $exitSum

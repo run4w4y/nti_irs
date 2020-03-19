@@ -1,7 +1,7 @@
 --macro addGlobalMetadata('', '@:build(Build.build())')
 -cp src
 -D js-es=3
--js build.js
+-js builds/out/build.js
 -main app.main.Main 
 -lib polygonal-ds
 # -lib closure
