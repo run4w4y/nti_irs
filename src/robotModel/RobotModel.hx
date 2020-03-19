@@ -9,12 +9,119 @@ import robotModel.ModelArguments;
 import robotModel.motorManager.MotorManager;
 import movementExecutor.MovementExecutor;
 import movementExecutor.Movement;
-import graph.Direction;
-import graph.Node;
-import graph.Labyrinth;
+import connectionPool.ConnectionPool;
+import connectionPool.PoolMember;
+import connectionPool.action.PoolAction;
+import connectionPool.request.RequestHandler;
 
 using tools.NullTools;
 using StringTools;
+
+
+enum WatcherRes {
+    NotFound;
+    FoundLeft;
+    FoundRight;
+    FoundFront;
+    FoundBack;
+}
+
+class Watcher extends RequestHandler {
+    var prevLeft:Int;
+    var prevRight:Int;
+    var prevFront:Int;
+    var prevBack:Int;
+    var left:Void -> Int;
+    var right:Void -> Int;
+    var front:Void -> Int;
+    var back:Void -> Int;
+
+    public function new(left:Void -> Int, right:Void -> Int, front:Void -> Int, back:Void -> Int):Void {
+        super();
+        this.left = left;
+        this.right = right;
+        this.front = front;
+        this.back = back;
+        prevLeft = left();
+        prevRight = right();
+        prevFront = front();
+        prevBack = back();
+    }
+
+    override public function call(_:Dynamic):Dynamic {
+        var res = NotFound;
+        if (Math.abs(left() - prevLeft) <= 2)
+            res = FoundLeft;
+        if (Math.abs(right() - prevRight) <= 2)
+            res = FoundRight;
+        if (Math.abs(front() - prevFront) <= 2)
+            res = FoundFront;
+        if (Math.abs(back() - prevBack) <= 2)
+            res = FoundBack;
+        // prevBack = back();
+        // prevLeft = left();
+        // prevRight = right();
+        // prevFront = front();
+        return res;
+    }
+}
+
+// class Localization extends PoolAction {
+//     var g:Labyrinth;
+//     var startDir:Direction;
+//     var executor:MovementExecutor;
+
+//     public function new(agent:PoolMember, startDir:Direction, executor:MovementExecutor):Void {
+//         super(agent);
+//         g = new Labyrinth(8, 8);
+//         this.startDir = startDir;
+//         this.executor = executor;
+//     }
+
+//     override function executeInner():Void {
+
+//     }
+// }
+
+class TestRide extends PoolAction {
+    var executor:MovementExecutor;
+    var checkBack: Void -> Bool;
+    var checkFront: Void -> Bool;
+    var checkLeft: Void -> Bool;
+    var checkRight: Void -> Bool;
+
+    public function new(agent:PoolMember, executor:MovementExecutor,
+        checkLeft:Void -> Bool, checkRight:Void -> Bool, checkFront:Void -> Bool,
+        checkBack: Void -> Bool
+    ) {
+        super(agent);
+        this.executor = executor;
+        this.checkBack = checkBack;
+        this.checkLeft = checkLeft;
+        this.checkRight = checkRight;
+        this.checkFront = checkFront;
+    }
+
+    override function executeInner():Void {
+        var actions = [Go, Go, Go, Go, Go, TurnRight, Go, TurnLeft, Go, Go, TurnRight, Go, Go, Go];
+        for (action in actions) {
+            executor.add(action);
+            executor.execute();
+
+            var change = request({
+                handler: PoolConfig.watcher
+            }, PoolConfig.slave);
+
+            Script.print(change);
+        }
+    }
+}
+
+class PoolConfig {
+    public static var master = new PoolMember(10, '192.168.77.1');
+    public static var slave = new PoolMember(20);
+    public static var watcher:Watcher;
+}
 
 
 class RobotModel {
@@ -31,6 +138,22 @@ class RobotModel {
     @:updateFrequency(10)
     inline function readSensor(sensor:Sensor):Int {
         return sensor.read();
+    }
+
+    inline function readRight():Int {
+        return readSensor(rightSensor);
+    }
+
+    inline function readLeft():Int {
+        return readSensor(leftSensor);
+    }
+
+    inline function readFront():Int {
+        return readSensor(frontSensor);
+    }
+
+    inline function readBack():Int {
+        return readSensor(backSensor);
     }
 
     function checkSensor(sensor:Sensor):Bool {
@@ -64,29 +187,17 @@ class RobotModel {
     }
 
     public function solution():Void {
-        var lines = Script.readAll("input.txt").map(
-            function (x) return x.trim().split(' ').map(Std.parseInt)
-        ).filter(function (x) return x.length != 0);
-        var input = switch (lines[0][0]) {
-            case 0: Up;
-            case 1: Right;
-            case 2: Down;
-            case _: Left;
-        };
-        var otherPos = new Node(lines[1][1], lines[1][0], Undefined);
-        Script.print(otherPos);
-
-        var g = new Labyrinth(8, 8);
-        var startNode = g.localizeUndefined(input, executor, checkLeft, checkRight, checkFront, checkBack);
-        var moveset = g.goToClosestPoint(startNode, otherPos);
-        for (i in moveset)
-            executor.add(i);
-        executor.execute();
-
-        Brick.display.clear();
-        // Brick.display.addLabel('(${startNode.col},${startNode.row})', new image.Pixel(0, 0));
-        Brick.display.addLabel('finish', new image.Pixel(0, 0));
-        Brick.display.redraw();
+        // var pool = new ConnectionPool(PoolConfig.master, [PoolConfig.slave], [
+        //     PoolConfig.watcher
+        // ]);
+        // pool.addActions([
+        //     new TestRide(
+        //         PoolConfig.master,
+        //         executor,
+        //         checkLeft, checkRight, checkFront, checkBack
+        //     )
+        // ]);
+        // pool.execute();
     }
 
     public function new(manager:MotorManager, args:ModelArguments):Void {
@@ -103,6 +214,11 @@ class RobotModel {
         cellSize    = args.cellSize;
         this.manager.leftSensor = leftSensor;
         this.manager.rightSensor = rightSensor;
+        this.manager.frontSensor = frontSensor;
+
+        PoolConfig.watcher = new Watcher(
+            readLeft, readRight, readFront, readBack
+        );
 
         if (environment == Simulator)
             manager.goEncoders(150);
@@ -111,6 +227,6 @@ class RobotModel {
             if (environment == Simulator)
                 new MovementExecutor(manager, 1370)
             else
-                new MovementExecutor(manager, 619);
+                new MovementExecutor(manager, 595);
     }
 }
