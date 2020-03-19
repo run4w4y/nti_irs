@@ -27,5 +27,8 @@ class Model extends RobotModel {
         Brick.display.clear();
         Brick.display.addLabel('(${startNode.col},${startNode.row})', new image.Pixel(0, 0));
         Brick.display.redraw();
+        Brick.say("aaaaaaaaa");
+        while (true)
+            trik.Script.wait(Seconds(.01));
     }
 }

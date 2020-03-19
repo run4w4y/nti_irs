@@ -78,7 +78,7 @@ class RealManager extends BaseManager implements MotorManager {
         }
 
         var t = Script.time();
-        while (Script.time().getDifference(t) < 2000)
+        while (Script.time().getDifference(t) < 1000)
             alignImaginaryEncoders();
 
         currentDirection = readGyro();
@@ -150,7 +150,7 @@ class RealManager extends BaseManager implements MotorManager {
                 u = pidWalls.calculate(13 - readRightSensor());
             else if (l)
                 u = pidWalls.calculate(readLeftSensor() - 13);
-            u = pidGyro.calculate(readGyro() - currentDirection);
+            u += pidGyro.calculate(readGyro() - currentDirection);
 
             startLeft(round(v - u));
             startRight(round(v + u));
@@ -167,7 +167,7 @@ class RealManager extends BaseManager implements MotorManager {
     }
 
     function checkSensor(sensor:Sensor):Bool {
-        return readSensor(sensor) <= 25;
+        return readSensor(sensor) <= 16;
     }
 
     inline function checkLeft():Bool {
