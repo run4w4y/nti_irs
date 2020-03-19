@@ -4,6 +4,8 @@ import Math.*;
 import trik.Brick;
 import trik.Script;
 import time.Time;
+import trik.robot.encoder.Encoder;
+import trik.robot.motor.Motor;
 import robotModel.speedManager.SpeedManager;
 import robotModel.speedManager.pid.PIDSim;
 import robotModel.speedManager.pid.PIDCoefficients;
@@ -19,6 +21,12 @@ class SimulatorManager extends BaseManager implements MotorManager {
         kd: 0.4,
         ki: 0.0001
     });
+
+    public function new(leftMotor:Motor, rightMotor:Motor, leftEncoder:Encoder, rightEncoder:Encoder,
+    wheelRadius:Float, ?inversedVelocity = false, ?inversedEncoders = false) {
+        goEncoders(150);
+        super(leftMotor, rightMotor, leftEncoder, rightEncoder, wheelRadius, inversedVelocity, inversedEncoders);
+    }
 
     public function turn(angle:Float):Void {
         currentDirection += angle;

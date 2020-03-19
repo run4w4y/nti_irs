@@ -12,9 +12,6 @@ interface MotorManager {
     public var leftEncoder:Encoder;
     public var rightEncoder:Encoder;
     public var currentDirection:Angle;
-    public var leftSensor:Null<Sensor>;
-    public var rightSensor:Null<Sensor>;
-    public var frontSensor:Null<Sensor>;
 
     public function turnLeft():Void;
     public function turnRight():Void;

@@ -6,10 +6,10 @@ import trik.Brick;
 import trik.Script;
 import trik.robot.motor.Motor;
 import trik.robot.encoder.Encoder;
-import trik.robot.sensor.Sensor;
 import robotModel.speedManager.SpeedManager;
 import robotModel.speedManager.pid.PID;
 import robotModel.speedManager.pid.PIDCoefficients;
+import robotModel.sensorManager.SensorManager;
 
 using tools.NullTools;
 
@@ -20,15 +20,13 @@ class BaseManager {
     public var leftEncoder:Encoder;
     public var rightEncoder:Encoder;
     public var currentDirection:Angle;
-    public var leftSensor:Null<Sensor> = null;
-    public var rightSensor:Null<Sensor> = null;
-    public var frontSensor:Null<Sensor> = null;
+    public var sensorManager:SensorManager;
     var wheelRadius:Float;
     var inversedVelocity:Bool;
     var inversedEncoders:Bool;
 
     public function new(leftMotor:Motor, rightMotor:Motor, leftEncoder:Encoder, rightEncoder:Encoder,
-    wheelRadius:Float, ?inversedVelocity = false, ?inversedEncoders = false):Void {
+    wheelRadius:Float, sensorManager:SensorManager, ?inversedVelocity = false, ?inversedEncoders = false):Void {
         this.leftMotor = leftMotor;
         this.rightMotor = rightMotor;
         this.leftEncoder = leftEncoder;
@@ -36,6 +34,7 @@ class BaseManager {
         this.inversedVelocity = inversedVelocity;
         this.inversedEncoders = inversedEncoders;
         this.wheelRadius = wheelRadius;
+        this.sensorManager = sensorManager;
         currentDirection = readGyro();
         resetEncoders();
     }

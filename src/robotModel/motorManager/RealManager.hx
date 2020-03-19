@@ -4,7 +4,6 @@ import Math.*;
 import time.Time;
 import trik.Brick;
 import trik.Script;
-import trik.robot.sensor.Sensor;
 import robotModel.motorManager.BaseManager;
 import robotModel.motorManager.MotorManager;
 import robotModel.speedManager.pid.PID;
@@ -85,7 +84,7 @@ class RealManager extends BaseManager implements MotorManager {
     }
 
     function wallDriveRight():Void {
-        var u = wallPid.calculate(13.5 - readRightSensor());
+        var u = wallPid.calculate(13.5 - sensorManager.rightSensor.read());
         iRight += round(8 + u);
         iLeft += round(8 - u);
         Script.wait(Seconds(.001));
@@ -93,7 +92,7 @@ class RealManager extends BaseManager implements MotorManager {
     }
 
     function wallDriveLeft():Void {
-        var u = wallPid.calculate(13.5 - readLeftSensor());
+        var u = wallPid.calculate(13.5 - sensorManager.leftSensor.read());
         iRight += round(8 - u);
         iLeft += round(8 + u);
         Script.wait(Seconds(.01));
@@ -104,8 +103,8 @@ class RealManager extends BaseManager implements MotorManager {
         var resetL = iLeft;
         var resetR = iRight;
         do {
-            var curLeft = readLeftSensor();
-            var curRight = readRightSensor();
+            var curLeft = sensorManager.leftSensor.read();
+            var curRight = sensorManager.rightSensor.read();
             if (curLeft < 25)
                 wallDriveLeft();
             else if (curRight < 25) 
@@ -120,9 +119,6 @@ class RealManager extends BaseManager implements MotorManager {
     }
 
     public function goEncoders(path:Int, ?accelPoint:Int, ?decelPoint:Int):Void {
-        // movePoint(path);
-        // return;
-
         // Gyro + walls
         var accel = new SineAcceleration(40, 90, accelPoint, decelPoint, path);
         resetEncoders();
@@ -135,21 +131,18 @@ class RealManager extends BaseManager implements MotorManager {
             kd: 2.65,
             ki: .0009
         });
-        // var pidFront = new PID(-100, 100, {
-        //     kp: 5
-        // });
 
         var curPath:Float;
         do {
             curPath = (readRight() + readLeft()) / 2;
             var v = accel.calculate(curPath);
-            var l = checkLeft(), r = checkRight(), f = checkFront();
+            var l = sensorManager.checkLeft(), r = sensorManager.checkRight();
             var u:Float = 0;
 
             if (r)
-                u = pidWalls.calculate(13 - readRightSensor());
+                u = pidWalls.calculate(13 - sensorManager.rightSensor.read());
             else if (l)
-                u = pidWalls.calculate(readLeftSensor() - 13);
+                u = pidWalls.calculate(sensorManager.leftSensor.read() - 13);
             u += pidGyro.calculate(readGyro() - currentDirection);
 
             startLeft(round(v - u));
@@ -163,39 +156,6 @@ class RealManager extends BaseManager implements MotorManager {
 
     public inline function goMillimeters(length:Int, ?acceleratiion = false):Void {
         goEncoders(round(mmToEnc(length)));
-    }
-
-    function checkSensor(sensor:Sensor):Bool {
-        return readSensor(sensor) <= 16;
-    }
-
-    inline function checkLeft():Bool {
-        return checkSensor(leftSensor);
-    }
-
-    inline function checkRight():Bool {
-        return checkSensor(rightSensor);
-    }
-
-    inline function checkFront():Bool {
-        return checkSensor(frontSensor);
-    }
-
-    @:updateFrequency(10)
-    inline function readSensor(sensor:Sensor):Int {
-        return sensor.read();
-    }
-    
-    inline function readLeftSensor():Int {
-        return readSensor(leftSensor);
-    }
-
-    inline function readRightSensor():Int {
-        return readSensor(rightSensor);
-    }
-
-    inline function readFrontSensor():Int {
-        return readSensor(frontSensor);
     }
 
     public inline function turnLeft():Void {
