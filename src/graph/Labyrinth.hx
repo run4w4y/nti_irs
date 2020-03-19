@@ -359,7 +359,7 @@ class Labyrinth {
 		allowedDirection[currentNode] = !args.readFront();
 
 		var tmp = getCheck(currentNode,args.executor);
-		trik.Script.print(lastNode);
+		trik.Script.print(tmp);
 		if(localized && lastNode == null)
 			return tmp;
 		

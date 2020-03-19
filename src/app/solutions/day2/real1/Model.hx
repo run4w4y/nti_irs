@@ -1,6 +1,7 @@
 package app.solutions.day2.real1;
 
 import trik.Brick;
+import trik.Script;
 import robotModel.RobotModel;
 import graph.Direction;
 import graph.Labyrinth;
@@ -27,5 +28,7 @@ class Model extends RobotModel {
         Brick.display.clear();
         Brick.display.addLabel('(${startNode.col},${startNode.row})', new image.Pixel(0, 0));
         Brick.display.redraw();
+        Script.wait(Seconds(1));
+        Brick.say('ooo');
     }
 }
