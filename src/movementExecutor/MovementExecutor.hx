@@ -30,7 +30,6 @@ class MovementExecutor {
         var goValue = 0;
         
         for (movement in execQueue) {
-            // trik.Script.print(goValue);
             switch (movement) {
                 case TurnRight:
                     if (goValue != 0)

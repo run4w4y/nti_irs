@@ -135,9 +135,9 @@ class RealManager extends BaseManager implements MotorManager {
             kd: 2.65,
             ki: .0009
         });
-        var pidFront = new PID(-100, 100, {
-            kp: 5
-        });
+        // var pidFront = new PID(-100, 100, {
+        //     kp: 5
+        // });
 
         var curPath:Float;
         do {
@@ -157,7 +157,6 @@ class RealManager extends BaseManager implements MotorManager {
             
             Script.wait(Seconds(.01));
         } while (curPath <= path);
-        // } while (true);
 
         stop(Seconds(0.1));
     }
