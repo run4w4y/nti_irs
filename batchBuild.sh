@@ -10,7 +10,6 @@ patchFile() {
 
 buildHaxe() {
     echo "Building $1""_$3.js with main $5"
-    local base64Input=$(echo "$2" | base64)
     haxe \
         --macro "addGlobalMetadata('', '@:build(Build.buildReal())')" \
         --macro "addGlobalMetadata('', '@:build(Build.build())')" \
@@ -33,14 +32,12 @@ buildHaxe() {
 mkdir -p "builds/out/$1"
 buildInputPath="builds/in/$1.in"
 
-echo "" >> $buildInputPath
-
 curName=
 curTest=''
 curMain=
 testCount=0
 
-while IFS= read line; do
+for line in `cat "$buildInputPath"`; do
     case "$line" in
         *:*)
             ARR=(${line//:/ })
