@@ -12,6 +12,7 @@ import connectionPool.ConnectionPool;
 import Math.*;
 
 using tools.NullTools;
+using Lambda;
 
 
 typedef ReadFunction = (Void -> Bool);
@@ -161,6 +162,7 @@ class Labyrinth {
 	}
 	
 	public function getPath(nodeFrom:Node, nodeTo:Node, ?forbiddenNodes:List<Node>){
+		forbiddenNodes = forbiddenNodes.coalesce(new List<Node>());
 		if(nodeFrom.direction == Undefined)
 			throw "Undefined starting node direction";
 		forbiddenPositions = new HashMap<Node,Bool>();
@@ -209,13 +211,13 @@ class Labyrinth {
 	}
 
 	var used = new HashMap<Node, Bool>();
-
 	function dfs(
 		currentNode:Node, 
 		args:DfsArgs
-	):Void {
+	) {
 		used[currentNode] = true;
 		nodes.push(currentNode);
+		// trik.Script.print(currentNode);
 
 		allowedDirection[currentNode.turnLeft()] = !args.readLeft();
 		
@@ -255,6 +257,7 @@ class Labyrinth {
 
 		if (!used[currentNode.go()] && allowedDirection[currentNode]) {
 			used[currentNode.go().reverseDirection()] = true;
+			nodes.push(currentNode.go().reverseDirection());
 
 			args.executor.add(Go);
 			args.executor.execute();
@@ -268,9 +271,139 @@ class Labyrinth {
 			args.executor.add(TurnAround);
 		};
 	}
+	
+	function getCheck(curNode:Node):Null<Node> {
+		var minRow = 0;
+		var minCol = 0;
+		var maxRow = 0;
+		var maxCol = 0;
+		for (node in nodes) {
+			minRow = cast (min(node.row, minRow), Int);
+			minCol = cast (min(node.col, minCol), Int);
+			maxRow = cast (max(node.row, maxRow), Int);
+			maxCol = cast (max(node.col, maxCol), Int);
+		}
+		if (maxRow - minRow + 1 != rows || maxCol - minCol + 1 != cols) 
+			return null;
+		trik.Script.print('ababababa');
+		var addToRow = cast (abs(minRow), Int);
+		var addToCol = cast (abs(minCol), Int);
+		return new Node(curNode.row + addToRow, curNode.col + addToCol, curNode.direction);
+	}
+	var realNode:Node;
+
+	function alignNodes(finishNode:Node,executor:MovementExecutor){
+		var moves = getPath(realNode,finishNode);
+		for(move in moves)
+			executor.add(move);
+		executor.execute();
+		realNode = finishNode;
+		trik.Script.print(realNode);
+	}
+
+	function undoneDfs(
+		currentNode:Node, 
+		args:DfsArgs
+	):Null<Node> {
+		trik.Script.print(currentNode);
+		trik.Script.print(realNode);
+		used[currentNode] = true;
+		nodes.push(currentNode);
+		var tmp = getCheck(currentNode);
+		
+		if(tmp != null)
+			return tmp;
+		allowedDirection[currentNode.turnLeft()] = !args.readLeft();
+		
+		if (!allowedDirection[currentNode.turnLeft()]){
+			used[currentNode.turnLeft()] = true;
+			nodes.push(currentNode.turnLeft());
+		}
+		
+		allowedDirection[currentNode.turnRight()] = !args.readRight();
+
+		if (!allowedDirection[currentNode.turnRight()]){
+			used[currentNode.turnRight()] = true;
+			nodes.push(currentNode.turnRight());
+		}
+		
+		allowedDirection[currentNode] = !args.readFront();
+
+		if (!used[currentNode.turnLeft()] && allowedDirection[currentNode.turnLeft()]) {
+
+			args.executor.add(TurnLeft);
+			args.executor.execute();
+			var node = undoneDfs(currentNode.turnLeft(), args);
+			if(node != null)
+				return node; 
+			args.executor.add(TurnRight);
+		}
+
+		if (!used[currentNode.turnRight()] && allowedDirection[currentNode.turnRight()]) {
+
+			args.executor.add(TurnRight);
+			args.executor.execute();
+			var node = undoneDfs(currentNode.turnRight(), args);
+			if(node != null)
+				return node; 
+			args.executor.add(TurnLeft);
+		}
+
+		if (!used[currentNode.go()] && allowedDirection[currentNode]) {
+			used[currentNode.go().reverseDirection()] = true;
+
+			args.executor.add(Go);
+			args.executor.execute();
+			
+			var node = undoneDfs(currentNode.go(), args);
+			if(node != null)
+				return node; 
+			args.executor.add(TurnAround);
+			args.executor.add(Go);
+			args.executor.execute();
+			args.executor.add(TurnAround);
+			
+		}
+
+		return null;
+	}
+
 	public function localizeUndefined(
 		startDirection:Direction, 
 		executor:MovementExecutor,
+		?readLeft:ReadFunction,
+		?readRight:ReadFunction,
+		?readFront:ReadFunction,
+		?readBack:ReadFunction
+	):Node {
+		var startPoint = new Node(0, 0, startDirection);
+		realNode = startPoint;
+		nodes = new Array<Node>();
+		var node = undoneDfs(startPoint, {
+			executor: executor,
+			readLeft: readLeft,
+			readRight: readRight,
+			readFront: readFront,
+			readBack: readBack
+		});
+		if(node != null)
+			return node;
+		executor.add(TurnAround);
+		executor.execute();
+		
+		node = undoneDfs(startPoint.reverseDirection(), {
+			executor: executor,
+			readLeft: readLeft,
+			readRight: readRight,
+			readFront: readFront,
+			readBack: readBack
+		});	
+		return node;
+	}
+	public function localizeUndefinedWithGoToPos(
+		startDirection:Direction, 
+		executor:MovementExecutor,
+		finishNode:Node,
 		?readLeft:ReadFunction,
 		?readRight:ReadFunction,
 		?readFront:ReadFunction,
@@ -324,6 +457,29 @@ class Labyrinth {
 		return new Node(addToRow, addToCol, startDirection);
 	}
 
+	public function goToClosestPoint(startNode:Node,finishNode:Node):Array<Movement>{
+		var nodeStrings = new Array<String>();
+		for(node in nodes){
+			nodeStrings.push(node.toString());
+		}
+		var shortPath = [];
+		if (nodeStrings.has(new Node(1, 0, Up).toString()))
+			// trik.Script.print('babababaabababab');
+		for(direction in [Left,Right,Down,Up]){
+			var nxtNode:Node;
+			nxtNode = finishNode.go(direction);
+			// trik.Script.print(nxtNode);
+			if(nodeStrings.has(nxtNode.toString())){
+				var path = getPath(startNode, nxtNode.changeDirection(Undefined));
+				if(path.length == 0)
+					continue;
+				if(shortPath.length == 0 || shortPath.length > path.length)
+					shortPath = path;
+			}
+		}
+		return shortPath;
+	}
+
 	var positionsOfRobots = new HashMap<PoolMember,Node>();
 	var found = new HashMap<PoolMember,Bool>();
 	var readFunctions = new HashMap<Movement,(Void -> Bool)>();
@@ -338,7 +494,7 @@ class Labyrinth {
 			var action = new ReadAction(robot, readFunctions[move]);
 			pool.addActions([action]);
 			pool.execute();
-			walls[move] = action.res;
+			walls[move] = !action.res;
 		}
 		return walls;
 	}

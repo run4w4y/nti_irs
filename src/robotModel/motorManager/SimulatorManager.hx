@@ -43,7 +43,7 @@ class SimulatorManager extends BaseManager implements MotorManager {
 
     public function goEncoders(encValue:Int, ?_ :Int, ?_:Int):Void {
         resetEncoders();
-        moveGyro(90, function () {
+        moveGyro(100, function () {
             return (readLeft() + readRight()) / 2 <= encValue;
         });
         stop(Seconds(0.1));

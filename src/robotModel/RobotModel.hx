@@ -64,14 +64,28 @@ class RobotModel {
     }
 
     public function solution():Void {
-        var actions = [Go, TurnRight, Go, TurnLeft, Go, TurnRight, Go, TurnLeft, Go, Go, TurnLeft, Go, Go, TurnLeft, Go, TurnRight, Go, TurnLeft, Go, Go, Go, TurnLeft, Go];
+        var lines = Script.readAll("input.txt").map(
+            function (x) return x.trim().split(' ').map(Std.parseInt)
+        ).filter(function (x) return x.length != 0);
+        var input = switch (lines[0][0]) {
+            case 0: Up;
+            case 1: Right;
+            case 2: Down;
+            case _: Left;
+        };
+        // var otherPos = new Node(lines[1][1], lines[1][0], Undefined);
+        // Script.print(otherPos);
 
-        for (action in actions)
-            executor.add(action);
-        executor.execute();
+        var g = new Labyrinth(8, 8);
+        var startNode = g.localizeUndefined(input, executor, checkLeft, checkRight, checkFront, checkBack);
+        // var moveset = g.goToClosestPoint(startNode, otherPos);
+        // for (i in moveset)
+        //     executor.add(i);
+        // executor.execute();
 
         Brick.display.clear();
-        Brick.display.addLabel('finish', new image.Pixel(0, 0));
+        Brick.display.addLabel('(${startNode.col},${startNode.row})', new image.Pixel(0, 0));
+        // Brick.display.addLabel('finish', new image.Pixel(0, 0));
         Brick.display.redraw();
     }
 
