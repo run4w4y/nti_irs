@@ -73,19 +73,19 @@ class RobotModel {
             case 2: Down;
             case _: Left;
         };
-        var otherPos = new Node(lines[1][1], lines[1][0], Undefined);
-        Script.print(otherPos);
+        // var otherPos = new Node(lines[1][1], lines[1][0], Undefined);
+        // Script.print(otherPos);
 
         var g = new Labyrinth(8, 8);
         var startNode = g.localizeUndefined(input, executor, checkLeft, checkRight, checkFront, checkBack);
-        var moveset = g.goToClosestPoint(startNode, otherPos);
-        for (i in moveset)
-            executor.add(i);
-        executor.execute();
+        // var moveset = g.goToClosestPoint(startNode, otherPos);
+        // for (i in moveset)
+        //     executor.add(i);
+        // executor.execute();
 
         Brick.display.clear();
-        // Brick.display.addLabel('(${startNode.col},${startNode.row})', new image.Pixel(0, 0));
-        Brick.display.addLabel('finish', new image.Pixel(0, 0));
+        Brick.display.addLabel('(${startNode.col},${startNode.row})', new image.Pixel(0, 0));
+        // Brick.display.addLabel('finish', new image.Pixel(0, 0));
         Brick.display.redraw();
     }
 
