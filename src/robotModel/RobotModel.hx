@@ -198,6 +198,29 @@ class RobotModel {
         //     )
         // ]);
         // pool.execute();
+        var lines = Script.readAll("input.txt").map(
+            function (x) return x.trim().split(' ').map(Std.parseInt)
+        ).filter(function (x) return x.length != 0 && x[0] != null);
+        var input = switch (lines[0][0]) {
+            case 0: Up;
+            case 1: Right;
+            case 2: Down;
+            case _: Left;
+        };
+        var otherPos = new Node(lines[1][1], lines[1][0], Undefined);
+        // Script.print(otherPos);
+
+        var g = new Labyrinth(8, 8);
+        var startNode = g.localizeUndefined(input, executor, otherPos, checkLeft, checkRight, checkFront, checkBack);
+        // var moveset = g.goToClosestPoint(startNode, otherPos);
+        // for (i in moveset)
+        //     executor.add(i);
+        // executor.execute();
+
+        Brick.display.clear();
+        // Brick.display.addLabel('(${startNode.col},${startNode.row})', new image.Pixel(0, 0));
+        Brick.display.addLabel('finish', new image.Pixel(0, 0));
+        Brick.display.redraw();
     }
 
     public function new(manager:MotorManager, args:ModelArguments):Void {

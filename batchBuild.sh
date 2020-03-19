@@ -19,7 +19,11 @@ buildHaxe() {
         -D "$1=$2" \
         -js "builds/out/$4/$1""_$3.js" \
         -main $5 \
-        -lib polygonal-ds
+        -lib polygonal-ds 
+        #-lib closure \
+        #-D closure_overwrite \
+        #-D closure_language_in=ECMASCRIPT3 \
+        #-D closure_prettyprint
     if (( $? != 0 )); then 
         exit $?
     fi
@@ -28,6 +32,8 @@ buildHaxe() {
 
 mkdir -p "builds/out/$1"
 buildInputPath="builds/in/$1.in"
+
+echo "" >> $buildInputPath
 
 curName=
 curTest=''
