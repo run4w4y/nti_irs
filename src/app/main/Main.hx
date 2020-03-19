@@ -1,34 +1,31 @@
 package app.main;
 
 import trik.Brick;
-import trik.Script;
 import robotModel.RobotModel;
-import robotModel.Environment;
-import robotModel.motorManager.MotorManager;
-import robotModel.motorManager.RealManager;
-import robotModel.motorManager.SimulatorManager;
-import artag.Artag;
-import app.artagDecoder.ArtagDecoder;
+import robotModel.motorManager.RealManager as MotorManager;
+import robotModel.sensor.IRSensor;
+import robotModel.sensor.USSensor;
+import robotModel.sensorManager.RealManager as SensorManager;
 
 
 class Main {
     public static function main():Void {
-        var env = Simulator;
-        var manager:MotorManager = new SimulatorManager(
+        var sensorManager = new SensorManager({
+            leftSensor: new IRSensor("A1"),
+            rightSensor: new IRSensor("A2"),
+            frontSensor: new USSensor("D1"),
+            backSensor: new USSensor("D2")
+        });
+        var motorManager = new MotorManager(
             Brick.motor("M4"),
             Brick.motor("M3"),
             Brick.encoder("E4"),
             Brick.encoder("E3"),
-            54
+            54,
+            sensorManager,
+            true
         );
-        var model = new RobotModel(manager, {
-            frontSensor: Brick.sensor("D1"),
-            backSensor: Brick.sensor("D2"),
-            leftSensor: Brick.sensor("A2"),
-            rightSensor: Brick.sensor("A1"),
-            environment: env,
-            cellSize: 400
-        });
+        var model = new RobotModel(589, motorManager, sensorManager);
         model.solution();
     }
 }

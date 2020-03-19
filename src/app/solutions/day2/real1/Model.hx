@@ -23,7 +23,13 @@ class Model extends RobotModel {
         };
 
         var g = new Labyrinth(8, 8);
-        var startNode = g.localizeUndefined(input, executor, null, checkLeft, checkRight, checkFront, checkBack);
+        var startNode = g.localizeUndefined(
+            input, executor, null, 
+            sensorManager.checkLeft.bind(), 
+            sensorManager.checkRight.bind(), 
+            sensorManager.checkFront.bind(), 
+            sensorManager.checkBack.bind()
+        );
 
         Brick.display.clear();
         Brick.display.addLabel('(${startNode.col},${startNode.row})', new image.Pixel(0, 0));

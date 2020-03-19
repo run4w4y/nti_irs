@@ -28,7 +28,11 @@ class Model extends RobotModel {
         var finishNode = new Node(lines[1][1], lines[1][0], Undefined);
         var g = new Labyrinth(8, 8);
         var res = g.goToPositionInUnknownLabybrinth(
-            startNode, finishNode, executor, checkLeft, checkRight, checkFront, checkBack
+            startNode, finishNode, executor, 
+            sensorManager.checkLeft.bind(), 
+            sensorManager.checkRight.bind(), 
+            sensorManager.checkFront.bind(), 
+            sensorManager.checkBack.bind()
         );
 
         Script.print(res);
