@@ -3,10 +3,8 @@ package robotModel;
 import time.Time;
 import trik.Script;
 import trik.Brick;
-import trik.robot.sensor.Sensor;
-import robotModel.Environment;
-import robotModel.ModelArguments;
 import robotModel.motorManager.MotorManager;
+import robotModel.sensorManager.SensorManager;
 import movementExecutor.MovementExecutor;
 import movementExecutor.Movement;
 import connectionPool.ConnectionPool;
@@ -33,37 +31,26 @@ class Watcher extends RequestHandler {
     var prevRight:Int;
     var prevFront:Int;
     var prevBack:Int;
-    var left:Void -> Int;
-    var right:Void -> Int;
-    var front:Void -> Int;
-    var back:Void -> Int;
+    var sensorManager:SensorManager;
 
-    public function new(left:Void -> Int, right:Void -> Int, front:Void -> Int, back:Void -> Int):Void {
+    public function new(sensorManager:SensorManager):Void {
         super();
-        this.left = left;
-        this.right = right;
-        this.front = front;
-        this.back = back;
-        prevLeft = left();
-        prevRight = right();
-        prevFront = front();
-        prevBack = back();
+        prevLeft = sensorManager.leftSensor.read();
+        prevRight = sensorManager.rightSensor.read();
+        prevFront = sensorManager.frontSensor.read();
+        prevBack = sensorManager.backSensor.read();
     }
 
     override public function call(_:Dynamic):Dynamic {
         var res = NotFound;
-        if (Math.abs(left() - prevLeft) <= 2)
+        if (Math.abs(sensorManager.leftSensor.read() - prevLeft) <= 2)
             res = FoundLeft;
-        if (Math.abs(right() - prevRight) <= 2)
+        if (Math.abs(sensorManager.rightSensor.read() - prevRight) <= 2)
             res = FoundRight;
-        if (Math.abs(front() - prevFront) <= 2)
+        if (Math.abs(sensorManager.frontSensor.read() - prevFront) <= 2)
             res = FoundFront;
-        if (Math.abs(back() - prevBack) <= 2)
+        if (Math.abs(sensorManager.backSensor.read() - prevBack) <= 2)
             res = FoundBack;
-        // prevBack = back();
-        // prevLeft = left();
-        // prevRight = right();
-        // prevFront = front();
         return res;
     }
 }
@@ -87,21 +74,10 @@ class Watcher extends RequestHandler {
 
 class TestRide extends PoolAction {
     var executor:MovementExecutor;
-    var checkBack: Void -> Bool;
-    var checkFront: Void -> Bool;
-    var checkLeft: Void -> Bool;
-    var checkRight: Void -> Bool;
 
-    public function new(agent:PoolMember, executor:MovementExecutor,
-        checkLeft:Void -> Bool, checkRight:Void -> Bool, checkFront:Void -> Bool,
-        checkBack: Void -> Bool
-    ) {
+    public function new(agent:PoolMember, executor:MovementExecutor) {
         super(agent);
         this.executor = executor;
-        this.checkBack = checkBack;
-        this.checkLeft = checkLeft;
-        this.checkRight = checkRight;
-        this.checkFront = checkFront;
     }
 
     override function executeInner():Void {
@@ -127,64 +103,11 @@ class PoolConfig {
 
 
 class RobotModel {
-    var cameraPort  :String;
-    var environment :Environment;
-    var frontSensor :Sensor;
-    var leftSensor  :Sensor;
-    var rightSensor :Sensor;
-    var backSensor  :Sensor;
-    var cellSize    :Float;
-    var manager     :MotorManager;
-    var executor    :MovementExecutor;
-
-    @:updateFrequency(10)
-    inline function readSensor(sensor:Sensor):Int {
-        return sensor.read();
-    }
-
-    inline function readRight():Int {
-        return readSensor(rightSensor);
-    }
-
-    inline function readLeft():Int {
-        return readSensor(leftSensor);
-    }
-
-    inline function readFront():Int {
-        return readSensor(frontSensor);
-    }
-
-    inline function readBack():Int {
-        return readSensor(backSensor);
-    }
-
-    function checkSensor(sensor:Sensor):Bool {
-        return switch (environment) {
-            case Simulator: readSensor(sensor) <= 70;
-            case Real:      readSensor(sensor) <= 25;
-        }
-    }
-
-    inline function checkLeft():Bool {
-        return checkSensor(leftSensor);
-    }
-
-    inline function checkRight():Bool {
-        return checkSensor(rightSensor);
-    }
-
-    inline function checkFront():Bool {
-        return checkSensor(frontSensor);
-    }
-
-    inline function checkBack():Bool {
-        return checkSensor(backSensor);
-    }
+    var motorManager  :MotorManager;
+    var executor      :MovementExecutor;
+    var sensorManager :SensorManager;
 
     function restoreCalibration():Void {
-        if (environment == Simulator)
-            return;
-
         Brick.gyroscope.setCalibrationValues(Brick.gyroscope.getCalibrationValues());
     }
 
@@ -195,40 +118,19 @@ class RobotModel {
         pool.addActions([
             new TestRide(
                 PoolConfig.master,
-                executor,
-                checkLeft, checkRight, checkFront, checkBack
+                executor
             )
         ]);
         pool.execute();
     }
 
-    public function new(manager:MotorManager, args:ModelArguments):Void {
+    public function new(cellSize:Int, motorManager:MotorManager, sensorManager:SensorManager):Void {
         restoreCalibration();
-        this.manager = manager;
-        Script.wait(Seconds(0.05));
-        this.manager.currentDirection = Brick.gyroscope.read();
-        cameraPort  = args.cameraPort.coalesce("video2");
-        environment = args.environment;
-        frontSensor = args.frontSensor;
-        leftSensor  = args.leftSensor;
-        rightSensor = args.rightSensor;
-        backSensor  = args.backSensor;
-        cellSize    = args.cellSize;
-        this.manager.leftSensor = leftSensor;
-        this.manager.rightSensor = rightSensor;
-        this.manager.frontSensor = frontSensor;
+        this.motorManager = motorManager;
+        this.sensorManager = sensorManager;
 
-        PoolConfig.watcher = new Watcher(
-            readLeft, readRight, readFront, readBack
-        );
-
-        if (environment == Simulator)
-            manager.goEncoders(150);
+        PoolConfig.watcher = new Watcher(sensorManager);
         
-        executor = 
-            if (environment == Simulator)
-                new MovementExecutor(manager, 1370)
-            else
-                new MovementExecutor(manager, 595);
+        executor = new MovementExecutor(motorManager, cellSize);
     }
 }
