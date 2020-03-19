@@ -3,8 +3,9 @@
 exitCode=0
 
 patchFile() {
-    sed 's/Type.typeof/Type.typeOf/g' "$1" > "$1"
-    rm -rf "$1"
+    sed 's/Type.typeof/Type.typeOf/g' "$1" > "$1.tmp"
+    rm "$1"
+    mv "$1.tmp" "$1"
 }
 
 buildHaxe() {
@@ -62,7 +63,7 @@ while IFS= read line; do
             fi
             ;;
     esac
-done <<< $(cat "$buildInputPath")\=
+done < "$buildInputPath"
 
 sliceFrom=
 for ((i=0; i<$#; i++)); do
