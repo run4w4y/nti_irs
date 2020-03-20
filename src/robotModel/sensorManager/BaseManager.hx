@@ -13,7 +13,7 @@ class BaseManager {
     public var leftSensor:Null<GenericSensor<Int>>;
     var defaultLength:Int;
 
-    public function new(args:ManagerArgs, defaultLength) {
+    public function new(args:ManagerArgs, defaultLength:Int) {
         frontSensor = args.frontSensor;
         leftSensor = args.frontSensor;
         backSensor = args.backSensor;
