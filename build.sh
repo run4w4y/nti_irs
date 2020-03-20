@@ -2,7 +2,7 @@
 
 patchFile() {
     local newName=$(basename "$1" .js)Patched.js
-    sed 's/Type.typeof/Type.typeOf/g' "$1" > "$newName"
+    sed 's/Type.typeof/Type.typeOf/g' "$1" > "builds/out/$newName"
     rm -rf "$1"
 }
 
