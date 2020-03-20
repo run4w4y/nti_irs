@@ -58,7 +58,7 @@ class Brick {
         return untyped __js__("brick.objectSensor({0})", port);
     }
 
-    static function getRawPhoto():RawImage {
+    public static function getRawPhoto():RawImage {
         return new RawImage(untyped __js__("getPhoto()"));
     }
 
