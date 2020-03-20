@@ -7,7 +7,6 @@ import trik.Script;
 import robotModel.motorManager.BaseManager;
 import robotModel.motorManager.MotorManager;
 import robotModel.speedManager.pid.PID;
-import robotModel.speedManager.pid.PIDSim;
 import robotModel.speedManager.pid.PIDCoefficients;
 import robotModel.speedManager.SineAcceleration;
 
@@ -31,10 +30,10 @@ class RealManager extends BaseManager implements MotorManager {
     });
 
     function alignImaginaryEncoders():Void {
-        var uL = iLPid.calculate(iLeft - readLeft());
-        var uR = iRPid.calculate(iRight - readRight());
-        startLeft(round(uL));
-        startRight(round(uR));
+        var uL = iLPid.calculate(iLeft - leftMotor.encoder.read());
+        var uR = iRPid.calculate(iRight - rightMotor.encoder.read());
+        leftMotor.setPower(round(uL));
+        rightMotor.setPower(round(uR));
     }
 
     public function turn(angle:Float):Void {
@@ -99,7 +98,7 @@ class RealManager extends BaseManager implements MotorManager {
 
         var curPath:Float;
         do {
-            curPath = (readRight() + readLeft()) / 2;
+            curPath = (rightMotor.encoder.read() + leftMotor.encoder.read()) / 2;
             var v = accel.calculate(curPath);
             var l = sensorManager.checkLeft(), r = sensorManager.checkRight();
             var u:Float = 0;
@@ -110,8 +109,8 @@ class RealManager extends BaseManager implements MotorManager {
                 u = pidWalls.calculate(sensorManager.leftSensor.read() - 13);
             u += pidGyro.calculate(readGyro() - currentDirection);
 
-            startLeft(round(v - u));
-            startRight(round(v + u));
+            leftMotor.setPower(round(v - u));
+            rightMotor.setPower(round(v + u));
             
             Script.wait(Seconds(.01));
         } while (curPath <= path);

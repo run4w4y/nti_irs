@@ -4,14 +4,11 @@ import Math.*;
 import trik.Brick;
 import trik.Script;
 import time.Time;
-import trik.robot.encoder.Encoder;
-import trik.robot.motor.Motor;
-import robotModel.speedManager.SpeedManager;
+import robotModel.motorManager.ManagerArgs;
 import robotModel.speedManager.pid.PIDSim;
 import robotModel.speedManager.pid.PIDCoefficients;
 import robotModel.motorManager.BaseManager;
 import robotModel.motorManager.MotorManager;
-import robotModel.sensorManager.SensorManager;
 
 using tools.NullTools;
 
@@ -23,14 +20,13 @@ class SimulatorManager extends BaseManager implements MotorManager {
         ki: 0.0001
     });
 
-    public function new(leftMotor:Motor, rightMotor:Motor, leftEncoder:Encoder, rightEncoder:Encoder,
-    wheelRadius:Float, sensorManager:SensorManager, ?inversedVelocity = false, ?inversedEncoders = false) {
-        super(leftMotor, rightMotor, leftEncoder, rightEncoder, wheelRadius, sensorManager, inversedVelocity, inversedEncoders);
+    public function new(args:ManagerArgs) {
+        super(args);
         goEncoders(150);
     }
 
     public function turn(angle:Float):Void {
-        currentDirection += angle;
+        Script.print(11);
         moveGyro(0, function() {
                 return abs(currentDirection - cast(Brick.gyroscope.read())) > 1;
             }, Seconds(0.01), {kp: 1 }
@@ -53,7 +49,7 @@ class SimulatorManager extends BaseManager implements MotorManager {
     public function goEncoders(encValue:Int, ?_ :Int, ?_:Int):Void {
         resetEncoders();
         moveGyro(90, function () {
-            return (readLeft() + readRight()) / 2 <= encValue;
+            return (leftMotor.encoder.read() + rightMotor.encoder.read()) / 2 <= encValue;
         });
         stop(Seconds(0.1));
     }
@@ -69,8 +65,7 @@ class SimulatorManager extends BaseManager implements MotorManager {
             ki: 0.0001
         };
         
-        if (condition != null)
-            gyroPID = new PIDSim(interval.coalesce(Seconds(.01)), -100, 100, coefficients.coalesce(defaults));
+        gyroPID = new PIDSim(interval.coalesce(Seconds(.01)), -100, 100, coefficients.coalesce(defaults));
         
         move(speed, gyroPID, function() {
                 return Brick.gyroscope.read() - currentDirection;
