@@ -1,16 +1,12 @@
 package robotModel.motorManager;
 
 import angle.Angle;
-import trik.robot.motor.Motor;
-import trik.robot.encoder.Encoder;
-import trik.robot.sensor.Sensor;
+import robotModel.motor.Motor;
 
 
 interface MotorManager {
     public var leftMotor:Motor;
     public var rightMotor:Motor;
-    public var leftEncoder:Encoder;
-    public var rightEncoder:Encoder;
     public var currentDirection:Angle;
 
     public function turnLeft():Void;
