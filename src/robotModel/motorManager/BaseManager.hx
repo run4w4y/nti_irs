@@ -4,11 +4,9 @@ import angle.Angle;
 import time.Time;
 import trik.Brick;
 import trik.Script;
-import trik.robot.motor.Motor;
-import trik.robot.encoder.Encoder;
+import robotModel.motor.Motor;
 import robotModel.speedManager.SpeedManager;
-import robotModel.speedManager.pid.PID;
-import robotModel.speedManager.pid.PIDCoefficients;
+import robotModel.motorManager.ManagerArgs;
 import robotModel.sensorManager.SensorManager;
 
 using tools.NullTools;
@@ -17,57 +15,24 @@ using tools.NullTools;
 class BaseManager {
     public var leftMotor:Motor;
     public var rightMotor:Motor;
-    public var leftEncoder:Encoder;
-    public var rightEncoder:Encoder;
     public var currentDirection:Angle;
     public var sensorManager:SensorManager;
     var wheelRadius:Float;
     var inversedVelocity:Bool;
     var inversedEncoders:Bool;
 
-    public function new(leftMotor:Motor, rightMotor:Motor, leftEncoder:Encoder, rightEncoder:Encoder,
-    wheelRadius:Float, sensorManager:SensorManager, ?inversedVelocity = false, ?inversedEncoders = false):Void {
-        this.leftMotor = leftMotor;
-        this.rightMotor = rightMotor;
-        this.leftEncoder = leftEncoder;
-        this.rightEncoder = rightEncoder;
-        this.inversedVelocity = inversedVelocity;
-        this.inversedEncoders = inversedEncoders;
-        this.wheelRadius = wheelRadius;
-        this.sensorManager = sensorManager;
+    public function new(args:ManagerArgs):Void {
+        leftMotor = args.leftMotor;
+        rightMotor = args.rightMotor;
+        wheelRadius = args.wheelRadius;
+        sensorManager = args.sensorManager;
         currentDirection = readGyro();
         resetEncoders();
     }
 
-    inline function startMotor(motor:Motor, velocity:Int):Void {
-        motor.setPower(if (inversedVelocity) -velocity else velocity);
-    }
-
-    inline function startLeft(velocity:Int):Void {
-        startMotor(leftMotor, velocity);
-    }
-
-    inline function startRight(velocity:Int):Void {
-        startMotor(rightMotor, velocity);
-    }
-
-    @:updateFrequency(7)
-    inline function readEncoder(encoder:Encoder):Int {
-        var val = encoder.read();
-        return if (inversedEncoders) -val else val;
-    }
-
-    inline function readLeft():Int {
-        return readEncoder(leftEncoder);
-    }
-
-    inline function readRight():Int {
-        return readEncoder(rightEncoder);
-    }
-
     inline function resetEncoders():Void {
-        leftEncoder.reset();
-        rightEncoder.reset();
+        leftMotor.encoder.reset();
+        rightMotor.encoder.reset();
     }
 
     function stop(?delayTime:Time):Void {
@@ -93,8 +58,8 @@ class BaseManager {
         do {
             var u = controller.calculate(getError());
             
-            startLeft(Math.round(speed - u));
-            startRight(Math.round(speed + u));
+            leftMotor.setPower(Math.round(speed - u));
+            rightMotor.setPower(Math.round(speed + u));
 
             if (condition == null) return;
             Script.wait(interval);
