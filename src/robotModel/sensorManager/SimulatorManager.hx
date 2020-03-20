@@ -5,7 +5,7 @@ import robotModel.sensorManager.BaseManager;
 import robotModel.sensorManager.ManagerArgs;
 
 
-class RealManager extends BaseManager implements SensorManager {
+class SimulatorManager extends BaseManager implements SensorManager {
     public function new(args:ManagerArgs) {
         super(args, 50);
     }

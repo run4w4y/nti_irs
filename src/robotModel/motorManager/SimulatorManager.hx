@@ -11,6 +11,7 @@ import robotModel.speedManager.pid.PIDSim;
 import robotModel.speedManager.pid.PIDCoefficients;
 import robotModel.motorManager.BaseManager;
 import robotModel.motorManager.MotorManager;
+import robotModel.sensorManager.SensorManager;
 
 using tools.NullTools;
 
@@ -23,9 +24,9 @@ class SimulatorManager extends BaseManager implements MotorManager {
     });
 
     public function new(leftMotor:Motor, rightMotor:Motor, leftEncoder:Encoder, rightEncoder:Encoder,
-    wheelRadius:Float, ?inversedVelocity = false, ?inversedEncoders = false) {
+    wheelRadius:Float, sensorManager:SensorManager, ?inversedVelocity = false, ?inversedEncoders = false) {
+        super(leftMotor, rightMotor, leftEncoder, rightEncoder, wheelRadius, sensorManager, inversedVelocity, inversedEncoders);
         goEncoders(150);
-        super(leftMotor, rightMotor, leftEncoder, rightEncoder, wheelRadius, inversedVelocity, inversedEncoders);
     }
 
     public function turn(angle:Float):Void {
