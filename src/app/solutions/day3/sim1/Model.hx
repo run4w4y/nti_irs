@@ -8,6 +8,7 @@ import image.RawHexImage;
 import artag.Artag;
 import app.artagDecoder.ArtagDecoder;
 import image.Pixel;
+import movementExecutor.Movement;
 
 using StringTools;
 
@@ -17,11 +18,10 @@ class Model extends RobotModel {
         var lines = Script.readAll('input.txt').map(function (x) return x.trim());
         // var img = new RawImage(lines[0].split(' ').map(Std.parseInt)).toImage();
         var img = new RawHexImage(lines[0]).toImage();
-        Script.print(img);
-        var artag = new Artag(img);
+        var artag = new Artag(img, false);
         var decoder = new ArtagDecoder(artag);
 
-        for (i in decoder.read())
+        for (i in decoder.read().filter(function (x) return x != Undefined))
             executor.add(i);
         executor.execute();
 
