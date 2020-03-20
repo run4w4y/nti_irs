@@ -83,41 +83,6 @@ class RealManager extends BaseManager implements MotorManager {
         currentDirection = readGyro();
     }
 
-    function wallDriveRight():Void {
-        var u = wallPid.calculate(13.5 - sensorManager.rightSensor.read());
-        iRight += round(8 + u);
-        iLeft += round(8 - u);
-        Script.wait(Seconds(.001));
-        alignImaginaryEncoders();
-    }
-
-    function wallDriveLeft():Void {
-        var u = wallPid.calculate(13.5 - sensorManager.leftSensor.read());
-        iRight += round(8 - u);
-        iLeft += round(8 + u);
-        Script.wait(Seconds(.01));
-        alignImaginaryEncoders();
-    }
-
-    function movePoint(path:Int):Void {
-        var resetL = iLeft;
-        var resetR = iRight;
-        do {
-            var curLeft = sensorManager.leftSensor.read();
-            var curRight = sensorManager.rightSensor.read();
-            if (curLeft < 25)
-                wallDriveLeft();
-            else if (curRight < 25) 
-                wallDriveRight();
-            else {
-                iLeft += 8;
-                iRight += 8;
-                alignImaginaryEncoders();
-                Script.wait(Seconds(.01));
-            }
-        } while ((Math.abs(iLeft - resetL) + Math.abs(iRight - resetR)) / 2 < path);
-    }
-
     public function goEncoders(path:Int, ?accelPoint:Int, ?decelPoint:Int):Void {
         // Gyro + walls
         var accel = new SineAcceleration(40, 90, accelPoint, decelPoint, path);
