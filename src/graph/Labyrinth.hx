@@ -192,10 +192,6 @@ class Labyrinth {
 	function getCheck(curNode:Node):Null<Node> {
 		if(localized)
 			return curNode;
-		var minRow = 0;
-		var minCol = 0;
-		var maxRow = 0;
-		var maxCol = 0;
 		for (node in nodes) {
 			minRow = cast (min(node.row, minRow), Int);
 			minCol = cast (min(node.col, minCol), Int);
@@ -205,6 +201,7 @@ class Labyrinth {
 		nodes = new Array<Node>();
 		if (maxRow - minRow + 1 != rows || maxCol - minCol + 1 != cols) 
 			return null;
+		trik.Script.print("Localized");
 		localized = true;
 		addToRow = cast (abs(minRow), Int);
 		addToCol = cast (abs(minCol), Int);
@@ -229,7 +226,7 @@ class Labyrinth {
 		nodes.push(currentNode);
 
 		allowedDirection[currentNode.turnLeft()] = !sensors.checkLeft();
-		
+
 		if (!allowedDirection[currentNode.turnLeft()]){
 			nodes.push(currentNode.turnLeft());
 		}
@@ -240,7 +237,7 @@ class Labyrinth {
 			nodes.push(currentNode.turnRight());
 		}
 
-		allowedDirection[currentNode.reverseDirection()] = !sensors.checkFront();
+		allowedDirection[currentNode.reverseDirection()] = !sensors.checkBack();
 
 		if (!allowedDirection[currentNode.reverseDirection()]){
 			nodes.push(currentNode.reverseDirection());
@@ -286,17 +283,27 @@ class Labyrinth {
 	public function localizeUndefined(startDirection:Direction, otherNode:Node):Node {
 		var startPoint = new Node(0, 0, startDirection);
 		realNode = startPoint;
+		trik.Script.print(otherNode);
 		nodes = new Array<Node>();
 		allowedDirection = new HashMap<Node,Bool>();
 		var node = undoneDfs(startPoint);
-		
+		trik.Script.print(node);
 		if(node != null){
 			alignNodes(startPoint);
-			for(direction in [Left,Right,Down,Up])
+			otherNode = new Node(otherNode.row - addToRow,otherNode.col - addToCol, otherNode.direction);
+			trik.Script.print(otherNode);
+			trik.Script.print(addToRow);
+			trik.Script.print(addToCol);
+			for(direction in [Left,Right,Down,Up]){
+				trik.Script.print(direction);
+				trik.Script.print(used[otherNode.go(direction)]);
+				trik.Script.print(otherNode.go(direction));
+				trik.Script.print("next");
 				if(used[otherNode.go(direction)]){
 					var tmpNode = otherNode.go(direction);
 					return new Node(tmpNode.row + addToRow,tmpNode.col + addToCol,Undefined);
 				}
+			}
 		}
 		return null;
 	}
