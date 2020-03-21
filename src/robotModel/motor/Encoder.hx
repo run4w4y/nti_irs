@@ -20,7 +20,7 @@ class Encoder {
 
     @:updateFrequency(5)
     public function read():Int {
-        return if (inversed) innerEncoder.read() else -innerEncoder.read();
+        return if (inversed) -innerEncoder.read() else innerEncoder.read();
     }
 
     public inline function reset():Void {
