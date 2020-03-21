@@ -283,7 +283,7 @@ class Labyrinth {
 		return null;
 	}
 
-	public function localizeUndefined(startDirection:Direction):Node {
+	public function localizeUndefined(startDirection:Direction, otherNode:Node):Node {
 		var startPoint = new Node(0, 0, startDirection);
 		realNode = startPoint;
 		nodes = new Array<Node>();
@@ -292,9 +292,12 @@ class Labyrinth {
 		
 		if(node != null){
 			alignNodes(startPoint);
-			return node;
+			for(direction in [Left,Right,Down,Up])
+				if(used[otherNode.go(direction)]){
+					var tmpNode = otherNode.go(direction);
+					return new Node(tmpNode.row + addToRow,tmpNode.col + addToCol,Undefined);
+				}
 		}
-
 		return null;
 	}
 
