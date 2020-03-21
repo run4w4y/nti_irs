@@ -113,7 +113,7 @@ class RealManager extends BaseManager implements MotorManager {
             rightMotor.setPower(round(v + u));
             
             Script.wait(Seconds(.01));
-        } while (curPath <= path);
+        } while (abs(curPath) <= abs(path));
 
         stop(Seconds(0.1));
     }
