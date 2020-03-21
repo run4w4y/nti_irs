@@ -21,7 +21,7 @@ class Main {
             wheelRadius: 54,
             sensorManager: sensorManager
         });
-        var model = new Model(1370, motorManager, sensorManager);
+        var model = new Model(1365, motorManager, sensorManager);
         model.solution();
     }
 }
