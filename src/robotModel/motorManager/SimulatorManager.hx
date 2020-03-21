@@ -46,11 +46,29 @@ class SimulatorManager extends BaseManager implements MotorManager {
         turn(180);
     }
 
+    function align():Void {
+        var readVal = sensorManager.frontSensor.read();
+        var threshold = 25;
+        var delta = readVal - 25;
+        
+        while (abs(delta) <= threshold && abs(delta) != 0) {
+            readVal = sensorManager.frontSensor.read();
+            delta = readVal - 25;
+            var pid = new PIDSim(Seconds(0.1), -100, 100, {kp: 10, kd: 0, ki: 0});
+            var u = pid.calculate(delta);
+            moveGyro(round(u));
+            Script.wait(Seconds(0.1));
+        }
+        stop(Seconds(0.1));
+    }
+
     public function goEncoders(encValue:Int, ?_ :Int, ?_:Int):Void {
         resetEncoders();
         moveGyro(90, function () {
             return Math.abs(leftMotor.encoder.read() + rightMotor.encoder.read()) / 2 <= Math.abs(encValue);
         });
+        if (sensorManager.checkFront())
+            align();
         stop(Seconds(0.1));
     }
 

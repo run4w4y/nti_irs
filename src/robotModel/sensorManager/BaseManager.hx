@@ -15,7 +15,7 @@ class BaseManager {
 
     public function new(args:ManagerArgs, defaultLength:Int) {
         frontSensor = args.frontSensor;
-        leftSensor = args.frontSensor;
+        leftSensor = args.leftSensor;
         backSensor = args.backSensor;
         rightSensor = args.rightSensor;
         this.defaultLength = defaultLength;
