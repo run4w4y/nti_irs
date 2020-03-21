@@ -26,7 +26,7 @@ class SimulatorManager extends BaseManager implements MotorManager {
     }
 
     public function turn(angle:Float):Void {
-        Script.print(11);
+        currentDirection += angle;
         moveGyro(0, function() {
                 return abs(currentDirection - cast(Brick.gyroscope.read())) > 1;
             }, Seconds(0.01), {kp: 1 }
@@ -49,7 +49,7 @@ class SimulatorManager extends BaseManager implements MotorManager {
     public function goEncoders(encValue:Int, ?_ :Int, ?_:Int):Void {
         resetEncoders();
         moveGyro(90, function () {
-            return (leftMotor.encoder.read() + rightMotor.encoder.read()) / 2 <= encValue;
+            return Math.abs(leftMotor.encoder.read() + rightMotor.encoder.read()) / 2 <= Math.abs(encValue);
         });
         stop(Seconds(0.1));
     }
@@ -68,7 +68,9 @@ class SimulatorManager extends BaseManager implements MotorManager {
         gyroPID = new PIDSim(interval.coalesce(Seconds(.01)), -100, 100, coefficients.coalesce(defaults));
         
         move(speed, gyroPID, function() {
-                return Brick.gyroscope.read() - currentDirection;
+                var err = Brick.gyroscope.read() - currentDirection;
+                // Script.print('${Brick.gyroscope.read()} $currentDirection $err');
+                return err;
             }, 
             condition, interval
         );
