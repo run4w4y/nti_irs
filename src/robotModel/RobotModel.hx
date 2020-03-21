@@ -39,6 +39,7 @@ class Watcher extends RequestHandler {
         prevRight = sensorManager.rightSensor.read();
         prevFront = sensorManager.frontSensor.read();
         prevBack = sensorManager.backSensor.read();
+        this.sensorManager = sensorManager;
     }
 
     override public function call(_:Dynamic):Dynamic {
@@ -125,11 +126,13 @@ class RobotModel {
     }
 
     public function new(cellSize:Int, motorManager:MotorManager, sensorManager:SensorManager):Void {
-        restoreCalibration();
+        // restoreCalibration();
+        Script.wait(Seconds(0.5));
         this.motorManager = motorManager;
+        this.motorManager.currentDirection = Brick.gyroscope.read();
         this.sensorManager = sensorManager;
 
-        PoolConfig.watcher = new Watcher(sensorManager);
+        // PoolConfig.watcher = new Watcher(sensorManager);
         
         executor = new MovementExecutor(motorManager, cellSize);
     }

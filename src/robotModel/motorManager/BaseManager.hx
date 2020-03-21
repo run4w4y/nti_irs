@@ -26,6 +26,7 @@ class BaseManager {
         rightMotor = args.rightMotor;
         wheelRadius = args.wheelRadius;
         sensorManager = args.sensorManager;
+        Script.wait(Milliseconds(100));
         currentDirection = readGyro();
         resetEncoders();
     }
