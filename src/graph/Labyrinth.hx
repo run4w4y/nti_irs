@@ -190,8 +190,15 @@ class Labyrinth {
 	var maxCol = 0;
 
 	function getCheck(curNode:Node):Null<Node> {
-		if(localized)
-			return curNode;
+		if(localized){
+			for(direction in [Left,Right,Down,Up]){
+				if(used[otherNode.go(direction)]){
+					var tmpNode = otherNode.go(direction);
+					return new Node(tmpNode.row + addToRow,tmpNode.col + addToCol,Undefined);
+				}
+			}
+			return null;
+		}
 		for (node in nodes) {
 			minRow = cast (min(node.row, minRow), Int);
 			minCol = cast (min(node.col, minCol), Int);
@@ -205,10 +212,17 @@ class Labyrinth {
 		localized = true;
 		addToRow = cast (abs(minRow), Int);
 		addToCol = cast (abs(minCol), Int);
-		return new Node(curNode.row + addToRow, curNode.col + addToCol, curNode.direction);
+		otherNode = new Node(otherNode.row - addToRow,otherNode.col - addToCol, otherNode.direction);
+		for(direction in [Left,Right,Down,Up]){
+			if(used[otherNode.go(direction)]){
+				var tmpNode = otherNode.go(direction);
+				return new Node(tmpNode.row + addToRow,tmpNode.col + addToCol, Undefined);
+			}
+		}
+		return null;
 	}
 	var realNode:Node;
-
+	var otherNode:Node;
 	function alignNodes(finishNode:Node){
 		var moves = getPath(realNode,finishNode);
 		for(move in moves)
@@ -222,32 +236,21 @@ class Labyrinth {
 
 		for(direction in [Left,Right,Up,Down]){
 			used[currentNode.changeDirection(direction)] = true;
+			nodes.push(currentNode.changeDirection(direction));
 		}
 		nodes.push(currentNode);
 
 		allowedDirection[currentNode.turnLeft()] = !sensors.checkLeft();
 
-		if (!allowedDirection[currentNode.turnLeft()]){
-			nodes.push(currentNode.turnLeft());
-		}
-		
 		allowedDirection[currentNode.turnRight()] = !sensors.checkRight();
 
-		if (!allowedDirection[currentNode.turnRight()]){
-			nodes.push(currentNode.turnRight());
-		}
-
 		allowedDirection[currentNode.reverseDirection()] = !sensors.checkBack();
-
-		if (!allowedDirection[currentNode.reverseDirection()]){
-			nodes.push(currentNode.reverseDirection());
-		}
 		
 		allowedDirection[currentNode] = !sensors.checkFront();
 
 		var tmp = getCheck(currentNode);
 		
-		if(localized)
+		if(localized && tmp != null)
 			return tmp;
 
 		if (!used[currentNode.turnLeft().go()] && allowedDirection[currentNode.turnLeft()]) {
@@ -281,6 +284,7 @@ class Labyrinth {
 	}
 
 	public function localizeUndefined(startDirection:Direction, otherNode:Node):Node {
+		this.otherNode = otherNode;
 		var startPoint = new Node(0, 0, startDirection);
 		realNode = startPoint;
 		trik.Script.print(otherNode);
@@ -291,14 +295,14 @@ class Labyrinth {
 		if(node != null){
 			alignNodes(startPoint);
 			otherNode = new Node(otherNode.row - addToRow,otherNode.col - addToCol, otherNode.direction);
-			trik.Script.print(otherNode);
-			trik.Script.print(addToRow);
-			trik.Script.print(addToCol);
+			// trik.Script.print(otherNode);
+			// trik.Script.print(addToRow);
+			// trik.Script.print(addToCol);
 			for(direction in [Left,Right,Down,Up]){
-				trik.Script.print(direction);
-				trik.Script.print(used[otherNode.go(direction)]);
-				trik.Script.print(otherNode.go(direction));
-				trik.Script.print("next");
+				// trik.Script.print(direction);
+				// trik.Script.print(used[otherNode.go(direction)]);
+				// trik.Script.print(otherNode.go(direction));
+				// trik.Script.print("next");
 				if(used[otherNode.go(direction)]){
 					var tmpNode = otherNode.go(direction);
 					return new Node(tmpNode.row + addToRow,tmpNode.col + addToCol,Undefined);
