@@ -50,6 +50,9 @@ class ConnectionPool implements Messenger {
 
         var tempId = Mailbox.myHullNumber();
         self = if (tempId == master.id) master else this.slaves[tempId];
+
+        if (!isMaster())
+            Mailbox.connect(master); 
     }
 
     public function addActions(actions:Array<PoolAction>):Void {
