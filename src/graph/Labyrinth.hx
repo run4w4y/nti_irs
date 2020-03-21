@@ -10,6 +10,7 @@ import graph.Direction;
 import graph.LabyrinthPoolActions;
 import connectionPool.PoolMember;
 import connectionPool.ConnectionPool;
+import app.solutions.day4.real1.WatcherRes;
 import Math.*;
 
 using tools.NullTools;
@@ -180,6 +181,7 @@ class Labyrinth {
 
 	var used = new HashMap<Node, Bool>();
 	var localized = false;
+	var found = false;
 	
 	var addToRow = -1;
 	var addToCol = -1;
@@ -189,15 +191,23 @@ class Labyrinth {
 	var maxRow = 0;
 	var maxCol = 0;
 
+	var requestF:Void -> Dynamic;
 	function getCheck(curNode:Node):Null<Node> {
+		if(localized && found){
+			return otherNode;
+		}
 		if(localized){
-			for(direction in [Left,Right,Down,Up]){
-				if(used[otherNode.go(direction)]){
-					var tmpNode = otherNode.go(direction);
-					return new Node(tmpNode.row + addToRow,tmpNode.col + addToCol,Undefined);
-				}
+			var res = requestF();
+			switch(res) {
+				case NotFound:
+					return null;
+				case _:
+					otherNode = curNode;
 			}
-			return null;
+			trik.Brick.say('aaaaa');
+			trik.Script.wait(Seconds(10));
+			found = true;
+			return otherNode;
 		}
 		for (node in nodes) {
 			minRow = cast (min(node.row, minRow), Int);
@@ -206,19 +216,28 @@ class Labyrinth {
 			maxCol = cast (max(node.col, maxCol), Int);
 		}
 		nodes = new Array<Node>();
+		if (!found) {
+			var res = requestF();
+			switch(res) {
+				case NotFound:
+					return null;
+				case _:
+					otherNode = curNode;
+			}
+			trik.Brick.say('aaaaa');
+			trik.Script.wait(Seconds(10));
+			found = true;
+		}
+
 		if (maxRow - minRow + 1 != rows || maxCol - minCol + 1 != cols) 
 			return null;
-		trik.Script.print("Localized");
+		
 		localized = true;
 		addToRow = cast (abs(minRow), Int);
 		addToCol = cast (abs(minCol), Int);
-		otherNode = new Node(otherNode.row - addToRow,otherNode.col - addToCol, otherNode.direction);
-		for(direction in [Left,Right,Down,Up]){
-			if(used[otherNode.go(direction)]){
-				var tmpNode = otherNode.go(direction);
-				return new Node(tmpNode.row + addToRow,tmpNode.col + addToCol, Undefined);
-			}
-		}
+
+		if(localized && found)
+			return curNode;
 		return null;
 	}
 	var realNode:Node;
@@ -238,7 +257,6 @@ class Labyrinth {
 			used[currentNode.changeDirection(direction)] = true;
 			nodes.push(currentNode.changeDirection(direction));
 		}
-		nodes.push(currentNode);
 
 		allowedDirection[currentNode.turnLeft()] = !sensors.checkLeft();
 
@@ -250,7 +268,7 @@ class Labyrinth {
 
 		var tmp = getCheck(currentNode);
 		
-		if(localized && tmp != null)
+		if(tmp != null)
 			return tmp;
 
 		if (!used[currentNode.turnLeft().go()] && allowedDirection[currentNode.turnLeft()]) {
@@ -283,232 +301,17 @@ class Labyrinth {
 		return null;
 	}
 
-	public function localizeUndefined(startDirection:Direction, otherNode:Node):Node {
-		this.otherNode = otherNode;
+	public function localizeUndefined(startDirection:Direction, requestF:() -> Dynamic):Node {
+		this.requestF = requestF;
 		var startPoint = new Node(0, 0, startDirection);
 		realNode = startPoint;
-		trik.Script.print(otherNode);
 		nodes = new Array<Node>();
 		allowedDirection = new HashMap<Node,Bool>();
 		var node = undoneDfs(startPoint);
-		trik.Script.print(node);
 		if(node != null){
 			alignNodes(startPoint);
-			otherNode = new Node(otherNode.row - addToRow,otherNode.col - addToCol, otherNode.direction);
-			// trik.Script.print(otherNode);
-			// trik.Script.print(addToRow);
-			// trik.Script.print(addToCol);
-			for(direction in [Left,Right,Down,Up]){
-				// trik.Script.print(direction);
-				// trik.Script.print(used[otherNode.go(direction)]);
-				// trik.Script.print(otherNode.go(direction));
-				// trik.Script.print("next");
-				if(used[otherNode.go(direction)]){
-					var tmpNode = otherNode.go(direction);
-					return new Node(tmpNode.row + addToRow,tmpNode.col + addToCol,Undefined);
-				}
-			}
 		}
 		return null;
 	}
 
-	var positionsOfRobots = new HashMap<PoolMember,Node>();
-	var found = new HashMap<PoolMember,Bool>();
-	var readFunctions = new HashMap<Movement,(Void -> Bool)>();
-	var checked = new HashMap<PoolMember,Bool>();
-	var allRobots = new List<PoolMember>();
-	var readout = new HashMap<PoolMember,HashMap<Movement,Bool>>();
-	var temporaryWalls = new HashMap<Node,Bool>();
-
-	function getReadout(robot:PoolMember,pool:ConnectionPool){
-		var walls = new HashMap<Movement,Bool>();
-		for(move in [TurnLeft,TurnRight,Go,TurnAround]){
-			var action = new ReadAction(robot, readFunctions[move]);
-			pool.addActions([action]);
-			pool.execute();
-			walls[move] = !action.res;
-		}
-		return walls;
-	}
-	var firstDirection:Direction;
-
-	function getPosition(robot1:PoolMember,robot2:PoolMember, moveToReach:Movement){
-		var directionToGo:Direction;
-		switch (moveToReach) {
-			case Go:
-				directionToGo = firstDirection;
-			case TurnLeft:
-				directionToGo = new Node(0,0,firstDirection).turnLeft().direction;
-			case TurnRight:
-				directionToGo = new Node(0,0,firstDirection).turnRight().direction;
-			case TurnAround:
-				directionToGo = new Node(0,0,firstDirection).reverseDirection().direction;
-			case _:
-				throw "Bad move";
-		}
-		positionsOfRobots[robot2] = positionsOfRobots[robot1].changeDirection(Up).go(directionToGo);
-		found[robot2] = true;
-	}
-
-	function dfsWithPool(currentNode:Node, agent:PoolMember, pool:ConnectionPool, args:DfsArgs){
-		used[currentNode] = true;
-		nodes.push(currentNode);
-		for(robot in allRobots){
-			if(found[robot])
-				continue;
-			var newReadout = getReadout(robot,pool);
-			for(move in [TurnLeft,TurnRight,TurnAround]){
-				if(readout[robot][move] != newReadout[move]){
-					readout[robot] = newReadout;
-					getPosition(agent,robot,move);
-					var posRobot = positionsOfRobots[robot];
-					temporaryWalls[posRobot.executeMove(move)] = true;
-					var direction = posRobot.executeMove(move).reverseDirection().direction;
-					temporaryWalls[currentNode.changeDirection(direction)] = true;
-					found[robot] = true;
-				}
-			}
-		}
-
-		getReadout(agent,pool);
-		
-		for(move in [TurnLeft,TurnRight,TurnAround]){
-			var nxtNode:Node;
-			switch(move){
-				case Go:
-					nxtNode = currentNode;
-				case _:
-					nxtNode = currentNode.executeMove(move);
-			}
-			allowedDirection[nxtNode] = readout[agent][move];
-			if(!allowedDirection[nxtNode]){
-				if(!used[nxtNode])
-					nodes.push(nxtNode);
-				used[nxtNode] = true;	
-			}
-		}
-
-		for(move in [TurnLeft,TurnRight,TurnAround]){
-			if(!allowedDirection[currentNode.executeMove(move)])
-				continue;
-			
-			var nxtNode:Node;
-			switch(move){
-				case Go:
-					nxtNode = currentNode.go();
-				case _:
-					nxtNode = currentNode.executeMove(move);
-			}
-			if(used[nxtNode])
-				continue;
-
-			if(move == Go){
-				if(!used[nxtNode.reverseDirection()])
-					nodes.push(nxtNode.reverseDirection());
-				used[nxtNode.reverseDirection()] = true;
-			}
-
-			pool.addActions([new AddMovementAction(agent,move,args.executor),new ExecuteMovementAction(agent,args.executor)]);
-			pool.execute();
-			positionsOfRobots[agent] = nxtNode;
-			
-			dfsWithPool(nxtNode, agent, pool, args);
-
-			positionsOfRobots[agent] = currentNode;
-			switch(move){
-				case Go:
-					pool.addActions([new AddMovementAction(agent,TurnAround,args.executor),new AddMovementAction(agent,Go,args.executor),new ExecuteMovementAction(agent,args.executor)]);
-					pool.execute();
-					pool.addActions([new AddMovementAction(agent,TurnAround,args.executor)]);
-				case TurnLeft:
-					pool.addActions([new AddMovementAction(agent,TurnRight,args.executor)]);
-				case TurnRight:
-					pool.addActions([new AddMovementAction(agent,TurnLeft,args.executor)]);
-				case TurnAround:
-					pool.addActions([new AddMovementAction(agent,TurnAround,args.executor)]);
-				case Undefined:
-					throw "Bad move";
-			}
-		}
-	}
-	
-	function isPositionsNotFound(robots:List<PoolMember>): Bool{
-		for(robot in robots)
-			if(!found[robot])
-				return true;
-		return false;
-	}
-	
-
-	public function localizeWithPool(robots:List<PoolMember>, connectionPool:ConnectionPool,?startDirection:Direction,
-		readLeft:ReadFunction,
-		readRight:ReadFunction,
-		readFront:ReadFunction,
-		readBack:ReadFunction
-		): List<Node> {
-
-		startDirection.coalesce(Up);
-		firstDirection = startDirection;
-		used = new HashMap<Node,Bool>();
-		readFunctions[TurnLeft] = readLeft;
-		readFunctions[TurnRight] = readRight;
-		readFunctions[Go] = readFront;
-		readFunctions[TurnAround] = readBack;
-
-		for(robot in robots){
-			found[robot] = false; 
-			checked[robot] = false;
-			readout[robot] = getReadout(robot,connectionPool);
-		}
-
-		for(robot in robots){
-			for(move in [TurnLeft,TurnRight,Go,TurnAround]){
-				if(readout[robot][move]){
-					found[robot] = true;
-				}
-			}
-			if(found[robot]){
-				positionsOfRobots[robot] = new Node(0,0,startDirection);
-				break;
-			}
-		}
-		while(isPositionsNotFound(robots)){
-			for(robot in robots){
-				if(checked[robot] || !found[robot])
-					continue;
-				dfsWithPool(positionsOfRobots[robot],robot,connectionPool, {
-					executor: executor
-				});
-				connectionPool.addActions([new ExecuteMovementAction(robot, executor)]);
-				connectionPool.execute();
-				checked[robot] = true;
-			}
-		}
-		
-		var minRow = 0;
-		var minCol = 0;
-
-		for (node in nodes) {
-			minRow = cast (min(node.row, minRow), Int);
-			minCol = cast (min(node.col, minCol), Int);
-		}
-
-		var addToRow = cast (abs(minRow), Int);
-		var addToCol = cast (abs(minCol), Int);
-		var tmpAllowed = new HashMap<Node, Bool>();
-		var tmpNodes:Array<Node> = [];
-		
-		for (node in nodes) {
-			var curNode = new Node(node.row + addToRow, node.col + addToCol, node.direction);
-			tmpNodes.push(curNode);
-			tmpAllowed[curNode] = (allowedDirection[node] || temporaryWalls[node]);
-		}
-		temporaryWalls = new HashMap<Node,Bool>();
-		used = new HashMap<Node,Bool>();
-		var positions = new List<Node>();
-		for(robot in robots){
-			positions.push(positionsOfRobots[robot]);
-		}
-		return positions;
-	}
 }
